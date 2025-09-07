@@ -1,0 +1,42 @@
+docker compose -f ./docker-compose.ev.yml --env-file ".ev.env" up -d
+docker compose -f ./docker-compose.ev.yml --env-file ".ev.env" down --volumes --rmi all
+
+
+docker compose -f ./docker-compose.ojol.yml --env-file ".ojol.env" up -d
+docker compose -f ./docker-compose.ojol.yml --env-file ".ojol.env" down --volumes --rmi all
+
+
+SETUP :
+works in postgres image, not alpine
+1. change config file
+
+nanosh var/lib/postgresql/data/postgresql.conf
+
+set :
+wal_level = logical
+max_replication_slots = 1 # min 1
+
+check:
+query -> SHOW wal_level;
+
+
+2. restart postgres
+restart :
+query -> "SELECT pg_reload_conf()"
+cmd -> 
+su <nonroot user> [eg: postgres]
+pg_ctl reload
+host -> docker restart <container_name>
+
+
+3. install wal2json module
+sudo apt-get install postgresql-<version>-wal2json
+
+
+4. create log replication 
+pg_recvlogical -d new_ojol_db -U new_user --slot=db_sync_slot --create-slot -P wal2json
+
+5. start listen replication
+pg_recvlogical -d new_ojol_db -U new_user --slot=db_sync_slot --start -o pretty-print=1 -o add-msg-prefixes=wal2json -f -
+
+

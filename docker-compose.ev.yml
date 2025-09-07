@@ -1,0 +1,40 @@
+version: '3.8'
+name: ${APP_NAME}
+
+services:
+  old_db:
+    container_name: old_ev
+    image: postgres:16
+    ports:
+      - "${OLD_OUT_PORT}:5432"
+    volumes:
+      - old-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${OLD_DATABASE}
+      - POSTGRES_USER=${OLD_USERNAME}
+      - POSTGRES_PASSWORD=${OLD_PASSWORD}
+    networks:
+      - db_migrate_network
+
+  new_db:
+    container_name: new_ev
+    image: postgres:16
+    ports:
+      - "${NEW_OUT_PORT}:5432"
+    volumes:
+      - new-db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${NEW_DATABASE}
+      - POSTGRES_USER=${NEW_USERNAME}
+      - POSTGRES_PASSWORD=${NEW_PASSWORD}
+    networks:
+      - db_migrate_network
+  
+volumes:
+  old-db-data:
+  new-db-data:
+
+networks:
+  db_migrate_network:
+    driver: bridge
+    name: db_migrate_network

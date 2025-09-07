@@ -1,0 +1,119 @@
+{
+  "version": "1.0",
+  "defaults": {
+    "target_db1": {
+      "users": {
+        "created_at": "NOW()",
+        "status": "active"
+      }
+    }
+  },
+  "transformations": {
+    "date_to_string": "TO_CHAR({value}, 'YYYY-MM-DD')",
+    "string_to_int": "CAST({value} AS INTEGER)"
+  },
+  "mappings": [
+    {
+      "source_table": "users",
+      "target_tables": [
+        {
+          "database": "old_ev_db",
+          "table": "ojol",
+          "operation_handling" : {
+            "insert" : true,
+            "update" : true,
+            "delete" : "soft_delete"
+          },
+          "column_mappings": [
+            {
+              "source_column": "email",
+              "target_column": "email"
+            },
+            {
+              "source_column": "password",
+              "target_column": "password"
+            }
+          ],
+           "key_mapping": {
+            "primary_key": {
+              "source": "user_id",
+              "target": "id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source_table": "drivers",
+      "target_tables": [
+         {
+          "database": "old_ev_db",
+          "table": "registrasi_ojol",
+          "operation_handling" : {
+            "insert" : true,
+            "update" : true,
+            "delete" : "soft_delete"
+          },
+          "column_mappings": [
+            {
+              "source_column": "name",
+              "target_column": "nama_lengkap"
+            },
+            {
+              "source_column": "id_card",
+              "target_column": "nik"
+            }
+          ],
+           "key_mapping": {
+            "primary_key": {
+              "source": "user_id",
+              "target": "id"
+            }
+          }
+        },
+        {
+          "database": "old_ev_db",
+          "table": "ojol",
+          "operation_handling" : {
+            "insert" : true,
+            "update" : true,
+            "delete" : "soft_delete"
+          },
+          "column_mappings": [
+            {
+              "source_column": "name",
+              "target_column": "nama"
+            },
+            {
+              "source_column": "phone",
+              "target_column": "telepon"
+            },
+            {
+              "source_column": "status",
+              "target_column": "status"
+            },
+            {
+              "source_column": "created_at",
+              "target_column": "created_at"
+            },
+            {
+              "source_column": "updated_at",
+              "target_column": "updated_at"
+            }
+          ],
+           "key_mapping": {
+            "primary_key": {
+              "source": "driver_id",
+              "target": "id"
+            }
+          }
+        }
+       
+      ]
+    }
+  ],
+  "conflict_resolution": {
+    "strategy": "source_wins",
+    "timestamp_column": "last_updated"
+  }
+}

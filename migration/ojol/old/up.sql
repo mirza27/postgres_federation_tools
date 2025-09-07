@@ -1,0 +1,49 @@
+CREATE TABLE "pelanggan" (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR NOT NULL,
+    telepon VARCHAR,
+    email VARCHAR UNIQUE NOT NULL,
+    password VARCHAR,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "ojol" (
+    id SERIAL PRIMARY KEY,
+    nama VARCHAR NOT NULL,
+    telepon VARCHAR,
+    email VARCHAR UNIQUE NOT NULL,
+    password VARCHAR,
+    kendaraan JSONB,
+    status VARCHAR,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "pesanan" (
+    id SERIAL PRIMARY KEY,
+    id_pelanggan INTEGER REFERENCES pelanggan(id),
+    id_ojol INTEGER REFERENCES ojol(id),
+    status VARCHAR,
+    nominal FLOAT(2),
+    catatan VARCHAR,
+    titik_jemput VARCHAR,
+    titik_tujuan VARCHAR,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE "registrasi_ojol" (
+    id SERIAL PRIMARY KEY,
+    id_ojol INTEGER REFERENCES ojol(id),
+    nama_lengkap VARCHAR NOT NULL,
+    nik VARCHAR,
+    alamat VARCHAR,
+    status_registrasi VARCHAR,
+    is_deleted BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);

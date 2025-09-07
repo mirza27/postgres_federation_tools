@@ -1,0 +1,84 @@
+{
+  "version": "1.0",
+  "defaults": {
+    "target_db": {
+      "users": {
+        "created_at": "NOW()",
+        "status": "active",
+        "is_deleted": false
+      }
+    }
+  },
+  "transformations": {
+    "date_to_string": "TO_CHAR({value}, 'YYYY-MM-DD')",
+    "string_to_int": "CAST({value} AS INTEGER)",
+    "json_to_text": "{value}::text"
+  },
+  "mappings": [
+    {
+      "source_table": "users",
+      "source_condition": "deleted = false",
+      "target_tables": [
+        {
+          "database": "target_db",
+          "table": "tbl_users",
+          "operation_handling": {
+            "insert": true,
+            "update": true,
+            "delete": "soft_delete"
+          },
+          "column_mappings": [
+            {
+              "source_column": "id",
+              "target_column": "user_id",
+              "transformation": "string_to_int"
+            },
+            {
+              "source_column": "fullname",
+              "target_column": "username"
+            },
+            {
+              "source_column": "email",
+              "target_column": "email_address"
+            },
+            {
+              "source_column": "null",
+              "target_column": "status",
+              "default_value": "active"
+            }
+          ],
+          "key_mapping": {
+            "primary_key": {
+              "source": "id",
+              "target": "user_id"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source_table": "orders",
+      "target_tables": [
+        {
+          "database": "target_db",
+          "table": "tbl_orders",
+          "column_mappings": [
+            {
+              "source_column": "id",
+              "target_column": "order_id"
+            },
+            {
+              "source_column": "user_id",
+              "target_column": "customer_id",
+              "transformation": "string_to_int"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "conflict_resolution": {
+    "strategy": "source_wins",
+    "timestamp_column": "last_updated"
+  }
+}

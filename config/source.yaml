@@ -1,0 +1,5 @@
+host: "localhost"
+port: 5433
+user: "new_user"
+password: "dsav9das"
+dbname: "new_ojol_db"
