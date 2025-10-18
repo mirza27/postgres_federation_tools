@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	"db_migrate_server/internal/cache"
 	"db_migrate_server/internal/config"
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/mapping"
@@ -46,7 +47,7 @@ func main() {
 	consumer := kafka.NewConsumer([]string{cfg.KafkaBrokers}, cfg.KafkaGroupID, plan.TopicList)
 	defer consumer.Close()
 
-	// prepare db
+	// prepare pivot db
 	pivotRepo, err := pivot.New(ctx, cfg.PivotDSN)
 	if err != nil {
 		panic(err)
@@ -60,8 +61,8 @@ func main() {
 		log.Println("✅ Pivot schema ensured")
 	}
 
-	// jw := cache.NewJoinWait(cfg.JoinWaitTTL)
-	// proc := pipeline.NewProcessor(plan, pivotRepo, jw)
+	jw := cache.NewJoinWait(cfg.JoinWaitTTL)
+	proc := pipeline.NewProcessor(plan, pivotRepo, jw)
 
 	// exec, err := executor.New(ctx, pivotRepo, cfg.TargetDSN, cfg.BatchMaxRows, cfg.BatchMaxInterval)
 	// if err != nil { panic(err) }
