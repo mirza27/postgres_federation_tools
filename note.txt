@@ -3,14 +3,14 @@ docker compose -f ./docker-compose.ev.yml --env-file ".ev.env" down --volumes --
 
 
 docker compose -f ./docker-compose.ojol.yml --env-file ".ojol.env" up -d
-docker compose -f ./docker-compose.ojol.yml --env-file ".ojol.env" down --volumes --rmi all
+docker compose -f ./docker-compose.ojol.yml --env-file ".ojol.env" down --volumes --rmi local
 
 
 SETUP :
 works in postgres image, not alpine
 1. change config file
 
-nanosh var/lib/postgresql/data/postgresql.conf
+nano var/lib/postgresql/data/postgresql.conf
 
 set :
 wal_level = logical
@@ -39,4 +39,19 @@ pg_recvlogical -d new_ojol_db -U new_user --slot=db_sync_slot --create-slot -P w
 5. start listen replication
 pg_recvlogical -d new_ojol_db -U new_user --slot=db_sync_slot --start -o pretty-print=1 -o add-msg-prefixes=wal2json -f -
 
+
+
+
+# DEBEZIUM
+
+- apply config
+curl -X POST -H "Content-Type: application/json"   -d @debezium-connector.json   http://localhost:8083/connectors
+
+
+curl -X DELETE http://localhost:8083/connectors/new-db-connector-v2
+
+
+- check status
+http://localhost:8083/connectors/new-db-connector/status
+http://localhost:8083/connectors?expand=status&expand=info%
 

@@ -1,0 +1,33 @@
+{
+  "entity": "order-to-pesanan",
+  "kind": "table",
+  "sources": [
+    { "alias": "o", "from": "src.order", "topic": "db_events_orders" }
+  ],
+  "target_table": "pesanan",
+  "key": {
+    "strategy": "natural",
+    "source" : ["d.order_id"],
+  "columns": {
+    "id" : { "from": "$key" },
+    "id_ojol" : { "foreign" : {
+      "relation_name": "driver-to-ojol",
+      "source_key_cols": ["d.driver_id"],
+      "target_key_cols": ["id"]
+    } },
+    "status" : { "from": "o.status"},
+    "nominal" : { "from": "o.amount" },
+    "catatan" : { "from": "o.amount"},
+    "titik_jemput" : { "from" : "o.depart_location"},
+    "titik_tujuan" : { "from" : "o.purpose_location"},
+    "created_at": { "from": "d.created_at" },
+    "updated_at": { "expr": "now()" }
+  },
+  "routing": {
+    "on_create": { "writeMode": "upsert", "conflictKey": ["id"] },
+    "on_update": { "writeMode": "upsert", "conflictKey": ["id"] },
+    "on_delete": { "writeMode": "delete", "matchKey": ["id"] },
+    "on_snapshot": { "writeMode": "upsert", "conflictKey": ["id"] }
+  }
+}
+}

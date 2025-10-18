@@ -1,0 +1,28 @@
+{
+  "name": "new-db-connector-v2",
+  "config": {
+    "topic.prefix": "my-database-migrate-events-v2",
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "provide.transaction.metadata": "true", 
+    "database.hostname": "new_db",
+    "database.port": "5432",
+    "database.user": "new_user",
+    "database.password": "dsav9das",
+    "database.dbname": "new_ojol_db",
+    
+    "plugin.name": "pgoutput",
+    "slot.name": "debezium_slot_v2",
+    "publication.name": "dbz_publication",
+    "table.include.list": "public.(.*)", 
+    "tombstones.on.delete": "true",
+    "transforms": "route",
+
+    "snapshot.mode": "initial",  
+    
+    "slot.drop.on.stop": "true",
+
+    "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+    "transforms.route.replacement": "db_events_$3"
+  }
+}
