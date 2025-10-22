@@ -9,17 +9,12 @@ import (
 
 	"db_migrate_server/internal/cache"
 	"db_migrate_server/internal/config"
+	"db_migrate_server/internal/executor"
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/mapping"
+	"db_migrate_server/internal/pipeline"
 	"db_migrate_server/internal/pivot"
-	// "github.com/yourorg/mapping-engine/internal/cache"
-	// "github.com/yourorg/mapping-engine/internal/config"
-	// "github.com/yourorg/mapping-engine/internal/executor"
-	// "github.com/yourorg/mapping-engine/internal/kafka"
-	// "github.com/yourorg/mapping-engine/internal/mapping"
-	// "github.com/yourorg/mapping-engine/internal/pipeline"
-	// "github.com/yourorg/mapping-engine/internal/pivot"
-	// "github.com/yourorg/mapping-engine/internal/util"
+	"db_migrate_server/internal/util"
 )
 
 func main() {
@@ -64,35 +59,39 @@ func main() {
 	jw := cache.NewJoinWait(cfg.JoinWaitTTL)
 	proc := pipeline.NewProcessor(plan, pivotRepo, jw)
 
-	// exec, err := executor.New(ctx, pivotRepo, cfg.TargetDSN, cfg.BatchMaxRows, cfg.BatchMaxInterval)
-	// if err != nil { panic(err) }
-	// defer exec.Close()
+	exec, err := executor.New(ctx, pivotRepo, cfg.TargetDSN, cfg.BatchMaxRows, cfg.BatchMaxInterval)
+	if err != nil {
+		panic(err)
+	}
+	defer exec.Close()
 
-	// // run executor background
-	// go exec.Run(ctx)
+	// run executor background
+	go exec.Run(ctx)
 
-	// // run consumer
-	// ch := make(chan kafka.Event, 256)
-	// go func() {
-	// 	if err := consumer.Listen(ctx, ch); err != nil {
-	// 		util.Error.Println("kafka listen:", err)
-	// 		cancel()
-	// 	}
-	// }()
+	// run consumer
+	ch := make(chan kafka.Event, 256)
+	go func() {
+		if err := consumer.Listen(ctx, ch); err != nil {
+			util.Error.Println("kafka listen:", err)
+			cancel()
+		}
+	}()
 
-	// util.Info.Printf("Engine started. topics=%v", topicList)
-	// for {
-	// 	select {
-	// 	case <-ctx.Done():
-	// 		util.Info.Println("shutting down")
-	// 		return
-	// 	case ev := <-ch:
-	// 		if ev.Value == nil { continue }
-	// 		if err := proc.Handle(ctx, ev); err != nil {
-	// 			util.Error.Println("process:", err)
-	// 		}
-	// 	}
-	// }
+	util.Info.Printf("Engine started. topics=%v", plan.TopicList)
+	for {
+		select {
+		case <-ctx.Done():
+			util.Info.Println("shutting down")
+			return
+		case ev := <-ch:
+			if ev.Value == nil {
+				continue
+			}
+			if err := proc.Handle(ctx, ev); err != nil {
+				util.Error.Println("process:", err)
+			}
+		}
+	}
 }
 
 func loadPivotSchema() []byte {
