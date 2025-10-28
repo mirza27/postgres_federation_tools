@@ -2,6 +2,7 @@ package mapping
 
 import (
 	config "db_migrate_server/internal/config"
+	"db_migrate_server/internal/util"
 	"encoding/json"
 	"fmt"
 	"io/fs"
@@ -13,6 +14,7 @@ import (
 
 func Load(cfg config.Config) (*Root, error) {
 
+	util.Info.Printf("mapping: Load start defaultPath=%s mappingPath=%s", cfg.DefaultConfigPath, cfg.MappingPath)
 	conf, err := setDefaultConfig(cfg.DefaultConfigPath)
 	if err != nil {
 		return nil, fmt.Errorf("gagal memuat default config dari %s: %w", cfg.DefaultConfigPath, err)
@@ -22,9 +24,11 @@ func Load(cfg config.Config) (*Root, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error reading json files : %w", err)
 	}
+	util.Info.Printf("mapping: found %d entity files", len(entityFiles))
 
 	var entities []Entity
 	for _, file := range entityFiles {
+		util.Debug.Printf("mapping: loading entity file=%s", file)
 		b, err := os.ReadFile(file)
 		if err != nil {
 			return nil, fmt.Errorf("baca %s: %w", file, err)
@@ -47,11 +51,13 @@ func Load(cfg config.Config) (*Root, error) {
 		Entities: entities,
 	}
 
+	util.Info.Printf("mapping: Load success entities=%d sources=%d", len(root.Entities), len(root.Sources))
 	return root, nil
 }
 
 func setDefaultConfig(path string) (*Root, error) {
 	data, err := os.ReadFile(path)
+	util.Info.Printf("mapping: setDefaultConfig path=%s", path)
 	if err != nil {
 		return nil, fmt.Errorf("default config error: %w", err)
 	}
@@ -100,11 +106,13 @@ func setDefaultConfig(path string) (*Root, error) {
 		res.Entities = []Entity{}
 	}
 
+	util.Debug.Printf("mapping: default config loaded sources=%d entities=%d", len(res.Sources), len(res.Entities))
 	return res, nil
 }
 
 func listJSONFiles(path string) ([]string, error) {
 
+	util.Info.Printf("mapping: listing json files path=%s", path)
 	var out []string
 	err := filepath.WalkDir(path, func(path string, d fs.DirEntry, err error) error {
 		if err != nil {
@@ -125,5 +133,6 @@ func listJSONFiles(path string) ([]string, error) {
 		return nil, err
 	}
 	sort.Strings(out)
+	util.Debug.Printf("mapping: listJSONFiles result=%v", out)
 	return out, nil
 }

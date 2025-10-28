@@ -5,6 +5,8 @@ import (
 	"encoding/json"
 	"strings"
 
+	"db_migrate_server/internal/util"
+
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -13,20 +15,25 @@ type Repo struct {
 }
 
 func New(ctx context.Context, dsn string) (*Repo, error) {
+	util.Info.Printf("pivot: connecting dsn=%s", dsn)
 	pool, err := pgxpool.New(ctx, dsn)
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 	return &Repo{DB: pool}, nil
 }
 
 func (r *Repo) Close() { r.DB.Close() }
 
 func (r *Repo) EnsureSchema(ctx context.Context, schemaSQL string) error {
+	util.Info.Println("pivot: ensuring schema")
 	_, err := r.DB.Exec(ctx, schemaSQL)
 	return err
 }
 
 // KeyMap: upsert & lookup generik
 func (r *Repo) LookupKey(ctx context.Context, mapName, srcKey string) (string, bool, error) {
+	util.Debug.Printf("pivot: LookupKey map=%s src=%s", mapName, srcKey)
 	var tgt string
 	err := r.DB.QueryRow(ctx,
 		`select tgt_key::text from _keymap_generic where map_name=$1 and src_key=$2`,
@@ -42,12 +49,15 @@ func (r *Repo) LookupKey(ctx context.Context, mapName, srcKey string) (string, b
 
 func (r *Repo) PutKeyIfAbsent(ctx context.Context, mapName, srcKey, genUUID string) (string, error) {
 	// idempoten
+	util.Debug.Printf("pivot: PutKeyIfAbsent map=%s src=%s", mapName, srcKey)
 	_, err := r.DB.Exec(ctx, `
 		insert into _keymap_generic(map_name, src_key, tgt_key)
 		values ($1,$2,$3::uuid)
 		on conflict (map_name, src_key) do nothing`,
 		mapName, srcKey, genUUID)
-	if err != nil { return "", err }
+	if err != nil {
+		return "", err
+	}
 
 	// baca balik
 	tgt, _, err := r.LookupKey(ctx, mapName, srcKey)
@@ -63,30 +73,37 @@ type ExecItem struct {
 }
 
 func (r *Repo) Enqueue(ctx context.Context, it ExecItem) error {
+
 	argsJSON, _ := json.Marshal(it.Args)
+	util.Debug.Printf("pivot: Enqueue entity=%s op=%s sql=%s", it.Entity, it.Op, truncateSQL(it.SQL))
+
 	_, err := r.DB.Exec(ctx, `
 		insert into _exec_queue (entity, op, sql_text, sql_args)
 		values ($1,$2,$3,$4::jsonb)`,
 		it.Entity, it.Op, it.SQL, string(argsJSON))
+
 	return err
 }
 
 type Row struct {
-	ID int64
-	SQL string
+	ID       int64
+	SQL      string
 	ArgsJSON []byte
-	Entity string
-	Op string
+	Entity   string
+	Op       string
 }
 
 func (r *Repo) FetchPending(ctx context.Context, limit int) ([]Row, error) {
+	util.Debug.Printf("pivot: FetchPending limit=%d", limit)
 	rows, err := r.DB.Query(ctx, `
 		select id, entity, op, sql_text, coalesce(sql_args,'[]'::jsonb)
 		from _exec_queue
 		where status='pending'
 		order by id asc
 		limit $1`, limit)
-	if err != nil { return nil, err }
+	if err != nil {
+		return nil, err
+	}
 	defer rows.Close()
 
 	var out []Row
@@ -95,18 +112,22 @@ func (r *Repo) FetchPending(ctx context.Context, limit int) ([]Row, error) {
 		var sql string
 		var args []byte
 		var entity, op string
-		if err := rows.Scan(&id, &entity, &op, &sql, &args); err != nil { return nil, err }
+		if err := rows.Scan(&id, &entity, &op, &sql, &args); err != nil {
+			return nil, err
+		}
 		out = append(out, Row{ID: id, Entity: entity, Op: op, SQL: sql, ArgsJSON: args})
 	}
 	return out, nil
 }
 
 func (r *Repo) MarkDone(ctx context.Context, id int64) error {
+	util.Debug.Printf("pivot: MarkDone id=%d", id)
 	_, err := r.DB.Exec(ctx, `update _exec_queue set status='done' where id=$1`, id)
 	return err
 }
 
 func (r *Repo) MarkError(ctx context.Context, id int64, msg string) error {
+	util.Warn.Printf("pivot: MarkError id=%d msg=%s", id, msg)
 	_, err := r.DB.Exec(ctx, `update _exec_queue set status='error', error=$2 where id=$1`, id, msg)
 	return err
 }
@@ -115,7 +136,15 @@ func (r *Repo) MarkError(ctx context.Context, id int64, msg string) error {
 func (r *Repo) Log(ctx context.Context, entity, op string, keyValues any, payload any, status, errMsg string) {
 	keyJSON, _ := json.Marshal(keyValues)
 	plJSON, _ := json.Marshal(payload)
+	util.Debug.Printf("pivot: Log entity=%s op=%s status=%s", entity, op, status)
 	_, _ = r.DB.Exec(ctx, `insert into _batch_log (entity, op, key_values, payload, status, error)
 	values ($1,$2,$3::jsonb,$4::jsonb,$5,$6)`,
 		entity, op, string(keyJSON), string(plJSON), status, errMsg)
+}
+
+func truncateSQL(sql string) string {
+	if len(sql) > 64 {
+		return sql[:64] + "..."
+	}
+	return sql
 }

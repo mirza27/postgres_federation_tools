@@ -19,6 +19,7 @@ type Executor struct {
 }
 
 func New(ctx context.Context, pivotRepo *pivot.Repo, targetDSN string, maxRows, intervalMs int) (*Executor, error) {
+	util.Info.Printf("executor: initializing target pool dsn=%s maxRows=%d interval=%dms", targetDSN, maxRows, intervalMs)
 	tgt, err := pgxpool.New(ctx, targetDSN)
 	if err != nil {
 		return nil, err
@@ -34,10 +35,12 @@ func (e *Executor) Close() { e.Target.Close() }
 func (e *Executor) Run(ctx context.Context) {
 	ticker := time.NewTicker(e.Interval)
 	defer ticker.Stop()
+	util.Info.Printf("executor: run loop started interval=%s", e.Interval)
 
 	for {
 		select {
 		case <-ctx.Done():
+			util.Info.Println("executor: run loop canceled")
 			return
 		case <-ticker.C:
 			e.tick(ctx)
@@ -52,9 +55,10 @@ func (e *Executor) tick(ctx context.Context) {
 		return
 	}
 	if len(items) == 0 {
+		util.Debug.Println("executor: no pending items")
 		return
 	}
-
+	util.Info.Printf("executor: processing %d pending items", len(items))
 	tx, err := e.Target.Begin(ctx)
 	if err != nil {
 		util.Error.Println("begin tx:", err)
@@ -63,6 +67,7 @@ func (e *Executor) tick(ctx context.Context) {
 	defer tx.Rollback(ctx)
 
 	for _, it := range items {
+		util.Debug.Printf("executor: handling queue id=%d entity=%s op=%s", it.ID, it.Entity, it.Op)
 		var args []interface{}
 		if err := json.Unmarshal(it.ArgsJSON, &args); err != nil {
 			util.Error.Println("args unmarshal:", err)
@@ -81,5 +86,7 @@ func (e *Executor) tick(ctx context.Context) {
 	}
 	if err := tx.Commit(ctx); err != nil {
 		util.Error.Println("commit:", err)
+	} else {
+		util.Info.Printf("executor: committed batch items=%d", len(items))
 	}
 }

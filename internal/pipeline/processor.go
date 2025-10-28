@@ -13,7 +13,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/tidwall/gjson"
 )
 
 type Processor struct {
@@ -28,8 +27,13 @@ func NewProcessor(plan *mapping.Planner, pivotRepo *pivot.Repo, jw *cache.JoinWa
 
 func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
-	op, _ := kafka.ExtractOpAndSource(&ev)
+	op := ev.Op
+	if op == "" && ev.Value != nil {
+		op = ev.Value.Op
+	}
 	entities := p.Plan.TopicToEntities[ev.Topic]
+
+	util.Debug.Printf("processor: Handle topic=%s op=%s matchedEntities=%d", ev.Topic, op, len(entities))
 
 	if len(entities) == 0 {
 		util.Debug.Printf("no entity matched topic=%s", ev.Topic)
@@ -37,26 +41,36 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 	}
 
 	for _, ent := range entities {
-		// 1) join-wait jika perlu lebih dari 1 topic
+
+		util.Debug.Printf("processor: handling entity=%s op=%s", ent.Entity, op)
+
+		// join wait if entity need more than 1 topic
 		allTopics := mapping.ExpectedTopics(ent)
+		util.Debug.Printf("processor: expected topics=%v for entity=%s", allTopics, ent.Entity)
 
 		if len(allTopics) > 1 {
 
 			joinKey := p.deriveJoinKey(ent, ev.Value)
+			util.Debug.Printf("processor: join key=%s topic=%s", joinKey, ev.Topic)
 			p.Join.Add(joinKey, ev.Topic, ev.Value)
 
 			if vals, ok := p.Join.GetSet(joinKey, allTopics); ok {
 				// compose merged payload di memori
+				util.Debug.Printf("processor: join satisfied entity=%s topics=%v", ent.Entity, allTopics)
 				merged := p.mergePayload(vals)
 				if err := p.planAndEnqueue(ctx, ent, op, merged); err != nil {
 					return err
 				}
 			} else {
+				util.Debug.Printf("processor: join incomplete entity=%s waiting other topics", ent.Entity)
 				continue // tunggu event lain
 			}
 
+			// if entity need only one topic
 		} else {
-			if err := p.planAndEnqueue(ctx, ent, op, map[string][]byte{ev.Topic: ev.Value}); err != nil {
+			util.Debug.Printf("processor: single topic path entity=%s topic=%s", ent.Entity, ev.Topic)
+
+			if err := p.planAndEnqueue(ctx, ent, op, map[string]*kafka.DebeziumValue{ev.Topic: ev.Value}); err != nil {
 				return err
 			}
 		}
@@ -65,50 +79,58 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 	return nil
 }
 
-func (p *Processor) deriveJoinKey(ent mapping.Entity, value []byte) string {
+func (p *Processor) deriveJoinKey(ent mapping.Entity, value *kafka.DebeziumValue) string {
 
 	// Ambil key.source[0] misalnya "u.id" → field "id" di after
-	// Disederhanakan: baca from after.id (Debezium)
+	util.Debug.Printf("processor: deriveJoinKey entity=%s", ent.Entity)
 
-	v := gjson.ParseBytes(value)
-	after := v.Get("after")
-	if !after.Exists() {
-		after = v.Get("payload.after")
+	if value == nil || len(ent.Key.Source) == 0 {
+		util.Debug.Printf("processor: deriveJoinKey missing value or key source entity=%s", ent.Entity)
+		return ""
 	}
 
-	key := ""
-	if len(ent.Key.Source) > 0 {
-		// ambil path terakhir (kolom)
-		src := ent.Key.Source[0] // "u.id"
-		parts := strings.Split(src, ".")
-		col := parts[len(parts)-1]
-		key = after.Get(col).String()
+	src := ent.Key.Source[0] // "u.id"
+	parts := strings.Split(src, ".")
+	col := parts[len(parts)-1]
+
+	key := stringFromRow(value.Payload.After, col)
+	if key == "" {
+		key = stringFromRow(value.Payload.Before, col)
 	}
 
+	util.Debug.Printf("processor: derived join key=%s entity=%s", key, ent.Entity)
 	return key
-
 }
 
 // mergePayload: gabungkan payload dari beberapa topic (sederhana: map[topic]rawJSON)
-func (p *Processor) mergePayload(topicBytes map[string][]byte) map[string][]byte { return topicBytes }
+func (p *Processor) mergePayload(topicBytes map[string]*kafka.DebeziumValue) map[string]*kafka.DebeziumValue {
+	return topicBytes
+}
 
-func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op string, payload map[string][]byte) error {
-	// 2) Resolve key: natural/shared/surrogate (sederhana)
+func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op string, payload map[string]*kafka.DebeziumValue) error {
+
+	util.Debug.Printf("processor: planAndEnqueue entity=%s op=%s payloadTopics=%d", ent.Entity, op, len(payload))
+
+	// check foreign type
 	keyVal, err := p.resolveKey(ctx, ent, payload)
 	if err != nil {
 		return err
 	}
+	util.Debug.Printf("processor: resolved key=%s entity=%s", keyVal, ent.Entity)
 
 	// 3) Bangun kolom target
 	cols, vals, sets, where, conflictCols, err := p.buildColumns(ent, keyVal, payload)
 	if err != nil {
 		return err
 	}
+	util.Debug.Printf("processor: built columns entity=%s cols=%v conflict=%v", ent.Entity, cols, conflictCols)
 
 	// 4) Tentukan writeMode & buat SQL
 	var stmt sqlbuilder.Stmt
-	switch opRoute(op, ent) {
+
+	switch opRoute(op, ent) { // check event op type
 	case "insert", "upsert":
+
 		if ent.Routing.OnCreate.WriteMode == "upsert" || ent.Routing.OnUpdate.WriteMode == "upsert" || ent.Routing.OnSnapshot.WriteMode == "upsert" {
 			updates := make([]string, 0, len(cols))
 			for i, c := range cols {
@@ -121,8 +143,12 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 		}
 	case "update":
 		stmt = sqlbuilder.Update(ent.TargetTable, sets, where, vals)
+
 	case "delete":
+		util.Debug.Printf("processor: delete route entity=%s where=%v", ent.Entity, where)
+
 		stmt = sqlbuilder.Delete(ent.TargetTable, where, vals)
+
 	default:
 		return fmt.Errorf("unsupported route")
 	}
@@ -148,11 +174,20 @@ func opRoute(op string, ent mapping.Entity) string {
 	}
 }
 
-func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload map[string][]byte) (string, error) {
+// mendefinisikan mapping foreign berdasarkan 'strategy'
+func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload map[string]*kafka.DebeziumValue) (string, error) {
+	util.Debug.Printf("processor: resolveKey entity=%s strategy=%s", ent.Entity, ent.Key.Strategy)
+
 	switch ent.Key.Strategy {
+
 	case "natural":
-		// ambil dari after kolom pertama (sederhana)
-		return p.deriveJoinKey(ent, anyPayload(payload)), nil
+
+		evtPayload := anyPayload(payload)
+
+		key := p.deriveJoinKey(ent, evtPayload)
+
+		return key, nil
+
 	case "shared_key", "surrogate":
 		if ent.Key.Resolver == nil || ent.Key.Resolver.Table == "" {
 			return "", fmt.Errorf("missing resolver for %s", ent.Entity)
@@ -172,30 +207,59 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 	}
 }
 
-func anyPayload(m map[string][]byte) []byte {
+func anyPayload(m map[string]*kafka.DebeziumValue) *kafka.DebeziumValue {
 	for _, v := range m {
+		util.Debug.Printf("processor: anyPayload returning payload topic")
+
 		return v
 	}
+	util.Debug.Printf("processor: anyPayload no payload available")
 	return nil
 }
 
-func (p *Processor) buildColumns(ent mapping.Entity, key string, payload map[string][]byte) (
+func stringFromRow(row map[string]any, key string) string {
+	if row == nil {
+		return ""
+	}
+	if val, ok := row[key]; ok && val != nil {
+		switch v := val.(type) {
+		case string:
+			return v
+		case fmt.Stringer:
+			return v.String()
+		default:
+			return fmt.Sprint(v)
+		}
+	}
+	return ""
+}
+
+func (p *Processor) buildColumns(ent mapping.Entity, key string, payload map[string]*kafka.DebeziumValue) (
 	cols []string, vals []interface{}, sets []string, where []string, conflict []string, err error) {
 
 	// Disederhanakan: hanya handle "$key" dan "from: <col>" dari after.* ; "expr: now()" diisi di SQL (skipped) atau di Go (time.Now())
 	// Kamu bisa perluasan: cast, resolver lookup, flatten/aggregate (untuk contoh ringkas ini belum penuh).
+
+	fmt.Printf("build column ent %v\n", ent)
+	fmt.Printf("build column ent columns %v\n", ent.Columns)
+	fmt.Printf("build column payload %v\n", payload)
+
 	for colName, spec := range ent.Columns {
 		cols = append(cols, colName)
 		switch {
 		case spec.From == "$key":
 			vals = append(vals, key)
+
 		case spec.Expr == "now()":
 			vals = append(vals, time.Now().UTC())
+
 		case spec.From != "":
 			// cari dari payload topic mana pun: ambil field "after.<col>"
 			vals = append(vals, firstAfterField(payload, spec.From))
+
 		default:
 			vals = append(vals, spec.Default)
+
 		}
 	}
 
@@ -224,20 +288,23 @@ func (p *Processor) buildColumns(ent mapping.Entity, key string, payload map[str
 	return
 }
 
-func firstAfterField(payload map[string][]byte, path string) any {
+func firstAfterField(payload map[string]*kafka.DebeziumValue, path string) any {
 	// path bisa "u.email" / "o.id" → ambil segmen terakhir
+	util.Debug.Printf("processor: firstAfterField path=%s", path)
 	parts := strings.Split(path, ".")
 	col := parts[len(parts)-1]
-	for _, raw := range payload {
-		v := gjson.ParseBytes(raw)
-		a := v.Get("after")
-		if !a.Exists() {
-			a = v.Get("payload.after")
+	for _, evt := range payload {
+		if evt == nil {
+			continue
 		}
-		if a.Exists() {
-			x := a.Get(col)
-			if x.Exists() {
-				return x.Value()
+		if evt.Payload.After != nil {
+			if val, ok := evt.Payload.After[col]; ok {
+				return val
+			}
+		}
+		if evt.Payload.Before != nil {
+			if val, ok := evt.Payload.Before[col]; ok {
+				return val
 			}
 		}
 	}

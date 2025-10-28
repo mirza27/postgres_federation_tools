@@ -1,18 +1,18 @@
 package mapping
 
 type Root struct {
-	Version string   `json:"version"`
-	Sources []Source `json:"sources"`
-	Target  Target   `json:"target"`
-	Topics  *Topics  `json:"topics,omitempty"`
-	Engine  Engine   `json:"engine"`
+	Version  string   `json:"version"`
+	Sources  []Source `json:"sources"`
+	Target   Target   `json:"target"`
+	Topics   *Topics  `json:"topics,omitempty"`
+	Engine   Engine   `json:"engine"`
 	Entities []Entity `json:"entities"`
 }
 
 type Source struct {
-	Name           string `json:"name"`
-	Type           string `json:"type"`
-	DefaultSchema  string `json:"default_schema"`
+	Name          string `json:"name"`
+	Type          string `json:"type"`
+	DefaultSchema string `json:"default_schema"`
 }
 
 type Target struct {
@@ -27,10 +27,10 @@ type Topics struct {
 }
 
 type Engine struct {
-	Language string `json:"language"`
+	Language   string `json:"language"`
 	SQLDialect string `json:"sqlDialect"`
-	Batch struct {
-		MaxRows int `json:"maxRows"`
+	Batch      struct {
+		MaxRows       int `json:"maxRows"`
 		MaxIntervalMs int `json:"maxIntervalMs"`
 	} `json:"batch"`
 	Logging struct {
@@ -48,18 +48,18 @@ type Engine struct {
 }
 
 type Entity struct {
-	Entity      string       `json:"entity"`
-	Kind        string       `json:"kind"`
+	Entity      string         `json:"entity"`
+	Kind        string         `json:"kind"`
 	Sources     []EntitySource `json:"sources"`
-	TargetTable string       `json:"target_table"`
+	TargetTable string         `json:"target_table"`
 
-	Key         Key          `json:"key"`
-	Columns     map[string]Column `json:"columns"`
+	Key     Key               `json:"key"`
+	Columns map[string]Column `json:"columns"`
 
-	Flatten     *Flatten     `json:"flatten,omitempty"`
-	Aggregates  *Aggregates  `json:"aggregates,omitempty"`
+	Flatten    *Flatten    `json:"flatten,omitempty"`
+	Aggregates *Aggregates `json:"aggregates,omitempty"`
 
-	Routing     Routing      `json:"routing"`
+	Routing Routing `json:"routing"`
 }
 
 type EntitySource struct {
@@ -75,18 +75,18 @@ type Join struct {
 }
 
 type Key struct {
-	Strategy string `json:"strategy"` // natural | shared_key | surrogate
-	Source   []string `json:"source,omitempty"`
+	Strategy string    `json:"strategy"` // natural | shared_key | surrogate
+	Source   []string  `json:"source,omitempty"`
 	Resolver *Resolver `json:"resolver,omitempty"`
 }
 
 type Resolver struct {
-	Type          string `json:"type"` // mapping_table | mapping_table_lookup
-	Table         string `json:"table"`
-	SourceKeyCol  string `json:"source_key_col"`
-	TargetKeyCol  string `json:"target_key_col"`
-	ValueFrom     string `json:"value_from,omitempty"`
-	Gen           *Gen   `json:"gen,omitempty"`
+	Type         string `json:"type"` // mapping_table | mapping_table_lookup
+	Table        string `json:"table"`
+	SourceKeyCol string `json:"source_key_col"`
+	TargetKeyCol string `json:"target_key_col"`
+	ValueFrom    string `json:"value_from,omitempty"`
+	Gen          *Gen   `json:"gen,omitempty"`
 }
 
 type Gen struct {
@@ -94,11 +94,11 @@ type Gen struct {
 }
 
 type Column struct {
-	From    string      `json:"from,omitempty"`     // "u.email" / "$key"
-	Expr    string      `json:"expr,omitempty"`     // "concat(...)" / "now()"
-	Cast    string      `json:"cast,omitempty"`
-	Default interface{} `json:"default,omitempty"`
-	Resolver *Resolver  `json:"resolver,omitempty"` // lookup FK via keymap lain
+	From     string      `json:"from,omitempty"` // "u.email" / "$key"
+	Expr     string      `json:"expr,omitempty"` // "concat(...)" / "now()"
+	Cast     string      `json:"cast,omitempty"`
+	Default  interface{} `json:"default,omitempty"`
+	Resolver *Resolver   `json:"resolver,omitempty"` // lookup FK via keymap lain
 }
 
 type Flatten struct {
@@ -108,8 +108,8 @@ type Flatten struct {
 }
 
 type Aggregates struct {
-	GroupBy []string               `json:"group_by"`
-	Metrics map[string]Column      `json:"metrics"`
+	GroupBy []string          `json:"group_by"`
+	Metrics map[string]Column `json:"metrics"`
 }
 
 type Routing struct {
