@@ -54,11 +54,11 @@ func main() {
 	defer pivotRepo.Close()
 	util.Info.Println("parser: pivot repository connected")
 
-	util.Info.Println("parser: ensuring pivot schema")
-	if err := pivotRepo.EnsureSchema(ctx, pivot.DefaultSchemaSQL()); err != nil {
-		panic(err)
-	}
-	util.Info.Println("parser: pivot schema ensured")
+	// util.Info.Println("parser: ensuring pivot schema")
+	// if err := pivotRepo.EnsureSchema(ctx, pivot.DefaultSchemaSQL()); err != nil {
+	// 	panic(err)
+	// }
+	// util.Info.Println("parser: pivot schema ensured")
 
 	util.Info.Printf("parser: initializing join wait ttl=%ds", cfg.JoinWaitTTL)
 	jw := cache.NewJoinWait(cfg.JoinWaitTTL)

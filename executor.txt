@@ -1,0 +1,5 @@
+📦 Config Loaded:
+Kafka brokers: localhost:29092
+Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+Mapping Path: ./internal/config/json/ojol
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-nbnb8d

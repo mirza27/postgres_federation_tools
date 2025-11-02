@@ -43,3 +43,12 @@ func Delete(table string, where []string, args []interface{}) Stmt {
 		strings.Join(where, " and "))
 	return Stmt{SQL: sql, Args: args}
 }
+
+func (s Stmt) WithReturning(cols ...string) Stmt {
+	if len(cols) == 0 {
+		return s
+	}
+	cp := s
+	cp.SQL = fmt.Sprintf(`%s returning %s`, cp.SQL, strings.Join(cols, ","))
+	return cp
+}

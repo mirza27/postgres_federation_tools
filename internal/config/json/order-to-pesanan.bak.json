@@ -6,14 +6,8 @@
   ],
   "target_table": "pesanan",
   "key": {
-    "strategy": "surrogate",
-    "source": ["o.order_id"],
-    "resolver": {
-      "type": "mapping_table",
-      "table": "_keymap_order",
-      "source_key_col": "src_order_id",
-      "target_key_col": "tgt_pesanan_id"
-    }
+    "strategy": "natural",
+    "source": ["d.order_id"]
   },
   "columns": {
     "id": { "from": "$key" },

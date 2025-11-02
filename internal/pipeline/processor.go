@@ -11,8 +11,6 @@ import (
 	"fmt"
 	"strings"
 	"time"
-
-	"github.com/google/uuid"
 )
 
 type Processor struct {
@@ -23,6 +21,12 @@ type Processor struct {
 
 func NewProcessor(plan *mapping.Planner, pivotRepo *pivot.Repo, jw *cache.JoinWait) *Processor {
 	return &Processor{Plan: plan, Pivot: pivotRepo, Join: jw}
+}
+
+type KeyResolution struct {
+	Value      string
+	NeedKeymap bool // default false
+	Request    *pivot.KeymapRequest
 }
 
 func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
@@ -112,14 +116,16 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 	util.Debug.Printf("processor: planAndEnqueue entity=%s op=%s payloadTopics=%d", ent.Entity, op, len(payload))
 
 	// check foreign type
-	keyVal, err := p.resolveKey(ctx, ent, payload)
+	keyRes, err := p.resolveKey(ctx, ent, payload)
 	if err != nil {
 		return err
 	}
-	util.Debug.Printf("processor: resolved key=%s entity=%s", keyVal, ent.Entity)
+	util.Debug.Printf("processor: resolved key value=%s needKeymap=%t entity=%s", keyRes.Value, keyRes.NeedKeymap, ent.Entity)
+
+	fmt.Printf("processor: resolved key value=%s needKeymap=%t entity=%s", keyRes.Value, keyRes.NeedKeymap, ent.Entity)
 
 	// 3) Bangun kolom target
-	cols, vals, sets, where, conflictCols, err := p.buildColumns(ent, keyVal, payload)
+	cols, vals, sets, where, conflictCols, err := p.buildColumns(ent, keyRes.Value, keyRes.Value != "", payload)
 	if err != nil {
 		return err
 	}
@@ -154,8 +160,26 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 	}
 
 	// 5) Enqueue ke pivot._exec_queue
+	var returning []string
+	if keyRes.NeedKeymap && keyRes.Request != nil && keyRes.Request.TgtColumn != "" {
+		stmt = stmt.WithReturning(keyRes.Request.TgtColumn)
+		returning = []string{keyRes.Request.TgtColumn}
+	}
+
+	var keymapReq *pivot.KeymapRequest
+	if keyRes.NeedKeymap {
+		keymapReq = keyRes.Request
+	}
+
 	return p.Pivot.Enqueue(ctx, pivot.ExecItem{
-		Entity: ent.Entity, Op: op, SQL: stmt.SQL, Args: stmt.Args,
+		Entity: ent.Entity,
+		Op:     op,
+		SQL:    stmt.SQL,
+		Args:   stmt.Args,
+
+		NeedKeymap: keyRes.NeedKeymap,
+		Keymap:     keymapReq,
+		Returning:  returning,
 	})
 }
 
@@ -175,7 +199,7 @@ func opRoute(op string, ent mapping.Entity) string {
 }
 
 // mendefinisikan mapping foreign berdasarkan 'strategy'
-func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload map[string]*kafka.DebeziumValue) (string, error) {
+func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload map[string]*kafka.DebeziumValue) (KeyResolution, error) {
 	util.Debug.Printf("processor: resolveKey entity=%s strategy=%s", ent.Entity, ent.Key.Strategy)
 
 	switch ent.Key.Strategy {
@@ -186,24 +210,35 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 
 		key := p.deriveJoinKey(ent, evtPayload)
 
-		return key, nil
+		return KeyResolution{Value: key}, nil
 
 	case "shared_key", "surrogate":
 		if ent.Key.Resolver == nil || ent.Key.Resolver.Table == "" {
-			return "", fmt.Errorf("missing resolver for %s", ent.Entity)
+			return KeyResolution{}, fmt.Errorf("missing resolver for %s", ent.Entity)
 		}
 		mapName := ent.Key.Resolver.Table // atau pakai nama entitas (bebas)
 		srcKey := p.deriveJoinKey(ent, anyPayload(payload))
-		// lookup
-		if tgt, ok, _ := p.Pivot.LookupKey(ctx, mapName, srcKey); ok {
-			return tgt, nil
+		if srcKey == "" {
+			return KeyResolution{}, fmt.Errorf("missing source key for %s", ent.Entity)
 		}
-		// generate (uuid v7 di sisi Go; di contoh sederhana ini pakai pg gen_random_uuid() boleh juga)
-		// gen := GenUUIDv7()
-		gen := uuid.New().String()
-		return p.Pivot.PutKeyIfAbsent(ctx, mapName, srcKey, gen)
+		// lookup
+		if tgt, ok, err := p.Pivot.LookupKey(ctx, mapName, srcKey); err != nil {
+			return KeyResolution{}, err
+		} else if ok {
+			return KeyResolution{Value: tgt}, nil
+		}
+
+		req := &pivot.KeymapRequest{
+			MapName:   mapName,
+			SrcKey:    srcKey,
+			SrcColumn: sourceKeyColumn(ent),
+			TgtColumn: targetKeyColumn(ent),
+			SrcTable:  firstSourceTable(ent),
+			TgtTable:  ent.TargetTable,
+		}
+		return KeyResolution{NeedKeymap: true, Request: req}, nil
 	default:
-		return "", fmt.Errorf("unknown key strategy")
+		return KeyResolution{}, fmt.Errorf("unknown key strategy")
 	}
 }
 
@@ -234,30 +269,60 @@ func stringFromRow(row map[string]any, key string) string {
 	return ""
 }
 
-func (p *Processor) buildColumns(ent mapping.Entity, key string, payload map[string]*kafka.DebeziumValue) (
+func sourceKeyColumn(ent mapping.Entity) string {
+	if ent.Key.Resolver != nil && ent.Key.Resolver.SourceKeyCol != "" {
+		return ent.Key.Resolver.SourceKeyCol
+	}
+	if len(ent.Key.Source) > 0 {
+		parts := strings.Split(ent.Key.Source[0], ".")
+		return parts[len(parts)-1]
+	}
+	return ""
+}
+
+func targetKeyColumn(ent mapping.Entity) string {
+	for colName, spec := range ent.Columns {
+		if spec.From == "$key" {
+			return colName
+		}
+	}
+	return ""
+}
+
+func firstSourceTable(ent mapping.Entity) string {
+	if len(ent.Sources) == 0 {
+		return ""
+	}
+	return ent.Sources[0].From
+}
+
+func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, payload map[string]*kafka.DebeziumValue) (
 	cols []string, vals []interface{}, sets []string, where []string, conflict []string, err error) {
 
 	// Disederhanakan: hanya handle "$key" dan "from: <col>" dari after.* ; "expr: now()" diisi di SQL (skipped) atau di Go (time.Now())
 	// Kamu bisa perluasan: cast, resolver lookup, flatten/aggregate (untuk contoh ringkas ini belum penuh).
 
-	fmt.Printf("build column ent %v\n", ent)
-	fmt.Printf("build column ent columns %v\n", ent.Columns)
-	fmt.Printf("build column payload %v\n", payload)
-
 	for colName, spec := range ent.Columns {
-		cols = append(cols, colName)
 		switch {
 		case spec.From == "$key":
+			if !hasKey {
+				util.Debug.Printf("processor: skipping column=%s entity=%s because key unavailable", colName, ent.Entity)
+				continue
+			}
+			cols = append(cols, colName)
 			vals = append(vals, key)
 
 		case spec.Expr == "now()":
+			cols = append(cols, colName)
 			vals = append(vals, time.Now().UTC())
 
 		case spec.From != "":
+			cols = append(cols, colName)
 			// cari dari payload topic mana pun: ambil field "after.<col>"
 			vals = append(vals, firstAfterField(payload, spec.From))
 
 		default:
+			cols = append(cols, colName)
 			vals = append(vals, spec.Default)
 
 		}
