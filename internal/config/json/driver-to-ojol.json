@@ -2,10 +2,8 @@
   "entity": "driver-to-ojol",
   "kind": "table",
   "sources": [
-    { "alias": "d", "from": "src.drivers", "topic": "db_events_drivers" },
-    { "alias": "u", "from": "src.users", "topic": "db_events_users", 
-      "join": { "on":"d.user_id = u.id", "type": "left" }
-  }
+    { "alias": "d", "from": "drivers" },
+    { "alias": "u", "from": "users", "join": { "on": "d.user_id = u.id", "type": "left" } }
   ],
   "target_table": "ojol",
   "key": {
@@ -14,9 +12,7 @@
     "resolver" : {
       "type": "mapping_table",
       "table": "_keymap_user",
-      "relation_name": "driver-to-ojol",
-      "source_key_col": "src_driver_id",
-      "target_key_col": "tgt_ojol_id"
+      "relation_name": "driver-to-ojol"
     }
   },
   "columns": {
@@ -31,9 +27,8 @@
     "updated_at": { "expr": "now()" }
   },
   "routing": {
-    "on_create": { "writeMode": "upsert", "conflictKey": ["id"] },
-    "on_update": { "writeMode": "upsert", "conflictKey": ["id"] },
-    "on_delete": { "writeMode": "delete", "matchKey": ["id"] },
-    "on_snapshot": { "writeMode": "upsert", "conflictKey": ["id"] }
+    "on_snapshot": { "mode": "insert" },
+    "on_create": { "mode": "insert" },
+    "on_update": { "mode": "update", "matchKey": ["id"] }
   }
 }

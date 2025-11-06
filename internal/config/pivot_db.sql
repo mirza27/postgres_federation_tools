@@ -51,6 +51,8 @@ create table if not exists _batch_log (
   batch_id text
 );
 
+
+-- check and add foreign key constraint if it doesn't exist
 do $$
 begin
   if not exists (

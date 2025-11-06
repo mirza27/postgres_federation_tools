@@ -84,6 +84,7 @@ func (r *Repo) LookupKey(ctx context.Context, mapName, srcKey string) (string, b
 func (r *Repo) EnsureKeymapRequest(ctx context.Context, queueID uuid.UUID, km KeymapRequest) (int64, error) {
 	util.Debug.Printf("pivot: EnsureKeymapRequest map=%s src=%s queue=%s", km.MapName, km.SrcKey, queueID)
 
+	// melakukan upsert pada tabel _keymap_generic sehingga setiap baris _exec_queue yang dibaca checker apapun statusnya
 	var keymapID int64
 	err := r.DB.QueryRow(ctx, `
         insert into _keymap_generic (

@@ -1,18 +1,121 @@
-📦 Config Loaded:
-Kafka brokers: localhost:29092
-Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
-Mapping Path: ./internal/config/json/ojol
-🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-0mfhub
-==== Planner ====
-Total Entities : 1
--- Entities --
-1. Entity: order-to-pesanan (table)
-   TargetTable: pesanan
-   Sources:
-     - alias=o from=src.order topic=db_events_orders
--- TopicToEntities --
-Topic: db_events_orders
-   - order-to-pesanan
--- TopicToEntities --
-[db_events_orders]
-processor: resolved key value= needKeymap=true entity=order-to-pesananprocessor: resolved key value= needKeymap=true entity=order-to-pesananprocessor: resolved key value= needKeymap=true entity=order-to-pesananprocessor: resolved key value= needKeymap=true entity=order-to-pesananprocessor: resolved key value= needKeymap=true entity=order-to-pesanan
+2025/11/06 15:24:15 [INFO] parser: signal context registered
+2025/11/06 15:24:15 [INFO] parser: loading configuration
+2025/11/06 15:24:15 [INFO] parser: configuration loaded
+2025/11/06 15:24:15 [INFO] parser: loading mapping root
+2025/11/06 15:24:15 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/ojol
+2025/11/06 15:24:15 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
+2025/11/06 15:24:15 [DEBUG] mapping: default config loaded sources=1 entities=0
+2025/11/06 15:24:15 [INFO] mapping: listing json files path=./internal/config/json/ojol
+2025/11/06 15:24:15 [DEBUG] mapping: listJSONFiles result=[internal/config/json/ojol/order-to-pesanan.json]
+2025/11/06 15:24:15 [INFO] mapping: found 1 entity files
+2025/11/06 15:24:15 [DEBUG] mapping: loading entity file=internal/config/json/ojol/order-to-pesanan.json
+2025/11/06 15:24:15 [INFO] mapping: Load success entities=1 sources=1
+2025/11/06 15:24:15 [INFO] parser: mapping root loaded with 1 entities
+2025/11/06 15:24:15 [1] Entity: order-to-pesanan → target: pesanan
+2025/11/06 15:24:15 [INFO] parser: building planner
+2025/11/06 15:24:15 [INFO] parser: planner covers 1 topics
+2025/11/06 15:24:15 [INFO] parser: creating kafka consumer group=db-migrate-engine-5xks8a
+2025/11/06 15:24:15 [INFO] kafka: NewConsumer brokers=[localhost:29092] groupID=db-migrate-engine-5xks8a topics=[db_events_orders]
+2025/11/06 15:24:15 [INFO] parser: kafka consumer ready
+2025/11/06 15:24:15 [INFO] parser: connecting pivot repository
+2025/11/06 15:24:15 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+2025/11/06 15:24:15 [INFO] parser: pivot repository connected
+2025/11/06 15:24:15 [INFO] parser: initializing join wait ttl=120s
+2025/11/06 15:24:15 [INFO] parser: processor ready
+2025/11/06 15:24:15 [INFO] parser: starting synchronous kafka loop
+2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
+2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
+2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
+2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
+2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
+2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
+2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000001 entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000001
+2025/11/06 15:24:18 [DEBUG] processor: resolved key value=11 needKeymap=false entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
+2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[id_ojol nominal catatan titik_tujuan id status titik_jemput created_at updated_at] conflict=[id]
+2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=af20ef0b-3887-4964-964c-e53a80b88c2e entity=order-to-pesanan op=r sql=insert into pesanan (id_ojol,nominal,catatan,titik_tujuan,id,sta... needKeymap=false
+2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
+2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
+2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
+2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
+2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
+2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
+2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000002 entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000002
+2025/11/06 15:24:18 [DEBUG] processor: resolved key value=12 needKeymap=false entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
+2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[id status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan] conflict=[id]
+2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=c3867daf-9f3c-4dd7-9798-c59fa2150cbb entity=order-to-pesanan op=r sql=insert into pesanan (id,status,titik_jemput,created_at,updated_a... needKeymap=false
+2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
+2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
+2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
+2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
+2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
+2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
+2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000003 entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000003
+2025/11/06 15:24:18 [DEBUG] processor: resolved key value=13 needKeymap=false entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
+2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[id status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan] conflict=[id]
+2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=7a28579a-d1c7-4e73-94be-97712cb5928e entity=order-to-pesanan op=r sql=insert into pesanan (id,status,titik_jemput,created_at,updated_a... needKeymap=false
+2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
+2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
+2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
+2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
+2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
+2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
+2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000004 entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000004
+2025/11/06 15:24:18 [DEBUG] processor: resolved key value=14 needKeymap=false entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
+2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan id] conflict=[id]
+2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=d39f0d23-555d-4123-a062-734bcb9a8221 entity=order-to-pesanan op=r sql=insert into pesanan (status,titik_jemput,created_at,updated_at,i... needKeymap=false
+2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
+2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
+2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
+2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
+2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
+2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
+2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000005 entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000005
+2025/11/06 15:24:18 [DEBUG] processor: resolved key value=15 needKeymap=false entity=order-to-pesanan
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
+2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
+2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan id] conflict=[id]
+2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=3e514b72-5f0c-4044-8e60-478a25aceec4 entity=order-to-pesanan op=r sql=insert into pesanan (status,titik_jemput,created_at,updated_at,i... needKeymap=false
+^C2025/11/06 15:24:29 [INFO] parser: shutdown complete

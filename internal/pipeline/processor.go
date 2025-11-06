@@ -122,41 +122,30 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 	}
 	util.Debug.Printf("processor: resolved key value=%s needKeymap=%t entity=%s", keyRes.Value, keyRes.NeedKeymap, ent.Entity)
 
-	fmt.Printf("processor: resolved key value=%s needKeymap=%t entity=%s", keyRes.Value, keyRes.NeedKeymap, ent.Entity)
+	// lihat mode routing
+	route := opRoute(op, ent)
+	util.Debug.Printf("processor: route=%s entity=%s", route, ent.Entity)
 
-	// 3) Bangun kolom target
-	cols, vals, sets, where, conflictCols, err := p.buildColumns(ent, keyRes.Value, keyRes.Value != "", payload)
+	// 3) Bangun kolom target menyesuaikan mode penulisan
+	cols, vals, sets, where, err := p.buildColumns(ent, keyRes.Value, keyRes.Value != "", payload, route)
 	if err != nil {
 		return err
 	}
-	util.Debug.Printf("processor: built columns entity=%s cols=%v conflict=%v", ent.Entity, cols, conflictCols)
+	util.Debug.Printf("processor: built columns entity=%s cols=%v", ent.Entity, cols)
 
 	// 4) Tentukan writeMode & buat SQL
 	var stmt sqlbuilder.Stmt
 
-	switch opRoute(op, ent) { // check event op type
-	case "insert", "upsert":
-
-		if ent.Routing.OnCreate.WriteMode == "upsert" || ent.Routing.OnUpdate.WriteMode == "upsert" || ent.Routing.OnSnapshot.WriteMode == "upsert" {
-			updates := make([]string, 0, len(cols))
-			for i, c := range cols {
-				updates = append(updates, fmt.Sprintf(`%s=EXCLUDED.%s`, c, c))
-				_ = i
-			}
-			stmt = sqlbuilder.Upsert(ent.TargetTable, cols, vals, conflictCols, updates)
-		} else {
-			stmt = sqlbuilder.Insert(ent.TargetTable, cols, vals)
-		}
+	switch route {
+	case "insert":
+		stmt = sqlbuilder.Insert(ent.TargetTable, cols, vals)
 	case "update":
+		if len(where) == 0 {
+			return fmt.Errorf("missing match key for update route on entity %s", ent.Entity)
+		}
 		stmt = sqlbuilder.Update(ent.TargetTable, sets, where, vals)
-
-	case "delete":
-		util.Debug.Printf("processor: delete route entity=%s where=%v", ent.Entity, where)
-
-		stmt = sqlbuilder.Delete(ent.TargetTable, where, vals)
-
 	default:
-		return fmt.Errorf("unsupported route")
+		return fmt.Errorf("unsupported route mode %s for entity %s", route, ent.Entity)
 	}
 
 	// 5) Enqueue ke pivot._exec_queue
@@ -186,15 +175,25 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 func opRoute(op string, ent mapping.Entity) string {
 	switch op {
 	case "c":
-		return ent.Routing.OnCreate.WriteMode
+		return normalizeRoute(ent.Routing.OnCreate.Mode, "insert")
 	case "u":
-		return ent.Routing.OnUpdate.WriteMode
-	case "d":
-		return ent.Routing.OnDelete.WriteMode
+		return normalizeRoute(ent.Routing.OnUpdate.Mode, "update")
 	case "r":
-		return ent.Routing.OnSnapshot.WriteMode
+		return normalizeRoute(ent.Routing.OnSnapshot.Mode, "insert")
 	default:
-		return "upsert"
+		// fallback ke mode insert agar event tak dikenal tetap ditulis
+		return normalizeRoute(ent.Routing.OnCreate.Mode, "insert")
+	}
+}
+
+func normalizeRoute(mode, fallback string) string {
+	switch mode {
+	case "insert", "update":
+		return mode
+	case "":
+		return fallback
+	default:
+		return mode
 	}
 }
 
@@ -221,6 +220,7 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 		if srcKey == "" {
 			return KeyResolution{}, fmt.Errorf("missing source key for %s", ent.Entity)
 		}
+
 		// lookup
 		if tgt, ok, err := p.Pivot.LookupKey(ctx, mapName, srcKey); err != nil {
 			return KeyResolution{}, err
@@ -296,8 +296,8 @@ func firstSourceTable(ent mapping.Entity) string {
 	return ent.Sources[0].From
 }
 
-func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, payload map[string]*kafka.DebeziumValue) (
-	cols []string, vals []interface{}, sets []string, where []string, conflict []string, err error) {
+func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, payload map[string]*kafka.DebeziumValue, route string) (
+	cols []string, vals []interface{}, sets []string, where []string, err error) {
 
 	// Disederhanakan: hanya handle "$key" dan "from: <col>" dari after.* ; "expr: now()" diisi di SQL (skipped) atau di Go (time.Now())
 	// Kamu bisa perluasan: cast, resolver lookup, flatten/aggregate (untuk contoh ringkas ini belum penuh).
@@ -333,26 +333,33 @@ func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, pa
 		sets = append(sets, fmt.Sprintf("%s=$%d", c, i+1))
 	}
 
-	if len(ent.Routing.OnCreate.ConflictKey) > 0 {
-		conflict = ent.Routing.OnCreate.ConflictKey
-	} else if len(ent.Routing.OnUpdate.ConflictKey) > 0 {
-		conflict = ent.Routing.OnUpdate.ConflictKey
-	} else if len(ent.Routing.OnSnapshot.ConflictKey) > 0 {
-		conflict = ent.Routing.OnSnapshot.ConflictKey
-	}
-
-	// where sederhana: if MatchKey ada → gunakan itu, else pakai key kolom pertama di conflict
-	mk := ent.Routing.OnDelete.MatchKey
-	if len(mk) == 0 && len(conflict) > 0 {
-		mk = conflict
-	}
-	for idx, k := range mk {
-		where = append(where, fmt.Sprintf("%s=$%d", k, idx+1))
+	if route == "update" {
+		match := ent.Routing.OnUpdate.MatchKey
+		if len(match) == 0 {
+			if tk := targetKeyColumn(ent); tk != "" {
+				match = []string{tk}
+			}
+		}
+		if len(match) == 0 {
+			return cols, vals, sets, nil, fmt.Errorf("missing match key for update entity=%s", ent.Entity)
+		}
+		indexes := map[string]int{}
+		for idx, c := range cols {
+			indexes[c] = idx + 1 // placeholder index
+		}
+		for _, k := range match {
+			if pos, ok := indexes[k]; ok {
+				where = append(where, fmt.Sprintf("%s=$%d", k, pos))
+			} else {
+				return cols, vals, sets, nil, fmt.Errorf("match key %s not present in columns for entity %s", k, ent.Entity)
+			}
+		}
 	}
 
 	return
 }
 
+// ambil nama kolom asli tanpa path
 func firstAfterField(payload map[string]*kafka.DebeziumValue, path string) any {
 	// path bisa "u.email" / "o.id" → ambil segmen terakhir
 	util.Debug.Printf("processor: firstAfterField path=%s", path)

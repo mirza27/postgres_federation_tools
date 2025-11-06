@@ -113,16 +113,12 @@ type Aggregates struct {
 }
 
 type Routing struct {
-	OnCreate   Write `json:"on_create"`
-	OnUpdate   Write `json:"on_update"`
-	OnDelete   Write `json:"on_delete"`
-	OnSnapshot Write `json:"on_snapshot"`
+	OnCreate   Route `json:"on_create"`
+	OnUpdate   Route `json:"on_update"`
+	OnSnapshot Route `json:"on_snapshot"`
 }
 
-type Write struct {
-	WriteMode   string            `json:"writeMode"` // upsert|insert|update|delete
-	ConflictKey []string          `json:"conflictKey,omitempty"`
-	MatchKey    []string          `json:"matchKey,omitempty"`
-	Where       []string          `json:"where,omitempty"`
-	Set         map[string]Column `json:"set,omitempty"`
+type Route struct {
+	Mode     string   `json:"mode"` // insert|update
+	MatchKey []string `json:"matchKey,omitempty"`
 }

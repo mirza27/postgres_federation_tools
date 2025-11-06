@@ -7,6 +7,7 @@ package mapping
 import (
 	"fmt"
 	"slices"
+	"strings"
 )
 
 // Planner memetakan topik->entities yang relevan + info join topik lain.
@@ -20,10 +21,9 @@ func NewPlanner(root *Root) *Planner {
 	mp := map[string][]Entity{}
 	for _, e := range root.Entities {
 
-		// setiap sumber punya Topic
 		for _, s := range e.Sources {
-			if s.Topic != "" {
-				mp[s.Topic] = append(mp[s.Topic], e)
+			if topic := sourceTopic(s); topic != "" {
+				mp[topic] = append(mp[topic], e)
 			}
 		}
 	}
@@ -40,8 +40,8 @@ func NewPlanner(root *Root) *Planner {
 func ExpectedTopics(e Entity) []string {
 	out := []string{}
 	for _, s := range e.Sources {
-		if s.Topic != "" && !slices.Contains(out, s.Topic) {
-			out = append(out, s.Topic)
+		if topic := sourceTopic(s); topic != "" && !slices.Contains(out, topic) {
+			out = append(out, topic)
 		}
 	}
 	return out
@@ -59,7 +59,7 @@ func (p *Planner) Print() {
 		fmt.Printf("   TargetTable: %s\n", e.TargetTable)
 		fmt.Printf("   Sources:\n")
 		for _, s := range e.Sources {
-			fmt.Printf("     - alias=%s from=%s topic=%s\n", s.Alias, s.From, s.Topic)
+			fmt.Printf("     - alias=%s from=%s topic=%s\n", s.Alias, s.From, sourceTopic(s))
 		}
 	}
 
@@ -74,5 +74,23 @@ func (p *Planner) Print() {
 
 	fmt.Println("-- TopicToEntities --")
 	fmt.Println(p.TopicList)
-	
+
+}
+
+func sourceTopic(s EntitySource) string {
+	if trimmed := strings.TrimSpace(s.Topic); trimmed != "" {
+		return trimmed
+	}
+	name := strings.TrimSpace(s.From)
+	if name == "" {
+		return ""
+	}
+	parts := strings.Split(name, ".")
+	base := parts[len(parts)-1]
+	base = strings.ToLower(strings.TrimSpace(base))
+	if base == "" {
+		return ""
+	}
+	base = strings.ReplaceAll(base, " ", "_")
+	return fmt.Sprintf("db_events_%s", base)
 }
