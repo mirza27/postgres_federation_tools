@@ -1,0 +1,46 @@
+@startuml ExecutorFlow
+title Executor Worker Flow
+
+start
+:Loop every interval;
+:Fetch ready rows from _exec_queue;
+if (Rows found?) then (yes)
+  :Begin target DB transaction;
+  repeat
+    :Select next row;
+    :Mark row status = executing\n(locked_by, locked_at);
+    :Deserialize SQL args;
+    if (Deserialization failed?) then (yes)
+      :Mark row error;\n(if keymap_id) mark keymap error;
+    else (no)
+      if (need_keymap && returning_cols not empty?) then (yes)
+        :Execute statement with QueryRow;
+        if (Execution failed?) then (yes)
+          :Mark row error;\n(if keymap_id) mark keymap error;
+        else (no)
+          :Capture returning key;
+          if (keymap_id present?) then (yes)
+            :Fulfill keymap (set tgt_key);
+          endif
+          :Mark row done;
+        endif
+      else (no)
+        :Execute statement with Exec;
+        if (Execution failed?) then (yes)
+          :Mark row error;
+        else (no)
+          :Mark row done;
+        endif
+      endif
+    endif
+  repeat while (More rows?)
+  if (Any success?) then (yes)
+    :Commit transaction;
+  else (no)
+    :Rollback transaction;
+  endif
+else (no)
+  :Sleep until next tick;
+endif
+
+@enduml

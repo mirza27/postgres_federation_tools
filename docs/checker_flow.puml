@@ -1,0 +1,31 @@
+@startuml CheckerFlow
+title Checker Worker Flow
+
+start
+:Loop every interval;
+:Fetch pending rows from _exec_queue;
+if (Rows found?) then (yes)
+  repeat
+    :Select next row;
+    if (need_keymap == false?) then (yes)
+      :Mark status = ready;
+    else (no)
+      :Deserialize keymap_payload;
+      :Ensure map_name & src_key present;
+      if (Invalid payload?) then (yes)
+        :Mark queue row error;
+      else (no)
+        :Call EnsureKeymapRequest(queue_id, payload);
+        if (DB error?) then (yes)
+          :Mark queue row error;
+        else (no)
+          :Update _exec_queue row\nset keymap_id, need_keymap=true,\nstatus=ready;
+        endif
+      endif
+    endif
+  repeat while (More rows?)
+else (no)
+  :Sleep until next tick;
+endif
+
+@enduml

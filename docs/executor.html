@@ -1,0 +1,1473 @@
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  contentStyleType="text/css"
+  data-diagram-type="ACTIVITY"
+  height="1202px"
+  preserveAspectRatio="none"
+  style="width: 1186px; height: 1202px; background: #ffffff"
+  version="1.1"
+  viewBox="0 0 1186 1202"
+  width="1186px"
+  zoomAndPan="magnify"
+>
+  <title>Executor Worker Flow</title>
+  <defs />
+  <g>
+    <g class="title" data-source-line="1">
+      <text
+        fill="#000000"
+        font-family="sans-serif"
+        font-size="14"
+        font-weight="bold"
+        lengthAdjust="spacing"
+        textLength="173.9063"
+        x="504.8048"
+        y="32.9951"
+      >
+        Executor Worker Flow
+      </text>
+    </g>
+    <ellipse
+      cx="774.0431"
+      cy="57.2969"
+      fill="#222222"
+      rx="10"
+      ry="10"
+      style="stroke: #222222; stroke-width: 1"
+    />
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="136.2676"
+      x="705.9093"
+      y="87.2969"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="116.2676"
+      x="715.9093"
+      y="108.4355"
+    >
+      Loop every interval
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="237.4297"
+      x="655.3283"
+      y="141.2656"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="217.4297"
+      x="665.3283"
+      y="162.4043"
+    >
+      Fetch ready rows from _exec_queue
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="739.0612,195.2344,809.0251,195.2344,821.0251,207.2344,809.0251,219.2344,739.0612,219.2344,727.0612,207.2344,739.0612,195.2344"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="69.9639"
+      x="739.0612"
+      y="211.0425"
+    >
+      Rows found?
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="708.0529"
+      y="204.6401"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="13.7017"
+      x="821.0251"
+      y="204.6401"
+    >
+      no
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="187.5723"
+      x="302.6553"
+      y="229.2344"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="167.5723"
+      x="312.6553"
+      y="250.373"
+    >
+      Begin target DB transaction
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="113.5332"
+      x="339.6748"
+      y="327.2031"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="93.5332"
+      x="349.6748"
+      y="348.3418"
+    >
+      Select next row
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="47.9375"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="193.1973"
+      x="299.8428"
+      y="381.1719"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="173.1973"
+      x="309.8428"
+      y="402.3105"
+    >
+      Mark row status = executing
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="134.2148"
+      x="309.8428"
+      y="416.2793"
+    >
+      (locked_by, locked_at)
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="143.7617"
+      x="324.5605"
+      y="449.1094"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="123.7617"
+      x="334.5605"
+      y="470.248"
+    >
+      Deserialize SQL args
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="335.6594,503.0781,457.2234,503.0781,469.2234,515.0781,457.2234,527.0781,335.6594,527.0781,323.6594,515.0781,335.6594,503.0781"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="121.564"
+      x="335.6594"
+      y="518.8862"
+    >
+      Deserialization failed?
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="304.6511"
+      y="512.4839"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="13.7017"
+      x="469.2234"
+      y="512.4839"
+    >
+      no
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="47.9375"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="225.7695"
+      x="11"
+      y="537.0781"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="92.877"
+      x="21"
+      y="558.2168"
+    >
+      Mark row error;
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="205.7695"
+      x="21"
+      y="572.1855"
+    >
+      (if keymap_id) mark keymap error
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="563.9553,537.0781,809.4572,537.0781,821.4572,549.0781,809.4572,561.0781,563.9553,561.0781,551.9553,549.0781,563.9553,537.0781"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="245.502"
+      x="563.9553"
+      y="552.8862"
+    >
+      need_keymap &amp;&amp; returning_cols not empty?
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="532.947"
+      y="546.4839"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="13.7017"
+      x="821.4572"
+      y="546.4839"
+    >
+      no
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="229.0039"
+      x="374.8289"
+      y="571.0781"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="209.0039"
+      x="384.8289"
+      y="592.2168"
+    >
+      Execute statement with QueryRow
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="442.2667,625.0469,536.3951,625.0469,548.3951,637.0469,536.3951,649.0469,442.2667,649.0469,430.2667,637.0469,442.2667,625.0469"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="94.1284"
+      x="442.2667"
+      y="640.855"
+    >
+      Execution failed?
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="411.2584"
+      y="634.4526"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="13.7017"
+      x="548.3951"
+      y="634.4526"
+    >
+      no
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="47.9375"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="225.7695"
+      x="259.0613"
+      y="659.0469"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="92.877"
+      x="269.0613"
+      y="680.1855"
+    >
+      Mark row error;
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="205.7695"
+      x="269.0613"
+      y="694.1543"
+    >
+      (if keymap_id) mark keymap error
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="152.7617"
+      x="530.3348"
+      y="659.0469"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="132.7617"
+      x="540.3348"
+      y="680.1855"
+    >
+      Capture returning key
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="183.7695"
+      x="514.8309"
+      y="776.418"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="163.7695"
+      x="524.8309"
+      y="797.5566"
+    >
+      Fulfill keymap (set tgt_key)
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="551.2081,728.0156,662.2232,728.0156,674.2232,740.0156,662.2232,752.0156,551.2081,752.0156,539.2081,740.0156,551.2081,728.0156"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="610.7156"
+      y="762.2261"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="111.0151"
+      x="551.2081"
+      y="743.8237"
+    >
+      keymap_id present?
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="606.7156,830.3867,618.7156,842.3867,606.7156,854.3867,594.7156,842.3867,606.7156,830.3867"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="109.2559"
+      x="552.0877"
+      y="874.3867"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="89.2559"
+      x="562.0877"
+      y="895.5254"
+    >
+      Mark row done
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="489.3309,914.3555,501.3309,926.3555,489.3309,938.3555,477.3309,926.3555,489.3309,914.3555"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="195.7051"
+      x="786.2291"
+      y="571.0781"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="175.7051"
+      x="796.2291"
+      y="592.2168"
+    >
+      Execute statement with Exec
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="837.0174,625.0469,931.1458,625.0469,943.1458,637.0469,931.1458,649.0469,837.0174,649.0469,825.0174,637.0469,837.0174,625.0469"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="94.1284"
+      x="837.0174"
+      y="640.855"
+    >
+      Execution failed?
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="806.0091"
+      y="634.4526"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="13.7017"
+      x="943.1458"
+      y="634.4526"
+    >
+      no
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="108.834"
+      x="760.6004"
+      y="659.0469"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="88.834"
+      x="770.6004"
+      y="680.1855"
+    >
+      Mark row error
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="109.2559"
+      x="898.5179"
+      y="659.0469"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="89.2559"
+      x="908.5179"
+      y="680.1855"
+    >
+      Mark row done
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="884.0816,699.0156,896.0816,711.0156,884.0816,723.0156,872.0816,711.0156,884.0816,699.0156"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <polygon
+      fill="#F1F1F1"
+      points="686.7062,944.3555,698.7062,956.3555,686.7062,968.3555,674.7062,956.3555,686.7062,944.3555"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <polygon
+      fill="#F1F1F1"
+      points="396.4414,974.3555,408.4414,986.3555,396.4414,998.3555,384.4414,986.3555,396.4414,974.3555"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <polygon
+      fill="#F1F1F1"
+      points="396.4414,283.2031,408.4414,295.2031,396.4414,307.2031,384.4414,295.2031,396.4414,283.2031"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <polygon
+      fill="#F1F1F1"
+      points="365.0286,1018.3555,427.8542,1018.3555,439.8542,1030.3555,427.8542,1042.3555,365.0286,1042.3555,353.0286,1030.3555,365.0286,1018.3555"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="62.8257"
+      x="365.0286"
+      y="1034.1636"
+    >
+      More rows?
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="359.7568,1062.3555,433.126,1062.3555,445.126,1074.3555,433.126,1086.3555,359.7568,1086.3555,347.7568,1074.3555,359.7568,1062.3555"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="73.3691"
+      x="359.7568"
+      y="1078.1636"
+    >
+      Any success?
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="19.0083"
+      x="328.7485"
+      y="1071.7612"
+    >
+      yes
+    </text>
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="11"
+      lengthAdjust="spacing"
+      textLength="13.7017"
+      x="445.126"
+      y="1071.7612"
+    >
+      no
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="138.7402"
+      x="246.7695"
+      y="1096.3555"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="118.7402"
+      x="256.7695"
+      y="1117.4941"
+    >
+      Commit transaction
+    </text>
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="142.4668"
+      x="405.5098"
+      y="1096.3555"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="122.4668"
+      x="415.5098"
+      y="1117.4941"
+    >
+      Rollback transaction
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="396.4414,1136.3242,408.4414,1148.3242,396.4414,1160.3242,384.4414,1148.3242,396.4414,1136.3242"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <rect
+      fill="#F1F1F1"
+      height="33.9688"
+      rx="12.5"
+      ry="12.5"
+      style="stroke: #181818; stroke-width: 0.5"
+      width="139.7422"
+      x="1035.7737"
+      y="229.2344"
+    />
+    <text
+      fill="#000000"
+      font-family="sans-serif"
+      font-size="12"
+      lengthAdjust="spacing"
+      textLength="119.7422"
+      x="1045.7737"
+      y="250.373"
+    >
+      Sleep until next tick
+    </text>
+    <polygon
+      fill="#F1F1F1"
+      points="774.0431,1166.3242,786.0431,1178.3242,774.0431,1190.3242,762.0431,1178.3242,774.0431,1166.3242"
+      style="stroke: #181818; stroke-width: 0.5"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="774.0431"
+      x2="774.0431"
+      y1="67.2969"
+      y2="87.2969"
+    />
+    <polygon
+      fill="#181818"
+      points="770.0431,77.2969,774.0431,87.2969,778.0431,77.2969,774.0431,81.2969"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="774.0431"
+      x2="774.0431"
+      y1="121.2656"
+      y2="141.2656"
+    />
+    <polygon
+      fill="#181818"
+      points="770.0431,131.2656,774.0431,141.2656,778.0431,131.2656,774.0431,135.2656"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="361.1719"
+      y2="381.1719"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,371.1719,396.4414,381.1719,400.4414,371.1719,396.4414,375.1719"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="429.1094"
+      y2="449.1094"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,439.1094,396.4414,449.1094,400.4414,439.1094,396.4414,443.1094"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="606.7156"
+      y1="752.0156"
+      y2="776.418"
+    />
+    <polygon
+      fill="#181818"
+      points="602.7156,766.418,606.7156,776.418,610.7156,766.418,606.7156,770.418"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="674.2232"
+      x2="708.6004"
+      y1="740.0156"
+      y2="740.0156"
+    />
+    <polygon
+      fill="#181818"
+      points="704.6004,783.4023,708.6004,793.4023,712.6004,783.4023,708.6004,787.4023"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="708.6004"
+      x2="708.6004"
+      y1="740.0156"
+      y2="842.3867"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="708.6004"
+      x2="618.7156"
+      y1="842.3867"
+      y2="842.3867"
+    />
+    <polygon
+      fill="#181818"
+      points="628.7156,838.3867,618.7156,842.3867,628.7156,846.3867,624.7156,842.3867"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="606.7156"
+      y1="810.3867"
+      y2="830.3867"
+    />
+    <polygon
+      fill="#181818"
+      points="602.7156,820.3867,606.7156,830.3867,610.7156,820.3867,606.7156,824.3867"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="606.7156"
+      y1="693.0156"
+      y2="728.0156"
+    />
+    <polygon
+      fill="#181818"
+      points="602.7156,718.0156,606.7156,728.0156,610.7156,718.0156,606.7156,722.0156"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="606.7156"
+      y1="854.3867"
+      y2="874.3867"
+    />
+    <polygon
+      fill="#181818"
+      points="602.7156,864.3867,606.7156,874.3867,610.7156,864.3867,606.7156,868.3867"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="430.2667"
+      x2="371.9461"
+      y1="637.0469"
+      y2="637.0469"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="371.9461"
+      x2="371.9461"
+      y1="637.0469"
+      y2="659.0469"
+    />
+    <polygon
+      fill="#181818"
+      points="367.9461,649.0469,371.9461,659.0469,375.9461,649.0469,371.9461,653.0469"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="548.3951"
+      x2="606.7156"
+      y1="637.0469"
+      y2="637.0469"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="606.7156"
+      y1="637.0469"
+      y2="659.0469"
+    />
+    <polygon
+      fill="#181818"
+      points="602.7156,649.0469,606.7156,659.0469,610.7156,649.0469,606.7156,653.0469"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="371.9461"
+      x2="371.9461"
+      y1="706.9844"
+      y2="926.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="371.9461"
+      x2="477.3309"
+      y1="926.3555"
+      y2="926.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="467.3309,922.3555,477.3309,926.3555,467.3309,930.3555,471.3309,926.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="606.7156"
+      y1="908.3555"
+      y2="926.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="606.7156"
+      x2="501.3309"
+      y1="926.3555"
+      y2="926.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="511.3309,922.3555,501.3309,926.3555,511.3309,930.3555,507.3309,926.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="489.3309"
+      x2="489.3309"
+      y1="605.0469"
+      y2="625.0469"
+    />
+    <polygon
+      fill="#181818"
+      points="485.3309,615.0469,489.3309,625.0469,493.3309,615.0469,489.3309,619.0469"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="825.0174"
+      x2="815.0174"
+      y1="637.0469"
+      y2="637.0469"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="815.0174"
+      x2="815.0174"
+      y1="637.0469"
+      y2="659.0469"
+    />
+    <polygon
+      fill="#181818"
+      points="811.0174,649.0469,815.0174,659.0469,819.0174,649.0469,815.0174,653.0469"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="943.1458"
+      x2="953.1458"
+      y1="637.0469"
+      y2="637.0469"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="953.1458"
+      x2="953.1458"
+      y1="637.0469"
+      y2="659.0469"
+    />
+    <polygon
+      fill="#181818"
+      points="949.1458,649.0469,953.1458,659.0469,957.1458,649.0469,953.1458,653.0469"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="815.0174"
+      x2="815.0174"
+      y1="693.0156"
+      y2="711.0156"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="815.0174"
+      x2="872.0816"
+      y1="711.0156"
+      y2="711.0156"
+    />
+    <polygon
+      fill="#181818"
+      points="862.0816,707.0156,872.0816,711.0156,862.0816,715.0156,866.0816,711.0156"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="953.1458"
+      x2="953.1458"
+      y1="693.0156"
+      y2="711.0156"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="953.1458"
+      x2="896.0816"
+      y1="711.0156"
+      y2="711.0156"
+    />
+    <polygon
+      fill="#181818"
+      points="906.0816,707.0156,896.0816,711.0156,906.0816,715.0156,902.0816,711.0156"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="884.0816"
+      x2="884.0816"
+      y1="605.0469"
+      y2="625.0469"
+    />
+    <polygon
+      fill="#181818"
+      points="880.0816,615.0469,884.0816,625.0469,888.0816,615.0469,884.0816,619.0469"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="551.9553"
+      x2="489.3309"
+      y1="549.0781"
+      y2="549.0781"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="489.3309"
+      x2="489.3309"
+      y1="549.0781"
+      y2="571.0781"
+    />
+    <polygon
+      fill="#181818"
+      points="485.3309,561.0781,489.3309,571.0781,493.3309,561.0781,489.3309,565.0781"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="821.4572"
+      x2="884.0816"
+      y1="549.0781"
+      y2="549.0781"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="884.0816"
+      x2="884.0816"
+      y1="549.0781"
+      y2="571.0781"
+    />
+    <polygon
+      fill="#181818"
+      points="880.0816,561.0781,884.0816,571.0781,888.0816,561.0781,884.0816,565.0781"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="489.3309"
+      x2="489.3309"
+      y1="938.3555"
+      y2="956.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="489.3309"
+      x2="674.7062"
+      y1="956.3555"
+      y2="956.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="664.7062,952.3555,674.7062,956.3555,664.7062,960.3555,668.7062,956.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="884.0816"
+      x2="884.0816"
+      y1="723.0156"
+      y2="956.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="884.0816"
+      x2="698.7062"
+      y1="956.3555"
+      y2="956.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="708.7062,952.3555,698.7062,956.3555,708.7062,960.3555,704.7062,956.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="323.6594"
+      x2="123.8848"
+      y1="515.0781"
+      y2="515.0781"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="123.8848"
+      x2="123.8848"
+      y1="515.0781"
+      y2="537.0781"
+    />
+    <polygon
+      fill="#181818"
+      points="119.8848,527.0781,123.8848,537.0781,127.8848,527.0781,123.8848,531.0781"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="469.2234"
+      x2="686.7062"
+      y1="515.0781"
+      y2="515.0781"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="686.7062"
+      x2="686.7062"
+      y1="515.0781"
+      y2="537.0781"
+    />
+    <polygon
+      fill="#181818"
+      points="682.7062,527.0781,686.7062,537.0781,690.7062,527.0781,686.7062,531.0781"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="123.8848"
+      x2="123.8848"
+      y1="585.0156"
+      y2="986.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="123.8848"
+      x2="384.4414"
+      y1="986.3555"
+      y2="986.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="374.4414,982.3555,384.4414,986.3555,374.4414,990.3555,378.4414,986.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="686.7062"
+      x2="686.7062"
+      y1="968.3555"
+      y2="986.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="686.7062"
+      x2="408.4414"
+      y1="986.3555"
+      y2="986.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="418.4414,982.3555,408.4414,986.3555,418.4414,990.3555,414.4414,986.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="483.0781"
+      y2="503.0781"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,493.0781,396.4414,503.0781,400.4414,493.0781,396.4414,497.0781"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="307.2031"
+      y2="327.2031"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,317.2031,396.4414,327.2031,400.4414,317.2031,396.4414,321.2031"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="439.8542"
+      x2="1021.7737"
+      y1="1030.3555"
+      y2="1030.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="1017.7737,652.4805,1021.7737,642.4805,1025.7737,652.4805,1021.7737,648.4805"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="1021.7737"
+      x2="1021.7737"
+      y1="295.2031"
+      y2="1030.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="1021.7737"
+      x2="408.4414"
+      y1="295.2031"
+      y2="295.2031"
+    />
+    <polygon
+      fill="#181818"
+      points="418.4414,291.2031,408.4414,295.2031,418.4414,299.2031,414.4414,295.2031"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="998.3555"
+      y2="1018.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,1008.3555,396.4414,1018.3555,400.4414,1008.3555,396.4414,1012.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="263.2031"
+      y2="283.2031"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,273.2031,396.4414,283.2031,400.4414,273.2031,396.4414,277.2031"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="347.7568"
+      x2="316.1396"
+      y1="1074.3555"
+      y2="1074.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="316.1396"
+      x2="316.1396"
+      y1="1074.3555"
+      y2="1096.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="312.1396,1086.3555,316.1396,1096.3555,320.1396,1086.3555,316.1396,1090.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="445.126"
+      x2="476.7432"
+      y1="1074.3555"
+      y2="1074.3555"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="476.7432"
+      x2="476.7432"
+      y1="1074.3555"
+      y2="1096.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="472.7432,1086.3555,476.7432,1096.3555,480.7432,1086.3555,476.7432,1090.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="316.1396"
+      x2="316.1396"
+      y1="1130.3242"
+      y2="1148.3242"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="316.1396"
+      x2="384.4414"
+      y1="1148.3242"
+      y2="1148.3242"
+    />
+    <polygon
+      fill="#181818"
+      points="374.4414,1144.3242,384.4414,1148.3242,374.4414,1152.3242,378.4414,1148.3242"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="476.7432"
+      x2="476.7432"
+      y1="1130.3242"
+      y2="1148.3242"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="476.7432"
+      x2="408.4414"
+      y1="1148.3242"
+      y2="1148.3242"
+    />
+    <polygon
+      fill="#181818"
+      points="418.4414,1144.3242,408.4414,1148.3242,418.4414,1152.3242,414.4414,1148.3242"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="1042.3555"
+      y2="1062.3555"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,1052.3555,396.4414,1062.3555,400.4414,1052.3555,396.4414,1056.3555"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="727.0612"
+      x2="396.4414"
+      y1="207.2344"
+      y2="207.2344"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="207.2344"
+      y2="229.2344"
+    />
+    <polygon
+      fill="#181818"
+      points="392.4414,219.2344,396.4414,229.2344,400.4414,219.2344,396.4414,223.2344"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="821.0251"
+      x2="1105.6448"
+      y1="207.2344"
+      y2="207.2344"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="1105.6448"
+      x2="1105.6448"
+      y1="207.2344"
+      y2="229.2344"
+    />
+    <polygon
+      fill="#181818"
+      points="1101.6448,219.2344,1105.6448,229.2344,1109.6448,219.2344,1105.6448,223.2344"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="396.4414"
+      y1="1160.3242"
+      y2="1178.3242"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="396.4414"
+      x2="762.0431"
+      y1="1178.3242"
+      y2="1178.3242"
+    />
+    <polygon
+      fill="#181818"
+      points="752.0431,1174.3242,762.0431,1178.3242,752.0431,1182.3242,756.0431,1178.3242"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="1105.6448"
+      x2="1105.6448"
+      y1="263.2031"
+      y2="1178.3242"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="1105.6448"
+      x2="786.0431"
+      y1="1178.3242"
+      y2="1178.3242"
+    />
+    <polygon
+      fill="#181818"
+      points="796.0431,1174.3242,786.0431,1178.3242,796.0431,1182.3242,792.0431,1178.3242"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <line
+      style="stroke: #181818; stroke-width: 1"
+      x1="774.0431"
+      x2="774.0431"
+      y1="175.2344"
+      y2="195.2344"
+    />
+    <polygon
+      fill="#181818"
+      points="770.0431,185.2344,774.0431,195.2344,778.0431,185.2344,774.0431,189.2344"
+      style="stroke: #181818; stroke-width: 1"
+    />
+    <!--SRC=[hPF1Jjmm48RlUOeveKJg4oIgK87k2Gxi7hWWHSRvTzUAOwVsc2Lz-jh91a9tGKZjRPpvFVFzummhrg2VBv21hQC7wreuMcbxo3BFmd5MtbhR4vxX1bA6uPw5hh9o1PPxSX3DGCuUF6sTxQX6h5J_2WYeChMbV3scR33DPK6yXw5yW2yoel8AEsKezjY1wUQAs0dZXMHbJHNp3Zq4no1ADz2GJ0Old9fLqzSxuTfqf0ZAmTDtmkX3cTsZoRMLBPhwQVX6nr1mSRnv0m-dX5Q_GPlxMueCVaebvhUiI32q5KhZXFyz0fophefjOu4MGoVwMZK5TIa_dO-IyIQq1-N6pdLILuE8U9HUN4Jx79o9LcffjITZcT3rF9p3Y23J2s8S1JeOfeFYFTs7-6phUM9pgqdykRL_iNVEubZlMlJH5TxCfSlLGf7eNkjJx-9B6Fu8BnPS1RrLMiyCkO-_4kyupR5OreLfrFQiiyOQBAWNkbC77qqvVVu_4_vyV5-1VetdQDeZEkmZ1-LtDeq_BkLbgfnGVvY1V90ItfzIbjUswnJ_lPllwSgrrVf9oFP4DY8inUL60pq5mqfFwynAjbKsAly0]-->
+  </g>
+</svg>
