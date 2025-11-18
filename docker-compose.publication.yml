@@ -2,13 +2,13 @@ version: "3.8"
 name: ${APP_NAME}
 
 services:
-  old_db:
-    container_name: old_ojol
+  old_publication_db:
+    container_name: old_publication
     image: postgres:16
     ports:
       - "${OLD_OUT_PORT}:5432"
     volumes:
-      - ojol_old_data:/var/lib/postgresql/data
+      - publication_old_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${OLD_DATABASE}
       - POSTGRES_USER=${OLD_USERNAME}
@@ -16,13 +16,13 @@ services:
     networks:
       - db_migrate_network
 
-  new_db:
-    container_name: new_ojol
+  new_publication_db:
+    container_name: new_publication
     image: postgres:16
     ports:
       - "${NEW_OUT_PORT}:5432"
     volumes:
-      - ojol_new_data:/var/lib/postgresql/data
+      - publication_new_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${NEW_DATABASE}
       - POSTGRES_USER=${NEW_USERNAME}
@@ -31,9 +31,9 @@ services:
       - db_migrate_network
 
 volumes:
-  ojol_old_data:
+  publication_old_data:
     external: true
-  ojol_new_data:
+  publication_new_data:
     external: true
 
 networks:

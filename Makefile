@@ -44,3 +44,18 @@ add-old-ojol:
 drop-old-ojol:
 	docker exec -i old_ojol psql -U old_user -d old_ojol_db < ./migration/ojol/old/down.sql
 	
+
+# PUBLICATION CASE
+add-new-publication:
+	docker exec -i new_publication psql -U new_user -d new_publication_db < ./migration/publication/new/up.sql
+	docker exec -i new_publication psql -U new_user -d new_publication_db < ./migration/publication/new/seed.sql
+
+drop-new-publication:
+	docker exec -i new_publication psql -U new_user -d new_publication_db < ./migration/publication/new/down.sql
+
+add-old-publication:
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/up.sql
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/seed.sql
+
+drop-old-publication:
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/down.sql
