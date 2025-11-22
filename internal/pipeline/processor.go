@@ -3,6 +3,8 @@ package pipeline
 import (
 	"context"
 	"db_migrate_server/internal/cache"
+	"db_migrate_server/internal/cast"
+	"db_migrate_server/internal/expr"
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/mapping"
 	"db_migrate_server/internal/pivot"
@@ -10,7 +12,6 @@ import (
 	"db_migrate_server/internal/util"
 	"fmt"
 	"strings"
-	"time"
 )
 
 type Processor struct {
@@ -299,33 +300,45 @@ func firstSourceTable(ent mapping.Entity) string {
 func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, payload map[string]*kafka.DebeziumValue, route string) (
 	cols []string, vals []interface{}, sets []string, where []string, err error) {
 
-	// Disederhanakan: hanya handle "$key" dan "from: <col>" dari after.* ; "expr: now()" diisi di SQL (skipped) atau di Go (time.Now())
+	// Disederhanakan: hanya handle "$key" dan "from: <col>" dari after.*; dukungan expr terbatas ke fungsi built-in.
 	// Kamu bisa perluasan: cast, resolver lookup, flatten/aggregate (untuk contoh ringkas ini belum penuh).
 
 	for colName, spec := range ent.Columns {
+		var (
+			value   interface{}
+			handled bool
+		)
+		if spec.Expr != "" {
+			if eval, ok, evalErr := expr.Evaluate(spec.Expr); evalErr != nil {
+				return cols, vals, sets, nil, fmt.Errorf("entity %s column %s: %w", ent.Entity, colName, evalErr)
+			} else if ok {
+				value = eval
+				handled = true
+			}
+		}
+
 		switch {
+		case handled:
+			// value already populated by expression
 		case spec.From == "$key":
 			if !hasKey {
 				util.Debug.Printf("processor: skipping column=%s entity=%s because key unavailable", colName, ent.Entity)
 				continue
 			}
-			cols = append(cols, colName)
-			vals = append(vals, key)
-
-		case spec.Expr == "now()":
-			cols = append(cols, colName)
-			vals = append(vals, time.Now().UTC())
-
+			value = key
 		case spec.From != "":
-			cols = append(cols, colName)
-			// cari dari payload topic mana pun: ambil field "after.<col>"
-			vals = append(vals, firstAfterField(payload, spec.From))
-
+			value = firstAfterField(payload, spec.From)
 		default:
-			cols = append(cols, colName)
-			vals = append(vals, spec.Default)
-
+			value = spec.Default
 		}
+
+		value, err = cast.Value(spec.Cast, value)
+		if err != nil {
+			return cols, vals, sets, nil, fmt.Errorf("entity %s column %s: %w", ent.Entity, colName, err)
+		}
+
+		cols = append(cols, colName)
+		vals = append(vals, value)
 	}
 
 	// sets untuk UPDATE (col=$i), where dari matchKey atau primary (key)
