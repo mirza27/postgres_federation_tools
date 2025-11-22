@@ -1,0 +1,21 @@
+{
+  "entity": "researcher-to-author",
+  "kind": "table",
+  "sources": [{ "alias": "r", "from": "researcher" }],
+  "target_table": "author",
+  "key": {
+    "strategy": "natural",
+    "source": ["r.rese_id"]
+  },
+  "columns": {
+    "code": { "from": "$key" },
+    "name": { "from": "r.rese_name" },
+    "lastname1": { "from": "r.rese_first_surname" },
+    "lastname2": { "from": "r.rese_sec_surname" }
+  },
+  "routing": {
+    "on_snapshot": { "mode": "insert" },
+    "on_create": { "mode": "insert" },
+    "on_update": { "mode": "update", "matchKey": ["code"] }
+  }
+}

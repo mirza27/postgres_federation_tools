@@ -1,0 +1,28 @@
+{
+  "entity": "publication_writer-to-authorship",
+  "kind": "table",
+  "sources": [{ "alias": "pw", "from": "publication_writer" }],
+  "target_table": "authorship",
+  "key": {
+    "strategy": "surrogate",
+    "source": ["pw.pub_id"],
+    "resolver": {
+      "type": "mapping_table",
+      "table": "_keymap_publication_writer-to-authorship"
+    }
+  },
+  "columns": {
+    "code": {
+      "from": "$key",
+      "expr": "random_number(1, 1000000000)"
+    },
+    "paper_doi": { "from": "pw.pub_id", "cast": "string" },
+    "author_code": { "from": "pw.rese_id" },
+    "orderofauthor": { "from": "pw.pwrit_ord" }
+  },
+  "routing": {
+    "on_snapshot": { "mode": "insert" },
+    "on_create": { "mode": "insert" },
+    "on_update": { "mode": "update", "matchKey": ["code"] }
+  }
+}

@@ -1,3 +1,25 @@
+# RUN worker
+executor:
+	go run ./cmd/executor/main.go
+
+parser:
+	go run ./cmd/parser/main.go
+
+checker:
+	go run ./cmd/checker/main.go
+
+
+# Debezium Config
+conn-publication:
+	curl -X POST -H "Content-Type: application/json"   -d @connector-publication.json   http://localhost:8083/connectors
+dis-publication:
+	curl -X DELETE http://localhost:8083/connectors/publication-connector
+
+conn-ojol:
+	curl -X POST -H "Content-Type: application/json"   -d @connector-ojol.json   http://localhost:8083/connectors
+dis-ojol:
+	curl -X DELETE http://localhost:8083/connectors/ojol-connector
+
 # CRM ECOM CASE
 db1:
 	docker exec -i fdw_test_ecom psql -U ecom_user -d ecom_db < ./migration/ecom_crm/ecom/up.sql
