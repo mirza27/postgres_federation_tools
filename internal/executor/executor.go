@@ -71,6 +71,13 @@ func (e *Executor) tick(ctx context.Context) {
 		util.Error.Println("begin tx:", err)
 		return
 	}
+
+	// dissable check foreign key temporarily
+	if _, err := tx.Exec(ctx, "set local session_replication_role = 'replica'"); err != nil {
+		util.Error.Println("set session_replication_role:", err)
+		_ = tx.Rollback(ctx)
+		return
+	}
 	defer tx.Rollback(ctx)
 
 	for _, it := range items {
