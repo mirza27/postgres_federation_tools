@@ -7,19 +7,32 @@ start
 if (Rows found?) then (yes)
   repeat
     :Select next row;
-    if (need_keymap == false?) then (yes)
-      :Mark status = ready;
-    else (no)
-      :Deserialize keymap_payload;
-      :Ensure map_name & src_key present;
-      if (Invalid payload?) then (yes)
-        :Mark queue row error;
+    if (need_join == true?) then (yes)
+      :Deserialize join_payload (fact);
+      :Lookup entity in planner;
+      :Fetch join fragments for join_key\n(from _join_map_topic) for dim topics;
+      if (Fragments complete?) then (yes)
+        :Merge fact + dim payloads;
+        :Generate SQL via Processor.planAndEnqueue;\n(enqueues new ready job);
+        :Mark placeholder done;
       else (no)
-        :Call EnsureKeymapRequest(queue_id, payload);
-        if (DB error?) then (yes)
+        :Skip (wait for next tick);
+      endif
+    else (no join)
+      if (need_keymap == false?) then (yes)
+        :Mark status = ready;
+      else (need keymap)
+        :Deserialize keymap_payload;
+        :Ensure map_name & src_key present;
+        if (Invalid payload?) then (yes)
           :Mark queue row error;
         else (no)
-          :Update _exec_queue row\nset keymap_id, need_keymap=true,\nstatus=ready;
+          :Call EnsureKeymapRequest(queue_id, payload);
+          if (DB error?) then (yes)
+            :Mark queue row error;
+          else (no)
+            :Update _exec_queue row\nset keymap_id, need_keymap=true,\nstatus=ready;
+          endif
         endif
       endif
     endif

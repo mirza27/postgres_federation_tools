@@ -7,36 +7,37 @@ start
 if (Entities found?) then (yes)
   repeat
     :Select next entity;
-    if (Entity requires multi-topic join?) then (yes)
-      :Derive join key from payload;
-      :Store payload in JoinWait cache;
-      if (All required topics present?) then (yes)
-        :Retrieve merged payload set;
-      else (no)
-        :Skip to next entity;
+    if (Entity multi-topic?) then (yes)
+      :Derive join_key (join_key field or join expr);\nDerive source_key (key.source or fallback join_key);
+      if (Event topic == fact topic?) then (yes)
+        :Marshal payload fact;
+        :Enqueue placeholder into _exec_queue\nneed_join=true, join_key/source_key,\njoin_payload (no SQL yet);
+      else (dim)
+        :Store fragment in _join_map_topic\n(join_key, topic, source_key, payload);
       endif
-    else (no)
+      :Skip to next entity;
+    else (single-topic)
       :Wrap payload as single-topic set;
-    endif
 
-    :Resolve key based on mapping strategy;
-    if (Key requires keymap lookup?) then (generate request)
-      :Prepare KeymapRequest (map_name, src_key, columns, tables);
-      :Mark job as need_keymap;
-    else (existing)
-      :Use resolved key value;
-    endif
-
-    :Build column/value arrays from mapping;
-    :Determine route (insert/update) from event op;
-    if (Route == update and match key missing?) then (error)
-      :Log & skip entity;
-    else (ok)
-      :Compose SQL statement;
-      if (Need keymap and target column known?) then (yes)
-        :Append RETURNING clause;
+      :Resolve key based on mapping strategy;
+      if (Key requires keymap lookup?) then (generate request)
+        :Prepare KeymapRequest (map_name, src_key, columns, tables);
+        :Mark job as need_keymap;
+      else (existing)
+        :Use resolved key value;
       endif
-      :Enqueue job into _exec_queue\n(status = pending,\nkeymap metadata, args JSON);
+
+      :Build column/value arrays from mapping;
+      :Determine route (insert/update) from event op;
+      if (Route == update and match key missing?) then (error)
+        :Log & skip entity;
+      else (ok)
+        :Compose SQL statement;
+        if (Need keymap and target column known?) then (yes)
+          :Append RETURNING clause;
+        endif
+        :Enqueue job into _exec_queue\n(status = pending,\nkeymap metadata, args JSON);
+      endif
     endif
   repeat while (More entities?)
 else (no)
