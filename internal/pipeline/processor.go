@@ -2,7 +2,6 @@ package pipeline
 
 import (
 	"context"
-	"db_migrate_server/internal/cache"
 	"db_migrate_server/internal/cast"
 	"db_migrate_server/internal/expr"
 	"db_migrate_server/internal/kafka"
@@ -10,6 +9,7 @@ import (
 	"db_migrate_server/internal/pivot"
 	"db_migrate_server/internal/sqlbuilder"
 	"db_migrate_server/internal/util"
+	"encoding/json"
 	"fmt"
 	"strings"
 )
@@ -17,11 +17,10 @@ import (
 type Processor struct {
 	Plan  *mapping.Planner
 	Pivot *pivot.Repo
-	Join  *cache.JoinWait
 }
 
-func NewProcessor(plan *mapping.Planner, pivotRepo *pivot.Repo, jw *cache.JoinWait) *Processor {
-	return &Processor{Plan: plan, Pivot: pivotRepo, Join: jw}
+func NewProcessor(plan *mapping.Planner, pivotRepo *pivot.Repo) *Processor {
+	return &Processor{Plan: plan, Pivot: pivotRepo}
 }
 
 type KeyResolution struct {
@@ -55,20 +54,41 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 		if len(allTopics) > 1 {
 
-			joinKey := p.deriveJoinKey(ent, ev.Value)
+			joinKey := p.deriveJoinKey(ent, ev.Topic, ev.Value)
 			util.Debug.Printf("processor: join key=%s topic=%s", joinKey, ev.Topic)
-			p.Join.Add(joinKey, ev.Topic, ev.Value)
 
-			if vals, ok := p.Join.GetSet(joinKey, allTopics); ok {
-				// compose merged payload di memori
-				util.Debug.Printf("processor: join satisfied entity=%s topics=%v", ent.Entity, allTopics)
-				merged := p.mergePayload(vals)
-				if err := p.planAndEnqueue(ctx, ent, op, merged); err != nil {
+			sourceKey := p.deriveKeySource(ent, map[string]*kafka.DebeziumValue{ev.Topic: ev.Value})
+			if sourceKey == "" {
+				sourceKey = joinKey
+			}
+			util.Debug.Printf("processor: source key=%s topic=%s", sourceKey, ev.Topic)
+
+			factTopic := topicName(ent.Sources[0])
+			if ev.Topic == factTopic {
+				// enqueue placeholder needing join
+				raw, _ := json.Marshal(ev.Value)
+				item := pivot.ExecItem{
+					Entity:        ent.Entity,
+					Op:            op,
+					NeedJoin:      true,
+					JoinKey:       joinKey,
+					JoinTopic:     ev.Topic,
+					JoinSourceKey: sourceKey,
+					JoinPayload:   raw,
+					NeedKeymap:    false,
+					SQL:           "pending_join",
+					Args:          nil,
+					Returning:     nil,
+				}
+				if err := p.Pivot.Enqueue(ctx, item); err != nil {
 					return err
 				}
+				util.Debug.Printf("processor: enqueued join placeholder entity=%s joinKey=%s", ent.Entity, joinKey)
 			} else {
-				util.Debug.Printf("processor: join incomplete entity=%s waiting other topics", ent.Entity)
-				continue // tunggu event lain
+				if err := p.Pivot.AddJoinFragment(ctx, ent.Entity, joinKey, ev.Topic, sourceKey, ev.Value); err != nil {
+					return err
+				}
+				util.Debug.Printf("processor: stored join fragment entity=%s topic=%s", ent.Entity, ev.Topic)
 			}
 
 			// if entity need only one topic
@@ -84,27 +104,75 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 	return nil
 }
 
-func (p *Processor) deriveJoinKey(ent mapping.Entity, value *kafka.DebeziumValue) string {
+func (p *Processor) deriveJoinKey(ent mapping.Entity, eventTopic string, value *kafka.DebeziumValue) string {
 
-	// Ambil key.source[0] misalnya "u.id" → field "id" di after
-	util.Debug.Printf("processor: deriveJoinKey entity=%s", ent.Entity)
+	aliasTopic := aliasTopics(ent)
 
-	if value == nil || len(ent.Key.Source) == 0 {
-		util.Debug.Printf("processor: deriveJoinKey missing value or key source entity=%s", ent.Entity)
+	// Ambil dari ekspresi join "alias.col = alias2.col" yang sesuai topic event
+	if key := keyFromJoinHint(ent, eventTopic, value, aliasTopic); key != "" {
+		return key
+	}
+
+	// Fallback: coba key.source jika join expr tidak cocok
+	if len(ent.Key.Source) > 0 {
+		if key := keyFromSource(ent.Key.Source, eventTopic, value, aliasTopic); key != "" {
+			util.Debug.Printf("processor: derived join key=%s entity=%s via key.source", key, ent.Entity)
+			return key
+		}
+	}
+
+	util.Debug.Printf("processor: deriveJoinKey missing value entity=%s", ent.Entity)
+	return ""
+}
+
+// keyFromJoinHint mencoba membaca ent.Key.JoinKey terlebih dulu; bila tidak ada, pakai join expression.
+func keyFromJoinHint(ent mapping.Entity, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) string {
+	if value == nil {
 		return ""
 	}
 
-	src := ent.Key.Source[0] // "u.id"
-	parts := strings.Split(src, ".")
-	col := parts[len(parts)-1]
-
-	key := stringFromRow(value.Payload.After, col)
-	if key == "" {
-		key = stringFromRow(value.Payload.Before, col)
+	if ent.Key.JoinKey != "" {
+		if key := keyFromSource([]string{ent.Key.JoinKey}, eventTopic, value, aliasTopic); key != "" {
+			util.Debug.Printf("processor: derived join key=%s entity=%s via join_key", key, ent.Entity)
+			return key
+		}
 	}
 
-	util.Debug.Printf("processor: derived join key=%s entity=%s", key, ent.Entity)
-	return key
+	for _, src := range ent.Sources {
+		if src.Join == nil || strings.TrimSpace(src.Join.On) == "" {
+			continue
+		}
+		clauses := strings.Split(strings.ReplaceAll(src.Join.On, "AND", "and"), "and")
+		for _, c := range clauses {
+			partsEq := strings.Split(c, "=")
+			if len(partsEq) != 2 {
+				continue
+			}
+			left := strings.TrimSpace(partsEq[0])
+			right := strings.TrimSpace(partsEq[1])
+			for _, side := range []string{left, right} {
+				ps := strings.Split(side, ".")
+				if len(ps) < 2 {
+					continue
+				}
+				alias := strings.TrimSpace(ps[0])
+				column := strings.TrimSpace(ps[len(ps)-1])
+				topic := aliasTopic[alias]
+				if topic == "" || (eventTopic != "" && topic != eventTopic) {
+					continue
+				}
+				key := stringFromRow(value.Payload.After, column)
+				if key == "" {
+					key = stringFromRow(value.Payload.Before, column)
+				}
+				if key != "" {
+					util.Debug.Printf("processor: derived join key=%s entity=%s via join expr", key, ent.Entity)
+					return key
+				}
+			}
+		}
+	}
+	return ""
 }
 
 // mergePayload: gabungkan payload dari beberapa topic (sederhana: map[topic]rawJSON)
@@ -206,9 +274,7 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 
 	case "natural":
 
-		evtPayload := anyPayload(payload)
-
-		key := p.deriveJoinKey(ent, evtPayload)
+		key := p.deriveKeySource(ent, payload)
 
 		return KeyResolution{Value: key}, nil
 
@@ -217,7 +283,7 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 			return KeyResolution{}, fmt.Errorf("missing resolver for %s", ent.Entity)
 		}
 		mapName := ent.Key.Resolver.Table // atau pakai nama entitas (bebas)
-		srcKey := p.deriveJoinKey(ent, anyPayload(payload))
+		srcKey := p.deriveKeySource(ent, payload)
 		if srcKey == "" {
 			return KeyResolution{}, fmt.Errorf("missing source key for %s", ent.Entity)
 		}
@@ -295,6 +361,78 @@ func firstSourceTable(ent mapping.Entity) string {
 		return ""
 	}
 	return ent.Sources[0].From
+}
+
+func aliasTopics(ent mapping.Entity) map[string]string {
+	out := map[string]string{}
+	for _, s := range ent.Sources {
+		topic := topicName(s)
+		if s.Alias != "" && topic != "" {
+			out[s.Alias] = topic
+		}
+	}
+	return out
+}
+
+func topicName(s mapping.EntitySource) string {
+	if trimmed := strings.TrimSpace(s.Topic); trimmed != "" {
+		return trimmed
+	}
+	name := strings.TrimSpace(s.From)
+	if name == "" {
+		return ""
+	}
+	parts := strings.Split(name, ".")
+	base := parts[len(parts)-1]
+	base = strings.ToLower(strings.TrimSpace(base))
+	if base == "" {
+		return ""
+	}
+	base = strings.ReplaceAll(base, " ", "_")
+	return fmt.Sprintf("db_events_%s", base)
+}
+
+// deriveKeySource mengambil source key sesuai key.source dan payload gabungan (topic->payload).
+// Ini dipakai untuk keymap (surrogate/shared) agar tidak bergantung pada join key.
+func (p *Processor) deriveKeySource(ent mapping.Entity, payload map[string]*kafka.DebeziumValue) string {
+	aliasTopic := aliasTopics(ent)
+	for _, src := range ent.Key.Source {
+		if key := keyFromSource([]string{src}, "", payload[aliasTopic[strings.Split(src, ".")[0]]], aliasTopic); key != "" {
+			return key
+		}
+	}
+	return ""
+}
+
+// HandleJoinReady dipakai checker saat join fragment sudah lengkap.
+func (p *Processor) HandleJoinReady(ctx context.Context, ent mapping.Entity, op string, payload map[string]*kafka.DebeziumValue) error {
+	return p.planAndEnqueue(ctx, ent, op, payload)
+}
+
+// keyFromSource mengambil nilai kolom dari key.source dengan memperhatikan alias->topic
+func keyFromSource(keySources []string, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) string {
+	if value == nil || len(keySources) == 0 {
+		return ""
+	}
+	for _, src := range keySources {
+		parts := strings.Split(src, ".")
+		if len(parts) == 0 {
+			continue
+		}
+		alias := parts[0]
+		col := parts[len(parts)-1]
+		topic := aliasTopic[alias]
+		if topic != "" && eventTopic != "" && topic != eventTopic {
+			continue
+		}
+		if key := stringFromRow(value.Payload.After, col); key != "" {
+			return key
+		}
+		if key := stringFromRow(value.Payload.Before, col); key != "" {
+			return key
+		}
+	}
+	return ""
 }
 
 func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, payload map[string]*kafka.DebeziumValue, route string) (

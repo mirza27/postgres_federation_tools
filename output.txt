@@ -1,121 +1,433 @@
-2025/11/06 15:24:15 [INFO] parser: signal context registered
-2025/11/06 15:24:15 [INFO] parser: loading configuration
-2025/11/06 15:24:15 [INFO] parser: configuration loaded
-2025/11/06 15:24:15 [INFO] parser: loading mapping root
-2025/11/06 15:24:15 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/ojol
-2025/11/06 15:24:15 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
-2025/11/06 15:24:15 [DEBUG] mapping: default config loaded sources=1 entities=0
-2025/11/06 15:24:15 [INFO] mapping: listing json files path=./internal/config/json/ojol
-2025/11/06 15:24:15 [DEBUG] mapping: listJSONFiles result=[internal/config/json/ojol/order-to-pesanan.json]
-2025/11/06 15:24:15 [INFO] mapping: found 1 entity files
-2025/11/06 15:24:15 [DEBUG] mapping: loading entity file=internal/config/json/ojol/order-to-pesanan.json
-2025/11/06 15:24:15 [INFO] mapping: Load success entities=1 sources=1
-2025/11/06 15:24:15 [INFO] parser: mapping root loaded with 1 entities
-2025/11/06 15:24:15 [1] Entity: order-to-pesanan → target: pesanan
-2025/11/06 15:24:15 [INFO] parser: building planner
-2025/11/06 15:24:15 [INFO] parser: planner covers 1 topics
-2025/11/06 15:24:15 [INFO] parser: creating kafka consumer group=db-migrate-engine-5xks8a
-2025/11/06 15:24:15 [INFO] kafka: NewConsumer brokers=[localhost:29092] groupID=db-migrate-engine-5xks8a topics=[db_events_orders]
-2025/11/06 15:24:15 [INFO] parser: kafka consumer ready
-2025/11/06 15:24:15 [INFO] parser: connecting pivot repository
-2025/11/06 15:24:15 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
-2025/11/06 15:24:15 [INFO] parser: pivot repository connected
-2025/11/06 15:24:15 [INFO] parser: initializing join wait ttl=120s
-2025/11/06 15:24:15 [INFO] parser: processor ready
-2025/11/06 15:24:15 [INFO] parser: starting synchronous kafka loop
-2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
-2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
-2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
-2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
-2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
-2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
-2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000001 entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000001
-2025/11/06 15:24:18 [DEBUG] processor: resolved key value=11 needKeymap=false entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
-2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[id_ojol nominal catatan titik_tujuan id status titik_jemput created_at updated_at] conflict=[id]
-2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=af20ef0b-3887-4964-964c-e53a80b88c2e entity=order-to-pesanan op=r sql=insert into pesanan (id_ojol,nominal,catatan,titik_tujuan,id,sta... needKeymap=false
-2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
-2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
-2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
-2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
-2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
-2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
-2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000002 entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000002
-2025/11/06 15:24:18 [DEBUG] processor: resolved key value=12 needKeymap=false entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
-2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[id status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan] conflict=[id]
-2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=c3867daf-9f3c-4dd7-9798-c59fa2150cbb entity=order-to-pesanan op=r sql=insert into pesanan (id,status,titik_jemput,created_at,updated_a... needKeymap=false
-2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
-2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
-2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
-2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
-2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
-2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
-2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000003 entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000003
-2025/11/06 15:24:18 [DEBUG] processor: resolved key value=13 needKeymap=false entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
-2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[id status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan] conflict=[id]
-2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=7a28579a-d1c7-4e73-94be-97712cb5928e entity=order-to-pesanan op=r sql=insert into pesanan (id,status,titik_jemput,created_at,updated_a... needKeymap=false
-2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
-2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
-2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
-2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
-2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
-2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
-2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000004 entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000004
-2025/11/06 15:24:18 [DEBUG] processor: resolved key value=14 needKeymap=false entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
-2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan id] conflict=[id]
-2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=d39f0d23-555d-4123-a062-734bcb9a8221 entity=order-to-pesanan op=r sql=insert into pesanan (status,titik_jemput,created_at,updated_at,i... needKeymap=false
-2025/11/06 15:24:18 [DEBUG] processor: Handle topic=db_events_orders op=r matchedEntities=1
-2025/11/06 15:24:18 [DEBUG] processor: handling entity=order-to-pesanan op=r
-2025/11/06 15:24:18 [DEBUG] processor: expected topics=[db_events_orders] for entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: single topic path entity=order-to-pesanan topic=db_events_orders
-2025/11/06 15:24:18 [DEBUG] processor: planAndEnqueue entity=order-to-pesanan op=r payloadTopics=1
-2025/11/06 15:24:18 [DEBUG] processor: resolveKey entity=order-to-pesanan strategy=surrogate
-2025/11/06 15:24:18 [DEBUG] processor: anyPayload returning payload topic
-2025/11/06 15:24:18 [DEBUG] processor: deriveJoinKey entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: derived join key=50000000-0000-0000-0000-000000000005 entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] pivot: LookupKey map=_keymap_order src=50000000-0000-0000-0000-000000000005
-2025/11/06 15:24:18 [DEBUG] processor: resolved key value=15 needKeymap=false entity=order-to-pesanan
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.status
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.depart_location
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=d.created_at
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.amount
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.note
-2025/11/06 15:24:18 [DEBUG] processor: firstAfterField path=o.purpose_location
-2025/11/06 15:24:18 [DEBUG] processor: built columns entity=order-to-pesanan cols=[status titik_jemput created_at updated_at id_ojol nominal catatan titik_tujuan id] conflict=[id]
-2025/11/06 15:24:18 [DEBUG] pivot: Enqueue queue=3e514b72-5f0c-4044-8e60-478a25aceec4 entity=order-to-pesanan op=r sql=insert into pesanan (status,titik_jemput,created_at,updated_at,i... needKeymap=false
-^C2025/11/06 15:24:29 [INFO] parser: shutdown complete
+Hasil Log Worker Parser :
+2025/11/23 10:43:07 [INFO] parser: signal context registered
+2025/11/23 10:43:07 [INFO] parser: loading configuration
+📦 Config Loaded:
+Kafka brokers: localhost:29092
+Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+Mapping Path: ./internal/config/json/publication
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-egoxcf
+2025/11/23 10:43:07 [INFO] parser: configuration loaded
+2025/11/23 10:43:07 [INFO] parser: loading mapping root
+2025/11/23 10:43:07 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/publication
+2025/11/23 10:43:07 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
+2025/11/23 10:43:07 [DEBUG] mapping: default config loaded sources=1 entities=0
+2025/11/23 10:43:07 [INFO] mapping: listing json files path=./internal/config/json/publication
+2025/11/23 10:43:07 [DEBUG] mapping: listJSONFiles result=[internal/config/json/publication/publication&country-to-publication.json]
+2025/11/23 10:43:07 [INFO] mapping: found 1 entity files
+2025/11/23 10:43:07 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country-to-publication.json
+2025/11/23 10:43:07 [INFO] mapping: Load success entities=1 sources=1
+2025/11/23 10:43:07 [INFO] parser: mapping root loaded with 1 entities
+2025/11/23 10:43:07 [1] Entity: publication-&-country-to-publication → target: publication
+2025/11/23 10:43:07 [INFO] parser: building planner
+==== Planner ====
+Total Entities : 1
+-- Entities --
+1. Entity: publication-&-country-to-publication (table)
+   TargetTable: publication
+   Sources:
+     - alias=p from=publication topic=db_events_publication
+     - alias=c from=country topic=db_events_country
+-- TopicToEntities --
+Topic: db_events_country
+   - publication-&-country-to-publication
+Topic: db_events_publication
+   - publication-&-country-to-publication
+-- TopicToEntities --
+[db_events_publication db_events_country]
+2025/11/23 10:43:07 [INFO] parser: planner covers 2 topics
+2025/11/23 10:43:07 [INFO] parser: creating kafka consumer group=db-migrate-engine-egoxcf
+2025/11/23 10:43:07 [INFO] kafka: NewConsumer brokers=[localhost:29092] groupID=db-migrate-engine-egoxcf topics=[db_events_publication db_events_country]
+2025/11/23 10:43:07 [INFO] parser: kafka consumer ready
+2025/11/23 10:43:07 [INFO] parser: connecting pivot repository
+2025/11/23 10:43:07 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+2025/11/23 10:43:07 [INFO] parser: pivot repository connected
+2025/11/23 10:43:07 [INFO] parser: processor ready
+2025/11/23 10:43:07 [INFO] parser: starting synchronous kafka loop
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=1 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=7699b2f3-fe4c-4ab3-8a6e-6c7059c38377 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=2 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=4522d723-8de9-431c-a8f0-aabf19aeeb01 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=3 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=237ce3f6-e84a-4db6-b869-71946ca9347e entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=4 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=ca7a7b87-ac04-4f42-8f1e-debb5c2a41a2 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=UK entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=UK topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=5 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=6be4b16f-7436-4f1a-b69c-e42fedcc2f74 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=6 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=ebd8efe1-d227-4d78-b52f-a271c41bf4c2 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=7 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=18a20569-53a5-43f4-9969-c6ea08f54389 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=8 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=d15943a5-e1d9-4104-a0ce-e44385dbcb4c entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=9 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=239d3dab-ab5b-4d93-a7c2-a7a3706a477d entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=10 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=9041e01a-c005-463b-b0fb-ae8bd9cacf67 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_country op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join expr
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: source key=ES topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=11 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=f11d3109-aeb6-456d-bf08-eda50032e553 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_country op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join expr
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: source key=US topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=12 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=e3706ab0-2e66-4014-812d-6d0132631add entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_country op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=UK entity=publication-&-country-to-publication via join expr
+2025/11/23 10:43:10 [DEBUG] processor: join key=UK topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: source key=UK topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=13 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=e3c32880-0353-4982-bf86-5e94b6f73db6 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_country op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join expr
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: source key=FR topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=14 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=8664a843-e8e5-4fd8-9473-161584f7fa97 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=UK entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=UK topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=15 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=04f36841-7efe-4027-a2fb-a2c065583422 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_country op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join expr
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: source key=DE topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=16 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=de56284e-17dc-4f9e-b62e-e761e437a2b2 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=17 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=178f6fdc-33c0-4878-800b-5a3a2e08a325 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=18 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=0936d2af-322c-4d98-9254-c99c0e19cea3 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=19 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=4a60dca1-515e-47a1-ba4a-b1e8cd420e7f entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=20 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=d9e5a7fd-41b2-4989-b69e-e437faf5cb49 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=21 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=3f24c950-cee0-4ddc-b3a5-2ed83311799b entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=22 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=765a0aac-ad2a-4748-a9d0-a758cd4689a8 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=UK entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=UK topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=23 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=409a4f37-cd9e-42ea-8aec-5bc319057e3c entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=24 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=6b708d46-d028-4092-baeb-441da03ea217 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=25 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=941dd7b9-eea6-4f85-bae2-fa207dc439d7 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=ES entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=ES topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=26 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=b3f91ea9-3424-42ac-bfc3-53e3aff2f60a entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=US entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=US topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=27 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=83a24702-0005-4f92-a23e-ff6314984da7 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=UK entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=UK topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=28 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=a5c45bd8-fcc9-4d2c-82a8-48319a705422 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=DE entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=DE topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=29 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=3a41c647-be80-4f60-b881-5bf8dd180927 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:43:10 [DEBUG] processor: Handle topic=db_events_publication op=r matchedEntities=1
+2025/11/23 10:43:10 [DEBUG] processor: handling entity=publication-&-country-to-publication op=r
+2025/11/23 10:43:10 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/11/23 10:43:10 [DEBUG] processor: derived join key=FR entity=publication-&-country-to-publication via join_key
+2025/11/23 10:43:10 [DEBUG] processor: join key=FR topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] processor: source key=30 topic=db_events_publication
+2025/11/23 10:43:10 [DEBUG] pivot: Enqueue queue=8ad071e9-4147-466b-b84c-b16b038f8ff9 entity=publication-&-country-to-publication op=r sql= needKeymap=false
+2025/11/23 10:43:10 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=FR
+
+
+Hasil log worker checker:
+2025/11/23 10:45:09 [DEBUG] pivot: FetchForChecker limit=1000
+2025/11/23 10:45:09 [INFO] checker: processing 30 items
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=1 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=2 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=3 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=4 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=5 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=6 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=7 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=8 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=9 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=10 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=11 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=12 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=13 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=14 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=15 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=16 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=17 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=18 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=19 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=20 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=21 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=22 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=23 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=24 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=25 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=FR
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=26 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=ES
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=27 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=US
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=28 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=UK
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=29 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=DE
+2025/11/23 10:45:09 [DEBUG] checker: handling queue id=30 entity=publication-&-country-to-publication needKeymap=false needJoin=true
+2025/11/23 10:45:09 [DEBUG] checker: join incomplete entity=publication-&-country-to-publication joinKey=FR
+
+
+isi tabel _exec_queue:
+1	7699b2f3-fe4c-4ab3-8a6e-6c7059c38377	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	1	{"Op": "r", "TsMs": 1763817077961, "Payload": {"After": {"pub_id": 1, "pub_loc": "Vigo", "pub_book": null, "pub_edit": "Springer", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 1, "pub_year": "B98=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "Scalable Data Migration in Heterogeneous Systems", "pub_visib": true, "pub_minute": null, "pub_source": "DB Journal"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "first_in_data_collection", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.054 +0700	2025-11-23 10:43:10.054 +0700
+2	4522d723-8de9-431c-a8f0-aabf19aeeb01	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	2	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 2, "pub_loc": "Madrid", "pub_book": null, "pub_edit": "Elsevier", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 1, "pub_year": "B+A=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "An Empirical Study on Change Data Capture", "pub_visib": true, "pub_minute": null, "pub_source": "Journal of Information Systems"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.063 +0700	2025-11-23 10:43:10.063 +0700
+3	237ce3f6-e84a-4db6-b869-71946ca9347e	publication-&-country-to-publication	r		null	NULL		DE	db_events_publication	3	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 3, "pub_loc": "Berlin", "pub_book": null, "pub_edit": "ACM", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 2, "pub_year": "B+E=", "pub_cntry": "DE", "pub_draft": null, "pub_prsnt": null, "pub_title": "Improving CDC Pipelines with Kafka", "pub_visib": true, "pub_minute": null, "pub_source": "Distributed Systems Journal"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.064 +0700	2025-11-23 10:43:10.064 +0700
+4	ca7a7b87-ac04-4f42-8f1e-debb5c2a41a2	publication-&-country-to-publication	r		null	NULL		FR	db_events_publication	4	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 4, "pub_loc": "Paris", "pub_book": null, "pub_edit": "IEEE", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 2, "pub_year": "B+I=", "pub_cntry": "FR", "pub_draft": null, "pub_prsnt": null, "pub_title": "Performance Evaluation of Debezium Connectors", "pub_visib": true, "pub_minute": null, "pub_source": "IEEE Data Engineering"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.064 +0700	2025-11-23 10:43:10.064 +0700
+5	6be4b16f-7436-4f1a-b69c-e42fedcc2f74	publication-&-country-to-publication	r		null	NULL		UK	db_events_publication	5	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 5, "pub_loc": "London", "pub_book": null, "pub_edit": "Springer", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 3, "pub_year": "B+M=", "pub_cntry": "UK", "pub_draft": null, "pub_prsnt": null, "pub_title": "A Survey on Database Modernization", "pub_visib": true, "pub_minute": null, "pub_source": "Software Engineering Journal"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.065 +0700	2025-11-23 10:43:10.065 +0700
+6	ebd8efe1-d227-4d78-b52f-a271c41bf4c2	publication-&-country-to-publication	r		null	NULL		US	db_events_publication	6	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 6, "pub_loc": "San Francisco", "pub_book": null, "pub_edit": "O'Reilly", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 3, "pub_year": "B+Q=", "pub_cntry": "US", "pub_draft": null, "pub_prsnt": null, "pub_title": "Streaming ETL for public.Systems", "pub_visib": true, "pub_minute": null, "pub_source": "US Data Science Journal"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.065 +0700	2025-11-23 10:43:10.065 +0700
+7	18a20569-53a5-43f4-9969-c6ea08f54389	publication-&-country-to-publication	r		null	NULL		DE	db_events_publication	7	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 7, "pub_loc": "Munich", "pub_book": null, "pub_edit": "IEEE", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 4, "pub_year": "B+U=", "pub_cntry": "DE", "pub_draft": null, "pub_prsnt": null, "pub_title": "Near Real-Time Data Integration", "pub_visib": true, "pub_minute": null, "pub_source": "Transactions on Big Data"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.066 +0700	2025-11-23 10:43:10.066 +0700
+8	d15943a5-e1d9-4104-a0ce-e44385dbcb4c	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	8	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 8, "pub_loc": "Barcelona", "pub_book": null, "pub_edit": "Elsevier", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 4, "pub_year": "B+Y=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "Designing Pivot Databases for Migration", "pub_visib": true, "pub_minute": null, "pub_source": "International Journal of Databases"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.066 +0700	2025-11-23 10:43:10.066 +0700
+9	239d3dab-ab5b-4d93-a7c2-a7a3706a477d	publication-&-country-to-publication	r		null	NULL		FR	db_events_publication	9	{"Op": "r", "TsMs": 1763817077962, "Payload": {"After": {"pub_id": 9, "pub_loc": "Lyon", "pub_book": null, "pub_edit": "Springer", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 5, "pub_year": "B+c=", "pub_cntry": "FR", "pub_draft": null, "pub_prsnt": null, "pub_title": "A DSL for Data Migration: DAMI Framework", "pub_visib": true, "pub_minute": null, "pub_source": "Software & Systems Modeling"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.066 +0700	2025-11-23 10:43:10.066 +0700
+10	9041e01a-c005-463b-b0fb-ae8bd9cacf67	publication-&-country-to-publication	r		null	NULL		US	db_events_publication	10	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 10, "pub_loc": "Seattle", "pub_book": null, "pub_edit": "ACM", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 5, "pub_year": "B+g=", "pub_cntry": "US", "pub_draft": null, "pub_prsnt": null, "pub_title": "Benchmarking CDC Approaches in Microservices", "pub_visib": true, "pub_minute": null, "pub_source": "Journal of Cloud Computing"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.067 +0700	2025-11-23 10:43:10.067 +0700
+11	f11d3109-aeb6-456d-bf08-eda50032e553	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	11	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 11, "pub_loc": "Vigo", "pub_book": null, "pub_edit": "ACM", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 6, "pub_year": "B+I=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of the CDC & Streaming Workshop 2018", "pub_visib": true, "pub_minute": null, "pub_source": "CDC Workshop"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.069 +0700	2025-11-23 10:43:10.069 +0700
+12	e3706ab0-2e66-4014-812d-6d0132631add	publication-&-country-to-publication	r		null	NULL		DE	db_events_publication	12	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 12, "pub_loc": "Berlin", "pub_book": null, "pub_edit": "IEEE", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 6, "pub_year": "B+M=", "pub_cntry": "DE", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of the Data Migration Summit 2019", "pub_visib": true, "pub_minute": null, "pub_source": "Data Migration Summit"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.070 +0700	2025-11-23 10:43:10.070 +0700
+13	e3c32880-0353-4982-bf86-5e94b6f73db6	publication-&-country-to-publication	r		null	NULL		FR	db_events_publication	13	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 13, "pub_loc": "Paris", "pub_book": null, "pub_edit": "Springer", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 7, "pub_year": "B+Q=", "pub_cntry": "FR", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of the ETL and Integration Conf 2020", "pub_visib": true, "pub_minute": null, "pub_source": "ETL & Integration Conf"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.072 +0700	2025-11-23 10:43:10.072 +0700
+14	8664a843-e8e5-4fd8-9473-161584f7fa97	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	14	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 14, "pub_loc": "Madrid", "pub_book": null, "pub_edit": "Red Hat", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 7, "pub_year": "B+U=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of the Debezium User Conference 2021", "pub_visib": true, "pub_minute": null, "pub_source": "Debezium Conf"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.073 +0700	2025-11-23 10:43:10.073 +0700
+15	04f36841-7efe-4027-a2fb-a2c065583422	publication-&-country-to-publication	r		null	NULL		UK	db_events_publication	15	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 15, "pub_loc": "London", "pub_book": null, "pub_edit": "Confluent", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 7, "pub_year": "B+Y=", "pub_cntry": "UK", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of Kafka and Friends 2022", "pub_visib": true, "pub_minute": null, "pub_source": "Kafka & Friends"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.073 +0700	2025-11-23 10:43:10.073 +0700
+16	de56284e-17dc-4f9e-b62e-e761e437a2b2	publication-&-country-to-publication	r		null	NULL		US	db_events_publication	16	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 16, "pub_loc": "San Jose", "pub_book": null, "pub_edit": "IEEE", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 8, "pub_year": "B+Q=", "pub_cntry": "US", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of Distributed Systems Conf 2020", "pub_visib": true, "pub_minute": null, "pub_source": "Distributed Systems Conf"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.074 +0700	2025-11-23 10:43:10.074 +0700
+17	178f6fdc-33c0-4878-800b-5a3a2e08a325	publication-&-country-to-publication	r		null	NULL		DE	db_events_publication	17	{"Op": "r", "TsMs": 1763817077963, "Payload": {"After": {"pub_id": 17, "pub_loc": "Berlin", "pub_book": null, "pub_edit": "Springer", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 8, "pub_year": "B+U=", "pub_cntry": "DE", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of Big Data Europe 2021", "pub_visib": true, "pub_minute": null, "pub_source": "Big Data Europe"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.074 +0700	2025-11-23 10:43:10.074 +0700
+18	0936d2af-322c-4d98-9254-c99c0e19cea3	publication-&-country-to-publication	r		null	NULL		FR	db_events_publication	18	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 18, "pub_loc": "Amsterdam", "pub_book": null, "pub_edit": "ACM", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 9, "pub_year": "B+Y=", "pub_cntry": "FR", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of Cloud Native Databases 2022", "pub_visib": true, "pub_minute": null, "pub_source": "Cloud Native DB Conf"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.075 +0700	2025-11-23 10:43:10.075 +0700
+19	4a60dca1-515e-47a1-ba4a-b1e8cd420e7f	publication-&-country-to-publication	r		null	NULL		US	db_events_publication	19	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 19, "pub_loc": "New York", "pub_book": null, "pub_edit": "O'Reilly", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 9, "pub_year": "B+c=", "pub_cntry": "US", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of Real-Time Analytics 2023", "pub_visib": true, "pub_minute": null, "pub_source": "Real-Time Analytics"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.075 +0700	2025-11-23 10:43:10.075 +0700
+20	d9e5a7fd-41b2-4989-b69e-e437faf5cb49	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	20	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 20, "pub_loc": "Lisbon", "pub_book": null, "pub_edit": "IEEE", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 9, "pub_year": "B+g=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "Proceedings of Modernization and Migration 2024", "pub_visib": true, "pub_minute": null, "pub_source": "Modernization & Migration"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.076 +0700	2025-11-23 10:43:10.076 +0700
+21	3f24c950-cee0-4ddc-b3a5-2ed83311799b	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	21	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 21, "pub_loc": "Madrid", "pub_book": null, "pub_edit": "Springer", "pub_isbn": "978-3-16-148410-0", "pub_link": null, "pub_repo": null, "pub_subj": 10, "pub_year": "B94=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "public.Systems Modernization Handbook", "pub_visib": true, "pub_minute": null, "pub_source": "Handbook Series"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.076 +0700	2025-11-23 10:43:10.076 +0700
+22	765a0aac-ad2a-4748-a9d0-a758cd4689a8	publication-&-country-to-publication	r		null	NULL		US	db_events_publication	22	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 22, "pub_loc": "San Francisco", "pub_book": null, "pub_edit": "O'Reilly", "pub_isbn": "978-1-491-99999-1", "pub_link": null, "pub_repo": null, "pub_subj": 10, "pub_year": "B+E=", "pub_cntry": "US", "pub_draft": null, "pub_prsnt": null, "pub_title": "Streaming Architectures with Kafka", "pub_visib": true, "pub_minute": null, "pub_source": "Professional Series"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.077 +0700	2025-11-23 10:43:10.077 +0700
+23	409a4f37-cd9e-42ea-8aec-5bc319057e3c	publication-&-country-to-publication	r		null	NULL		UK	db_events_publication	23	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 23, "pub_loc": "London", "pub_book": null, "pub_edit": "Elsevier", "pub_isbn": "978-0-12-345678-9", "pub_link": null, "pub_repo": null, "pub_subj": 11, "pub_year": "B+I=", "pub_cntry": "UK", "pub_draft": null, "pub_prsnt": null, "pub_title": "Data Integration Patterns", "pub_visib": true, "pub_minute": null, "pub_source": "Patterns Series"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.077 +0700	2025-11-23 10:43:10.077 +0700
+24	6b708d46-d028-4092-baeb-441da03ea217	publication-&-country-to-publication	r		null	NULL		DE	db_events_publication	24	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 24, "pub_loc": "Berlin", "pub_book": null, "pub_edit": "ACM", "pub_isbn": "978-1-234-56789-7", "pub_link": null, "pub_repo": null, "pub_subj": 11, "pub_year": "B+M=", "pub_cntry": "DE", "pub_draft": null, "pub_prsnt": null, "pub_title": "Microservices and Databases", "pub_visib": true, "pub_minute": null, "pub_source": "Software Architecture Series"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.078 +0700	2025-11-23 10:43:10.078 +0700
+25	941dd7b9-eea6-4f85-bae2-fa207dc439d7	publication-&-country-to-publication	r		null	NULL		FR	db_events_publication	25	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 25, "pub_loc": "Paris", "pub_book": null, "pub_edit": "Red Hat", "pub_isbn": "978-9-876-54321-0", "pub_link": null, "pub_repo": null, "pub_subj": 11, "pub_year": "B+U=", "pub_cntry": "FR", "pub_draft": null, "pub_prsnt": null, "pub_title": "Hands-On CDC with Debezium", "pub_visib": true, "pub_minute": null, "pub_source": "Practical Guides"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.078 +0700	2025-11-23 10:43:10.078 +0700
+26	b3f91ea9-3424-42ac-bfc3-53e3aff2f60a	publication-&-country-to-publication	r		null	NULL		ES	db_events_publication	26	{"Op": "r", "TsMs": 1763817077964, "Payload": {"After": {"pub_id": 26, "pub_loc": "Madrid", "pub_book": null, "pub_edit": "Springer", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 12, "pub_year": "B94=", "pub_cntry": "ES", "pub_draft": null, "pub_prsnt": null, "pub_title": "Chapter: Designing Pivot Tables", "pub_visib": true, "pub_minute": null, "pub_source": "public.Systems Modernization Handbook"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.079 +0700	2025-11-23 10:43:10.079 +0700
+27	83a24702-0005-4f92-a23e-ff6314984da7	publication-&-country-to-publication	r		null	NULL		US	db_events_publication	27	{"Op": "r", "TsMs": 1763817077965, "Payload": {"After": {"pub_id": 27, "pub_loc": "San Francisco", "pub_book": null, "pub_edit": "O'Reilly", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 12, "pub_year": "B+E=", "pub_cntry": "US", "pub_draft": null, "pub_prsnt": null, "pub_title": "Chapter: Kafka Connect in Practice", "pub_visib": true, "pub_minute": null, "pub_source": "Streaming Architectures with Kafka"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.079 +0700	2025-11-23 10:43:10.079 +0700
+28	a5c45bd8-fcc9-4d2c-82a8-48319a705422	publication-&-country-to-publication	r		null	NULL		UK	db_events_publication	28	{"Op": "r", "TsMs": 1763817077965, "Payload": {"After": {"pub_id": 28, "pub_loc": "London", "pub_book": null, "pub_edit": "Elsevier", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 12, "pub_year": "B+I=", "pub_cntry": "UK", "pub_draft": null, "pub_prsnt": null, "pub_title": "Chapter: CDC Design Patterns", "pub_visib": true, "pub_minute": null, "pub_source": "Data Integration Patterns"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.080 +0700	2025-11-23 10:43:10.080 +0700
+29	3a41c647-be80-4f60-b881-5bf8dd180927	publication-&-country-to-publication	r		null	NULL		DE	db_events_publication	29	{"Op": "r", "TsMs": 1763817077965, "Payload": {"After": {"pub_id": 29, "pub_loc": "Berlin", "pub_book": null, "pub_edit": "ACM", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 12, "pub_year": "B+M=", "pub_cntry": "DE", "pub_draft": null, "pub_prsnt": null, "pub_title": "Chapter: Microservices Data Ownership", "pub_visib": true, "pub_minute": null, "pub_source": "Microservices and Databases"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.080 +0700	2025-11-23 10:43:10.080 +0700
+30	8ad071e9-4147-466b-b84c-b16b038f8ff9	publication-&-country-to-publication	r		null	NULL		FR	db_events_publication	30	{"Op": "r", "TsMs": 1763817077965, "Payload": {"After": {"pub_id": 30, "pub_loc": "Paris", "pub_book": null, "pub_edit": "Red Hat", "pub_isbn": null, "pub_link": null, "pub_repo": null, "pub_subj": 12, "pub_year": "B+U=", "pub_cntry": "FR", "pub_draft": null, "pub_prsnt": null, "pub_title": "Chapter: Debezium in Production", "pub_visib": true, "pub_minute": null, "pub_source": "Hands-On CDC with Debezium"}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "publication", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "last_in_data_collection", "connector": "postgresql"}}, "Transaction": null}	true	pending	false		0				2025-11-23 10:43:10.081 +0700	2025-11-23 10:43:10.081 +0700
+
+
+isi tabel _join_map_topic:
+1	1	db_events_country	ES	{"Op": "r", "TsMs": 1763817077954, "Payload": {"After": {"cntry_id": "ES", "cntry_name_en": "Spain", "cntry_name_es": "España", "cntry_name_gl": "España", "cntry_aneca_id": 34}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "country", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "first_in_data_collection", "connector": "postgresql"}}, "Transaction": null}	2025-11-23 10:43:10.067 +0700
+2	2	db_events_country	US	{"Op": "r", "TsMs": 1763817077954, "Payload": {"After": {"cntry_id": "US", "cntry_name_en": "United States", "cntry_name_es": "Estados Unidos", "cntry_name_gl": "Estados Unidos", "cntry_aneca_id": 1}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "country", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	2025-11-23 10:43:10.070 +0700
+3	3	db_events_country	UK	{"Op": "r", "TsMs": 1763817077954, "Payload": {"After": {"cntry_id": "UK", "cntry_name_en": "United Kingdom", "cntry_name_es": "Reino Unido", "cntry_name_gl": "Reino Unido", "cntry_aneca_id": 44}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "country", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	2025-11-23 10:43:10.071 +0700
+4	4	db_events_country	FR	{"Op": "r", "TsMs": 1763817077954, "Payload": {"After": {"cntry_id": "FR", "cntry_name_en": "France", "cntry_name_es": "Francia", "cntry_name_gl": "Francia", "cntry_aneca_id": 33}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "country", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "true", "connector": "postgresql"}}, "Transaction": null}	2025-11-23 10:43:10.072 +0700
+5	5	db_events_country	DE	{"Op": "r", "TsMs": 1763817077954, "Payload": {"After": {"cntry_id": "DE", "cntry_name_en": "Germany", "cntry_name_es": "Alemania", "cntry_name_gl": "Alemaña", "cntry_aneca_id": 49}, "Before": null, "Source": {"db": "old_publication_db", "lsn": 28905888, "name": "publication", "txId": 826, "xmin": null, "table": "country", "ts_ms": 1763817077800, "schema": "public", "version": "2.1.4.Final", "sequence": "[null,\"28905888\"]", "snapshot": "last_in_data_collection", "connector": "postgresql"}}, "Transaction": null}	2025-11-23 10:43:10.073 +0700
+
+isi table _join_map:
+1	publication-&-country-to-publication	ES	2025-11-23 10:43:10.067 +0700	2025-11-23 10:43:10.067 +0700
+2	publication-&-country-to-publication	US	2025-11-23 10:43:10.070 +0700	2025-11-23 10:43:10.070 +0700
+3	publication-&-country-to-publication	UK	2025-11-23 10:43:10.071 +0700	2025-11-23 10:43:10.071 +0700
+4	publication-&-country-to-publication	FR	2025-11-23 10:43:10.072 +0700	2025-11-23 10:43:10.072 +0700
+5	publication-&-country-to-publication	DE	2025-11-23 10:43:10.073 +0700	2025-11-23 10:43:10.073 +0700

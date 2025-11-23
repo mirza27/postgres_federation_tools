@@ -4,6 +4,7 @@ import (
 	"context"
 	"db_migrate_server/internal/checker"
 	"db_migrate_server/internal/config"
+	"db_migrate_server/internal/mapping"
 	"db_migrate_server/internal/pivot"
 	"db_migrate_server/internal/util"
 	"os"
@@ -22,6 +23,14 @@ func main() {
 	cfg := config.Load()
 	util.Info.Println("checker: configuration loaded")
 
+	util.Info.Println("checker: loading mapping root")
+	root, err := mapping.Load(*cfg)
+	if err != nil {
+		panic(err)
+	}
+	util.Info.Printf("checker: mapping loaded entities=%d", len(root.Entities))
+	plan := mapping.NewPlanner(root)
+
 	util.Info.Println("checker: connecting pivot repository")
 	pivotRepo, err := pivot.New(ctx, cfg.PivotDSN)
 	if err != nil {
@@ -36,7 +45,7 @@ func main() {
 	}
 	util.Info.Println("checker: pivot schema ensured")
 
-	ch := checker.New(pivotRepo, cfg.BatchMaxRows, cfg.BatchMaxInterval)
+	ch := checker.New(pivotRepo, plan, cfg.BatchMaxRows, cfg.BatchMaxInterval)
 	util.Info.Println("checker: worker ready")
 
 	util.Info.Println("checker: starting run loop")

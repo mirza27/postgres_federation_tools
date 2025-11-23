@@ -1,0 +1,10 @@
+Apakah memungkinkan jika proses join disederhanakan dengan memisahkan proses merge join ke worker checker. 
+
+Sehingga hanya terdapat 1 instance / consumer untuk setiap tabel topic pada worker parser. Namun setiap instance tetap membaca semua mapping.
+contoh mekanisme pada kasus entity 'publication-&-country-to-publication' yaitu 
+1. instance untuk topic publication akan menulis ke tabel _exec_queue dengan memberikan tanda bahwa memerlukan join.
+Sedangkan untuk instance lain misalnya topic country akan membaca mapping dan berlaku sebagai fragment yang sehingga menulis pada tabel join tanpa menulis ke _exec_queue.
+Jika membutuhkan lebih dari 2 join maka instance lain tersebut berlaku sama seperti fragmen topic country.
+2. Worker checker secara terus menerus juga akan mengecek tabel _exec_queue. Selain mengecek keymap, worker cheker juga akan mengecek apakah bari memerlukan join.
+Jika memerlukan maka cek tabel dengan key join yang sama apakah sudah ada atau belum. Jika belum maka lanjut ke baris _exec_queue lainnya. Jika sudah maka lengkapi beris _exec_queue (merge join).
+3. Sehingga worker executor tetap akan menjalankan query.

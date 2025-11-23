@@ -1,0 +1,6 @@
+data di tabel _exec_queue:
+91	bf2c1854-d503-44ab-87c0-6eec1f9d832a	publication-&-country-to-publication	r	insert into publication (place,country,year,publisher_name,code,title) values ($1,$2,$3,$4,$5,$6) returning code	["Vigo", null, "B98=", "Springer", 229376288, "Scalable Data Migration in Heterogeneous Systems"]	{code}	{"src_key": "1", "map_name": "_keymap_publication-&-country-to-publication", "src_table": "publication", "tgt_table": "publication", "src_column": "pub_id", "tgt_column": "code"}					false	error	true	1	1	ERROR: invalid input syntax for type bigint: "B98=" (SQLSTATE 22P02)			2025-11-23 10:59:56.284 +0700	2025-11-23 11:00:06.436 +0700
+
+
+data di tabel publication (schema sumber): 
+1		Scalable Data Migration in Heterogeneous Systems	2015	Vigo	Springer	1				DB Journal				true	ES

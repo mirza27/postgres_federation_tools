@@ -17,6 +17,8 @@
     "tombstones.on.delete": "true",
     "transforms": "route",
 
+    "decimal.handling.mode": "string",
+
     "snapshot.mode": "initial",
 
     "slot.drop.on.stop": "true",

@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	"db_migrate_server/internal/cache"
 	"db_migrate_server/internal/config"
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/mapping"
@@ -60,9 +59,7 @@ func main() {
 	// }
 	// util.Info.Println("parser: pivot schema ensured")
 
-	util.Info.Printf("parser: initializing join wait ttl=%ds", cfg.JoinWaitTTL)
-	jw := cache.NewJoinWait(cfg.JoinWaitTTL)
-	proc := pipeline.NewProcessor(plan, pivotRepo, jw)
+	proc := pipeline.NewProcessor(plan, pivotRepo)
 	util.Info.Println("parser: processor ready")
 
 	util.Info.Println("parser: starting synchronous kafka loop")
