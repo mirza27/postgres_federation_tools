@@ -15,10 +15,4 @@ type ExecItem struct {
 	NeedKeymap bool
 	Keymap     *KeymapRequest
 	Returning  []string
-
-	NeedJoin      bool
-	JoinKey       string
-	JoinTopic     string
-	JoinSourceKey string
-	JoinPayload   []byte
 }

@@ -138,11 +138,15 @@ func (r *Repo) MarkKeymapError(ctx context.Context, keymapID int64, msg string) 
 // Join map -----------------------------------------------------------------
 
 // AddJoinFragment menyimpan fragmen join per topic dan source_key.
-func (r *Repo) AddJoinFragment(ctx context.Context, entity, joinKey, topic, sourceKey string, payload *kafka.DebeziumValue) error {
+func (r *Repo) AddJoinFragment(ctx context.Context, entity, joinKey, topic, sourceKey string, joinFields map[string]string, payload *kafka.DebeziumValue) error {
 	if joinKey == "" || sourceKey == "" {
 		return fmt.Errorf("missing join/source key for entity %s", entity)
 	}
 	raw, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+	fieldsJSON, err := json.Marshal(joinFields)
 	if err != nil {
 		return err
 	}
@@ -169,15 +173,106 @@ func (r *Repo) AddJoinFragment(ctx context.Context, entity, joinKey, topic, sour
 	}
 
 	_, err = tx.Exec(ctx, `
-        insert into _join_map_topic (join_map_id, topic, source_key, payload, updated_at)
-        values ($1,$2,$3,$4::jsonb, now())
+        insert into _join_map_topic (join_map_id, topic, source_key, join_fields, payload, updated_at)
+        values ($1,$2,$3,$4::jsonb,$5::jsonb, now())
         on conflict (join_map_id, topic, source_key)
-        do update set payload=excluded.payload, updated_at=excluded.updated_at`,
-		joinMapID, topic, sourceKey, string(raw))
+        do update set payload=excluded.payload, join_fields=excluded.join_fields, updated_at=excluded.updated_at`,
+		joinMapID, topic, sourceKey, string(fieldsJSON), string(raw))
 	if err != nil {
 		return err
 	}
 	return tx.Commit(ctx)
+}
+
+// EnqueueNeedJoin menyimpan pekerjaan join fact ke tabel _need_join.
+func (r *Repo) EnqueueNeedJoin(ctx context.Context, it NeedJoinItem) error {
+	if it.QueueID == uuid.Nil {
+		it.QueueID = uuid.New()
+	}
+	var payloadJSON interface{}
+	if len(it.JoinPayload) > 0 {
+		payloadJSON = string(it.JoinPayload)
+	}
+	var fieldsJSON interface{}
+	if len(it.JoinFields) > 0 {
+		fieldsJSON = string(it.JoinFields)
+	}
+	util.Debug.Printf("pivot: EnqueueNeedJoin queue=%s entity=%s joinKey=%s topic=%s", it.QueueID, it.Entity, it.JoinKey, it.JoinTopic)
+	_, err := r.DB.Exec(ctx, `
+        insert into _need_join (
+            queue_id, entity, op, join_key, join_topic, join_source_key,
+            join_payload, join_fields, status
+        )
+        values ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb,'pending')`,
+		it.QueueID, it.Entity, it.Op, it.JoinKey, it.JoinTopic, nullIfEmpty(it.JoinSourceKey), payloadJSON, fieldsJSON)
+	return err
+}
+
+// FetchNeedJoin mengambil pekerjaan join pending untuk worker joiner.
+func (r *Repo) FetchNeedJoin(ctx context.Context, limit int) ([]NeedJoinItem, error) {
+	rows, err := r.DB.Query(ctx, `
+        select id, queue_id, entity, op, join_key, join_topic, coalesce(join_source_key,''), 
+               coalesce(join_payload,'{}'::jsonb), coalesce(join_fields,'{}'::jsonb), status
+        from _need_join
+        where status='pending'
+        order by created_at asc
+        limit $1`, limit)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []NeedJoinItem
+	for rows.Next() {
+		var (
+			id      int64
+			queueID uuid.UUID
+			entity  string
+			op      string
+			joinKey string
+			joinTopic string
+			joinSourceKey string
+			joinPayload []byte
+			joinFields []byte
+			status  string
+		)
+		if err := rows.Scan(&id, &queueID, &entity, &op, &joinKey, &joinTopic, &joinSourceKey, &joinPayload, &joinFields, &status); err != nil {
+			return nil, err
+		}
+		out = append(out, NeedJoinItem{
+			ID:            id,
+			QueueID:       queueID,
+			Entity:        entity,
+			Op:            op,
+			JoinKey:       joinKey,
+			JoinTopic:     joinTopic,
+			JoinSourceKey: joinSourceKey,
+			JoinPayload:   joinPayload,
+			JoinFields:    joinFields,
+			Status:        status,
+		})
+	}
+	return out, rows.Err()
+}
+
+// MarkNeedJoinDone menandai pekerjaan join selesai.
+func (r *Repo) MarkNeedJoinDone(ctx context.Context, id int64) error {
+	util.Debug.Printf("pivot: MarkNeedJoinDone id=%d", id)
+	_, err := r.DB.Exec(ctx, `
+        update _need_join
+        set status='done', updated_at=now(), last_error=null
+        where id=$1`, id)
+	return err
+}
+
+// MarkNeedJoinError mencatat error pada pekerjaan join.
+func (r *Repo) MarkNeedJoinError(ctx context.Context, id int64, msg string) error {
+	util.Warn.Printf("pivot: MarkNeedJoinError id=%d msg=%s", id, msg)
+	_, err := r.DB.Exec(ctx, `
+        update _need_join
+        set status='error', updated_at=now(), last_error=$2
+        where id=$1`, id, msg)
+	return err
 }
 
 // FetchJoinFragments mengambil payload per topic untuk join_key tertentu.
@@ -234,190 +329,6 @@ func (r *Repo) FetchJoinFragments(ctx context.Context, entity, joinKey string, t
 	return out, complete, nil
 }
 
-// UpsertJoinFragment menyimpan payload per topic & source_key.
-// Mengembalikan daftar payload gabungan yang siap diproses (bisa lebih dari satu)
-// dan membersihkan fragment sisi "fact" yang sudah diproses. Fragment dimensi dipertahankan.
-func (r *Repo) UpsertJoinFragment(ctx context.Context, entity, joinKey, topic, sourceKey string, payload *kafka.DebeziumValue, expectedTopics []string) ([]map[string]*kafka.DebeziumValue, error) {
-	util.Debug.Printf("pivot: UpsertJoinFragment entity=%s joinKey=%s topic=%s sourceKey=%s expected=%v", entity, joinKey, topic, sourceKey, expectedTopics)
-	if joinKey == "" || sourceKey == "" {
-		return nil, fmt.Errorf("missing join/source key for entity %s", entity)
-	}
-	if len(expectedTopics) == 0 {
-		return nil, fmt.Errorf("missing expected topics for entity %s", entity)
-	}
-
-	raw, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
-
-	tx, err := r.DB.Begin(ctx)
-	if err != nil {
-		return nil, err
-	}
-	defer func() {
-		if err != nil {
-			_ = tx.Rollback(ctx)
-		}
-	}()
-
-	var joinMapID int64
-	err = tx.QueryRow(ctx, `
-        insert into _join_map (entity, join_key)
-        values ($1,$2)
-        on conflict (entity, join_key)
-        do update set updated_at=now()
-        returning join_map_id`,
-		entity, joinKey).Scan(&joinMapID)
-	if err != nil {
-		return nil, err
-	}
-
-	_, err = tx.Exec(ctx, `
-        insert into _join_map_topic (join_map_id, topic, source_key, payload, updated_at)
-        values ($1,$2,$3,$4::jsonb, now())
-        on conflict (join_map_id, topic, source_key)
-        do update set payload=excluded.payload, updated_at=excluded.updated_at`,
-		joinMapID, topic, sourceKey, string(raw))
-	if err != nil {
-		return nil, err
-	}
-
-	// cek kelengkapan: ada minimal satu row untuk setiap topic
-	var topicReady int
-	err = tx.QueryRow(ctx, `
-        select count(distinct topic) from _join_map_topic
-        where join_map_id=$1 and topic = any($2)`,
-		joinMapID, expectedTopics).Scan(&topicReady)
-	if err != nil {
-		return nil, err
-	}
-	if topicReady < len(expectedTopics) {
-		err = tx.Commit(ctx)
-		return nil, err
-	}
-
-	// ambil count per topic untuk menentukan dim/fact
-	type cnt struct {
-		Topic string
-		Count int
-	}
-	rows, err := tx.Query(ctx, `
-        select topic, count(*) from _join_map_topic
-        where join_map_id=$1
-        group by topic`, joinMapID)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-	var counts []cnt
-	for rows.Next() {
-		var c cnt
-		if scanErr := rows.Scan(&c.Topic, &c.Count); scanErr != nil {
-			err = scanErr
-			return nil, err
-		}
-		counts = append(counts, c)
-	}
-	if err = rows.Err(); err != nil {
-		return nil, err
-	}
-
-	if len(counts) < len(expectedTopics) {
-		err = tx.Commit(ctx)
-		return nil, err
-	}
-
-	// tentukan dimTopic (count==1) dan factTopic (lainnya)
-	var dimTopic string
-	for _, c := range counts {
-		if c.Count == 1 {
-			dimTopic = c.Topic
-			break
-		}
-	}
-	if dimTopic == "" {
-		// fallback: pilih topic yang bukan current untuk jadi dim
-		for _, t := range expectedTopics {
-			if t != topic {
-				dimTopic = t
-				break
-			}
-		}
-	}
-
-	// ambil payload dim
-	var dimPayload *kafka.DebeziumValue
-	err = tx.QueryRow(ctx, `
-        select payload from _join_map_topic
-        where join_map_id=$1 and topic=$2
-        limit 1`, joinMapID, dimTopic).Scan(&raw)
-	if err != nil {
-		return nil, err
-	}
-	if len(raw) > 0 {
-		if unmarshalErr := json.Unmarshal(raw, &dimPayload); unmarshalErr != nil {
-			return nil, unmarshalErr
-		}
-	}
-
-	// ambil semua fact rows (topic selain dimTopic)
-	factRows, err := tx.Query(ctx, `
-        select join_map_topic_id, topic, payload
-        from _join_map_topic
-        where join_map_id=$1 and topic<>$2`, joinMapID, dimTopic)
-	if err != nil {
-		return nil, err
-	}
-	defer factRows.Close()
-
-	type fact struct {
-		ID     int64
-		Topic  string
-		PBytes []byte
-	}
-	var facts []fact
-	for factRows.Next() {
-		var f fact
-		if scanErr := factRows.Scan(&f.ID, &f.Topic, &f.PBytes); scanErr != nil {
-			err = scanErr
-			return nil, err
-		}
-		facts = append(facts, f)
-	}
-	if err = factRows.Err(); err != nil {
-		return nil, err
-	}
-
-	var merges []map[string]*kafka.DebeziumValue
-	for _, f := range facts {
-		var fv kafka.DebeziumValue
-		if unmarshalErr := json.Unmarshal(f.PBytes, &fv); unmarshalErr != nil {
-			return nil, unmarshalErr
-		}
-		merges = append(merges, map[string]*kafka.DebeziumValue{
-			f.Topic:  &fv,
-			dimTopic: dimPayload,
-		})
-		// hapus fact setelah dipakai
-		if _, err = tx.Exec(ctx, `delete from _join_map_topic where join_map_topic_id=$1`, f.ID); err != nil {
-			return nil, err
-		}
-	}
-
-	// jika tidak ada fact (aneh, karena complete check), commit saja
-	if len(merges) == 0 {
-		err = tx.Commit(ctx)
-		return merges, err
-	}
-
-	if err = tx.Commit(ctx); err != nil {
-		return nil, err
-	}
-
-	return merges, nil
-}
-
 // Exec queue ----------------------------------------------------------------
 
 // Enqueue dipanggil parser untuk menyimpan rencana eksekusi ke _exec_queue.
@@ -446,24 +357,16 @@ func (r *Repo) Enqueue(ctx context.Context, it ExecItem) error {
 		keymapArg = string(payload)
 	}
 
-	var joinPayloadArg interface{}
-	if len(it.JoinPayload) > 0 {
-		joinPayloadArg = string(it.JoinPayload)
-	}
-
 	util.Debug.Printf("pivot: Enqueue queue=%s entity=%s op=%s sql=%s needKeymap=%t",
 		it.QueueID, it.Entity, it.Op, truncateSQL(it.SQL), it.NeedKeymap)
 
 	_, err = r.DB.Exec(ctx, `
         insert into _exec_queue (
             queue_id, entity, op, sql_text, sql_args,
-            returning_cols, keymap_payload, need_keymap, status,
-            need_join, join_key, join_topic, join_source_key, join_payload
+            returning_cols, keymap_payload, need_keymap, status
         )
-        values ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,'pending',
-                $9,$10,$11,$12,$13::jsonb)`,
-		it.QueueID, it.Entity, it.Op, it.SQL, string(argsJSON), it.Returning, keymapArg, it.NeedKeymap,
-		it.NeedJoin, nullIfEmpty(it.JoinKey), nullIfEmpty(it.JoinTopic), nullIfEmpty(it.JoinSourceKey), joinPayloadArg)
+        values ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,'pending')`,
+		it.QueueID, it.Entity, it.Op, it.SQL, string(argsJSON), it.Returning, keymapArg, it.NeedKeymap)
 	return err
 }
 
@@ -538,9 +441,7 @@ func (r *Repo) FetchForChecker(ctx context.Context, limit int) ([]CheckerItem, e
 
 	rows, err := r.DB.Query(ctx, `
         select id, queue_id, entity, need_keymap, keymap_id, status,
-               coalesce(keymap_payload,'{}'::jsonb),
-               need_join, coalesce(join_key,''), coalesce(join_topic,''), coalesce(join_source_key,''),
-               coalesce(join_payload,'{}'::jsonb), coalesce(op,'')
+               coalesce(keymap_payload,'{}'::jsonb)
         from _exec_queue
         where status='pending'
         order by created_at asc
@@ -561,16 +462,9 @@ func (r *Repo) FetchForChecker(ctx context.Context, limit int) ([]CheckerItem, e
 			keymapID    pgtype.Int8
 			payload     []byte
 			queueID     uuid.UUID
-			needJoin    bool
-			joinKey     string
-			joinTopic   string
-			joinSource  string
-			joinPayload []byte
-			op          string
 		)
 
-		if err := rows.Scan(&id, &queueID, &entity, &needKeymap, &keymapID, &status, &payload,
-			&needJoin, &joinKey, &joinTopic, &joinSource, &joinPayload, &op); err != nil {
+		if err := rows.Scan(&id, &queueID, &entity, &needKeymap, &keymapID, &status, &payload); err != nil {
 			// Data yang tidak bisa diparsing lebih baik gagal lebih awal daripada memproses info salah.
 			return nil, err
 		}
@@ -590,12 +484,6 @@ func (r *Repo) FetchForChecker(ctx context.Context, limit int) ([]CheckerItem, e
 			KeymapID:      kmPtr,
 			Status:        status,
 			KeymapPayload: payload,
-			NeedJoin:      needJoin,
-			JoinKey:       joinKey,
-			JoinTopic:     joinTopic,
-			JoinSourceKey: joinSource,
-			JoinPayload:   joinPayload,
-			Op:            op,
 		})
 	}
 	return out, rows.Err()

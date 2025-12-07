@@ -6,14 +6,17 @@
     {
       "alias": "c",
       "from": "country",
-      "join": { "type": "inner", "on": "p.pub_cntry = c.cntry_id" }
+      "join": {
+        "match_with": "p",
+        "fact_column": "pub_cntry",
+        "dim_column": "cntry_id"
+      }
     }
   ],
   "target_table": "publication",
   "key": {
     "strategy": "surrogate",
     "source": ["p.pub_id"],
-    "join_key": "p.pub_cntry",
     "resolver": {
       "type": "mapping_table",
       "table": "_keymap_publication-&-country-to-publication"

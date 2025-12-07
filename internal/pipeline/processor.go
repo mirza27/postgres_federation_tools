@@ -4,6 +4,7 @@ import (
 	"context"
 	"db_migrate_server/internal/cast"
 	"db_migrate_server/internal/expr"
+	"db_migrate_server/internal/join"
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/mapping"
 	"db_migrate_server/internal/pivot"
@@ -16,19 +17,32 @@ import (
 
 type Processor struct {
 	Plan  *mapping.Planner
-	Pivot *pivot.Repo
+	Pivot PivotStore
 }
 
-func NewProcessor(plan *mapping.Planner, pivotRepo *pivot.Repo) *Processor {
+// NewProcessor wires planner and pivot repo into a Processor orchestrator.
+func NewProcessor(plan *mapping.Planner, pivotRepo PivotStore) *Processor {
 	return &Processor{Plan: plan, Pivot: pivotRepo}
 }
 
+// PivotStore membatasi operasi pivot yang boleh diakses processor.
+type PivotStore interface {
+	EnqueueNeedJoin(ctx context.Context, it pivot.NeedJoinItem) error
+	AddJoinFragment(ctx context.Context, entity, joinKey, topic, sourceKey string, joinFields map[string]string, payload *kafka.DebeziumValue) error
+	LookupKey(ctx context.Context, mapName, srcKey string) (string, bool, error)
+	Enqueue(ctx context.Context, it pivot.ExecItem) error
+}
+
+// KeyResolution captures resolved key value and optional keymap request info.
 type KeyResolution struct {
 	Value      string
 	NeedKeymap bool // default false
 	Request    *pivot.KeymapRequest
 }
 
+// Handle routes a single Kafka event to matching entities, deciding between
+// multi-topic join path (store fragments or enqueue placeholders) and direct
+// single-topic planning.
 func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 	op := ev.Op
@@ -54,8 +68,10 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 		if len(allTopics) > 1 {
 
-			joinKey := p.deriveJoinKey(ent, ev.Topic, ev.Value)
-			util.Debug.Printf("processor: join key=%s topic=%s", joinKey, ev.Topic)
+			aliasTopic := aliasTopics(ent)
+			joinCtx := join.DeriveContext(ent, ev.Topic, ev.Value, aliasTopic)
+			joinKey := joinCtx.JoinKey
+			util.Debug.Printf("processor: join key=%s topic=%s fields=%v", joinKey, ev.Topic, joinCtx.Fields)
 
 			sourceKey := p.deriveKeySource(ent, map[string]*kafka.DebeziumValue{ev.Topic: ev.Value})
 			if sourceKey == "" {
@@ -67,25 +83,22 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 			if ev.Topic == factTopic {
 				// enqueue placeholder needing join
 				raw, _ := json.Marshal(ev.Value)
-				item := pivot.ExecItem{
+				fieldsRaw, _ := json.Marshal(joinCtx.Fields)
+				item := pivot.NeedJoinItem{
 					Entity:        ent.Entity,
 					Op:            op,
-					NeedJoin:      true,
 					JoinKey:       joinKey,
 					JoinTopic:     ev.Topic,
 					JoinSourceKey: sourceKey,
 					JoinPayload:   raw,
-					NeedKeymap:    false,
-					SQL:           "pending_join",
-					Args:          nil,
-					Returning:     nil,
+					JoinFields:    fieldsRaw,
 				}
-				if err := p.Pivot.Enqueue(ctx, item); err != nil {
+				if err := p.Pivot.EnqueueNeedJoin(ctx, item); err != nil {
 					return err
 				}
 				util.Debug.Printf("processor: enqueued join placeholder entity=%s joinKey=%s", ent.Entity, joinKey)
 			} else {
-				if err := p.Pivot.AddJoinFragment(ctx, ent.Entity, joinKey, ev.Topic, sourceKey, ev.Value); err != nil {
+				if err := p.Pivot.AddJoinFragment(ctx, ent.Entity, joinKey, ev.Topic, sourceKey, joinCtx.Fields, ev.Value); err != nil {
 					return err
 				}
 				util.Debug.Printf("processor: stored join fragment entity=%s topic=%s", ent.Entity, ev.Topic)
@@ -104,82 +117,12 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 	return nil
 }
 
-func (p *Processor) deriveJoinKey(ent mapping.Entity, eventTopic string, value *kafka.DebeziumValue) string {
-
-	aliasTopic := aliasTopics(ent)
-
-	// Ambil dari ekspresi join "alias.col = alias2.col" yang sesuai topic event
-	if key := keyFromJoinHint(ent, eventTopic, value, aliasTopic); key != "" {
-		return key
-	}
-
-	// Fallback: coba key.source jika join expr tidak cocok
-	if len(ent.Key.Source) > 0 {
-		if key := keyFromSource(ent.Key.Source, eventTopic, value, aliasTopic); key != "" {
-			util.Debug.Printf("processor: derived join key=%s entity=%s via key.source", key, ent.Entity)
-			return key
-		}
-	}
-
-	util.Debug.Printf("processor: deriveJoinKey missing value entity=%s", ent.Entity)
-	return ""
-}
-
-// keyFromJoinHint mencoba membaca ent.Key.JoinKey terlebih dulu; bila tidak ada, pakai join expression.
-func keyFromJoinHint(ent mapping.Entity, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) string {
-	if value == nil {
-		return ""
-	}
-
-	if ent.Key.JoinKey != "" {
-		if key := keyFromSource([]string{ent.Key.JoinKey}, eventTopic, value, aliasTopic); key != "" {
-			util.Debug.Printf("processor: derived join key=%s entity=%s via join_key", key, ent.Entity)
-			return key
-		}
-	}
-
-	for _, src := range ent.Sources {
-		if src.Join == nil || strings.TrimSpace(src.Join.On) == "" {
-			continue
-		}
-		clauses := strings.Split(strings.ReplaceAll(src.Join.On, "AND", "and"), "and")
-		for _, c := range clauses {
-			partsEq := strings.Split(c, "=")
-			if len(partsEq) != 2 {
-				continue
-			}
-			left := strings.TrimSpace(partsEq[0])
-			right := strings.TrimSpace(partsEq[1])
-			for _, side := range []string{left, right} {
-				ps := strings.Split(side, ".")
-				if len(ps) < 2 {
-					continue
-				}
-				alias := strings.TrimSpace(ps[0])
-				column := strings.TrimSpace(ps[len(ps)-1])
-				topic := aliasTopic[alias]
-				if topic == "" || (eventTopic != "" && topic != eventTopic) {
-					continue
-				}
-				key := stringFromRow(value.Payload.After, column)
-				if key == "" {
-					key = stringFromRow(value.Payload.Before, column)
-				}
-				if key != "" {
-					util.Debug.Printf("processor: derived join key=%s entity=%s via join expr", key, ent.Entity)
-					return key
-				}
-			}
-		}
-	}
-	return ""
-}
-
-// mergePayload: gabungkan payload dari beberapa topic (sederhana: map[topic]rawJSON)
+// mergePayload merges payload from multiple topics (identity map here).
 func (p *Processor) mergePayload(topicBytes map[string]*kafka.DebeziumValue) map[string]*kafka.DebeziumValue {
 	return topicBytes
 }
 
+// planAndEnqueue resolves keys, chooses route, builds SQL, and writes to pivot queue.
 func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op string, payload map[string]*kafka.DebeziumValue) error {
 
 	util.Debug.Printf("processor: planAndEnqueue entity=%s op=%s payloadTopics=%d", ent.Entity, op, len(payload))
@@ -241,6 +184,7 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 	})
 }
 
+// opRoute maps Debezium op to configured routing mode (insert/update).
 func opRoute(op string, ent mapping.Entity) string {
 	switch op {
 	case "c":
@@ -255,6 +199,7 @@ func opRoute(op string, ent mapping.Entity) string {
 	}
 }
 
+// normalizeRoute picks valid route or falls back when empty.
 func normalizeRoute(mode, fallback string) string {
 	switch mode {
 	case "insert", "update":
@@ -266,7 +211,7 @@ func normalizeRoute(mode, fallback string) string {
 	}
 }
 
-// mendefinisikan mapping foreign berdasarkan 'strategy'
+// resolveKey implements key strategy: derive natural key or request/lookup keymap.
 func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload map[string]*kafka.DebeziumValue) (KeyResolution, error) {
 	util.Debug.Printf("processor: resolveKey entity=%s strategy=%s", ent.Entity, ent.Key.Strategy)
 
@@ -309,6 +254,7 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 	}
 }
 
+// anyPayload returns an arbitrary payload from the map (when only one is expected).
 func anyPayload(m map[string]*kafka.DebeziumValue) *kafka.DebeziumValue {
 	for _, v := range m {
 		util.Debug.Printf("processor: anyPayload returning payload topic")
@@ -319,6 +265,7 @@ func anyPayload(m map[string]*kafka.DebeziumValue) *kafka.DebeziumValue {
 	return nil
 }
 
+// stringFromRow tries to stringify a column value from Debezium row map.
 func stringFromRow(row map[string]any, key string) string {
 	if row == nil {
 		return ""
@@ -336,6 +283,7 @@ func stringFromRow(row map[string]any, key string) string {
 	return ""
 }
 
+// sourceKeyColumn resolves column name used as src_key for keymap requests.
 func sourceKeyColumn(ent mapping.Entity) string {
 	if ent.Key.Resolver != nil && ent.Key.Resolver.SourceKeyCol != "" {
 		return ent.Key.Resolver.SourceKeyCol
@@ -347,6 +295,7 @@ func sourceKeyColumn(ent mapping.Entity) string {
 	return ""
 }
 
+// targetKeyColumn finds target column bound to $key placeholder.
 func targetKeyColumn(ent mapping.Entity) string {
 	for colName, spec := range ent.Columns {
 		if spec.From == "$key" {
@@ -356,6 +305,7 @@ func targetKeyColumn(ent mapping.Entity) string {
 	return ""
 }
 
+// firstSourceTable returns the first source table name for metadata/debug.
 func firstSourceTable(ent mapping.Entity) string {
 	if len(ent.Sources) == 0 {
 		return ""
@@ -363,6 +313,7 @@ func firstSourceTable(ent mapping.Entity) string {
 	return ent.Sources[0].From
 }
 
+// aliasTopics builds a map alias->topic name for the entity sources.
 func aliasTopics(ent mapping.Entity) map[string]string {
 	out := map[string]string{}
 	for _, s := range ent.Sources {
@@ -374,6 +325,7 @@ func aliasTopics(ent mapping.Entity) map[string]string {
 	return out
 }
 
+// topicName derives topic from explicit field or table name.
 func topicName(s mapping.EntitySource) string {
 	if trimmed := strings.TrimSpace(s.Topic); trimmed != "" {
 		return trimmed
@@ -409,7 +361,7 @@ func (p *Processor) HandleJoinReady(ctx context.Context, ent mapping.Entity, op 
 	return p.planAndEnqueue(ctx, ent, op, payload)
 }
 
-// keyFromSource mengambil nilai kolom dari key.source dengan memperhatikan alias->topic
+// keyFromSource mengambil nilai kolom dari key.source dengan memperhatikan alias->topic.
 func keyFromSource(keySources []string, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) string {
 	if value == nil || len(keySources) == 0 {
 		return ""
@@ -435,6 +387,7 @@ func keyFromSource(keySources []string, eventTopic string, value *kafka.Debezium
 	return ""
 }
 
+// buildColumns assembles target columns/values and where clause for insert/update.
 func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, payload map[string]*kafka.DebeziumValue, route string) (
 	cols []string, vals []interface{}, sets []string, where []string, err error) {
 
@@ -465,7 +418,7 @@ func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, pa
 			}
 			value = key
 		case spec.From != "":
-			value = firstAfterField(payload, spec.From)
+			value = extractFieldFromPayload(payload, spec.From)
 		default:
 			value = spec.Default
 		}
@@ -510,8 +463,8 @@ func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, pa
 	return
 }
 
-// ambil nama kolom asli tanpa path
-func firstAfterField(payload map[string]*kafka.DebeziumValue, path string) any {
+// extractFieldFromPayload picks a column value from merged payload using the last path segment.
+func extractFieldFromPayload(payload map[string]*kafka.DebeziumValue, path string) any {
 	// path bisa "u.email" / "o.id" → ambil segmen terakhir
 	util.Debug.Printf("processor: firstAfterField path=%s", path)
 	parts := strings.Split(path, ".")

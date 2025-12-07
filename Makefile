@@ -1,3 +1,10 @@
+# run container
+run-base:
+	docker compose -f docker-compose.base.yml --env-file .base.env up -d
+
+run-pub:
+	docker compose -f docker-compose.publication.yml --env-file .publication.env up -d
+
 # RUN worker
 executor:
 	go run ./cmd/executor/main.go
@@ -7,6 +14,9 @@ parser:
 
 checker:
 	go run ./cmd/checker/main.go
+
+joiner:
+	go run ./cmd/joiner/main.go
 
 
 # Debezium Config
@@ -19,6 +29,13 @@ conn-ojol:
 	curl -X POST -H "Content-Type: application/json"   -d @connector-ojol.json   http://localhost:8083/connectors
 dis-ojol:
 	curl -X DELETE http://localhost:8083/connectors/ojol-connector
+
+# pivotable 
+up-pivot:
+	docker exec -i pivot_db psql -U pivot_user -d pivot < ./internal/config/pivot_db.sql
+
+drop-pivot:
+	docker exec -i pivot_db  psql -U pivot_user -d pivot < ./migration/pivot/down.sql
 
 # CRM ECOM CASE
 db1:

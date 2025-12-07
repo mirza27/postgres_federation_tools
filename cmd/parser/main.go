@@ -2,11 +2,10 @@ package main
 
 import (
 	"context"
+	"db_migrate_server/internal/app"
 	"db_migrate_server/internal/config"
 	"db_migrate_server/internal/kafka"
-	"db_migrate_server/internal/mapping"
 	"db_migrate_server/internal/pipeline"
-	"db_migrate_server/internal/pivot"
 	"db_migrate_server/internal/util"
 	"log"
 	"os"
@@ -24,19 +23,14 @@ func main() {
 	cfg := config.Load()
 	util.Info.Println("parser: configuration loaded")
 
-	util.Info.Println("parser: loading mapping root")
-	root, err := mapping.Load(*cfg)
+	plan, err := app.LoadPlan(cfg)
 	if err != nil {
 		panic(err)
 	}
-	util.Info.Printf("parser: mapping root loaded with %d entities", len(root.Entities))
 
-	for i, e := range root.Entities {
+	for i, e := range plan.Entities {
 		log.Printf("[%d] Entity: %s → target: %s", i+1, e.Entity, e.TargetTable)
 	}
-
-	util.Info.Println("parser: building planner")
-	plan := mapping.NewPlanner(root)
 	plan.Print()
 	util.Info.Printf("parser: planner covers %d topics", len(plan.TopicList))
 
@@ -45,19 +39,11 @@ func main() {
 	defer consumer.Close()
 	util.Info.Println("parser: kafka consumer ready")
 
-	util.Info.Println("parser: connecting pivot repository")
-	pivotRepo, err := pivot.New(ctx, cfg.PivotDSN)
+	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
 	if err != nil {
 		panic(err)
 	}
 	defer pivotRepo.Close()
-	util.Info.Println("parser: pivot repository connected")
-
-	// util.Info.Println("parser: ensuring pivot schema")
-	// if err := pivotRepo.EnsureSchema(ctx, pivot.DefaultSchemaSQL()); err != nil {
-	// 	panic(err)
-	// }
-	// util.Info.Println("parser: pivot schema ensured")
 
 	proc := pipeline.NewProcessor(plan, pivotRepo)
 	util.Info.Println("parser: processor ready")

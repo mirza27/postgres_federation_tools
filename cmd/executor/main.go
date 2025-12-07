@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
+	"db_migrate_server/internal/app"
 	"db_migrate_server/internal/config"
 	"db_migrate_server/internal/executor"
-	"db_migrate_server/internal/pivot"
 	"db_migrate_server/internal/util"
 	"os"
 	"os/signal"
@@ -22,19 +22,11 @@ func main() {
 	cfg := config.Load()
 	util.Info.Println("executor: configuration loaded")
 
-	util.Info.Println("executor: connecting pivot repository")
-	pivotRepo, err := pivot.New(ctx, cfg.PivotDSN)
+	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
 	if err != nil {
 		panic(err)
 	}
 	defer pivotRepo.Close()
-	util.Info.Println("executor: pivot repository connected")
-
-	util.Info.Println("executor: ensuring pivot schema")
-	if err := pivotRepo.EnsureSchema(ctx, pivot.DefaultSchemaSQL()); err != nil {
-		panic(err)
-	}
-	util.Info.Println("executor: pivot schema ensured")
 
 	util.Info.Printf("executor: creating executor batchMaxRows=%d intervalMs=%d", cfg.BatchMaxRows, cfg.BatchMaxInterval)
 	exec, err := executor.New(ctx, pivotRepo, cfg.TargetDSN, cfg.BatchMaxRows, cfg.BatchMaxInterval)

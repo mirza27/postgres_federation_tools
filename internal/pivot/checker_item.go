@@ -14,11 +14,4 @@ type CheckerItem struct {
 	KeymapID      *int64
 	Status        string
 	KeymapPayload []byte
-
-	NeedJoin      bool
-	JoinKey       string
-	JoinTopic     string
-	JoinSourceKey string
-	JoinPayload   []byte
-	Op            string
 }

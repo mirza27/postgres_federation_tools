@@ -15,14 +15,23 @@ import (
 )
 
 type Executor struct {
-	Pivot    *pivot.Repo
+	Pivot    PivotStore
 	Target   *pgxpool.Pool
 	MaxRows  int
 	Interval time.Duration
 	WorkerID string
 }
 
-func New(ctx context.Context, pivotRepo *pivot.Repo, targetDSN string, maxRows, intervalMs int) (*Executor, error) {
+type PivotStore interface {
+	FetchReady(ctx context.Context, limit int) ([]pivot.Row, error)
+	MarkExecuting(ctx context.Context, id int64, worker string) error
+	MarkDone(ctx context.Context, id int64) error
+	MarkError(ctx context.Context, id int64, msg string) error
+	FulfillKeymap(ctx context.Context, keymapID int64, tgtKey string) error
+	MarkKeymapError(ctx context.Context, keymapID int64, msg string) error
+}
+
+func New(ctx context.Context, pivotRepo PivotStore, targetDSN string, maxRows, intervalMs int) (*Executor, error) {
 	util.Info.Printf("executor: initializing target pool dsn=%s maxRows=%d interval=%dms", targetDSN, maxRows, intervalMs)
 	tgt, err := pgxpool.New(ctx, targetDSN)
 	if err != nil {

@@ -3,7 +3,15 @@
   "kind": "table",
   "sources": [
     { "alias": "d", "from": "drivers" },
-    { "alias": "u", "from": "users", "join": { "on": "d.user_id = u.id", "type": "left" } }
+    {
+      "alias": "u",
+      "from": "users",
+      "join": {
+        "match_with": "d",
+        "fact_column": "user_id",
+        "dim_column": "id"
+      }
+    }
   ],
   "target_table": "ojol",
   "key": {

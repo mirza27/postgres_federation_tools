@@ -27,11 +27,6 @@ create table if not exists _exec_queue (
   sql_args jsonb,
   returning_cols text[],
   keymap_payload jsonb,
-  join_key text,
-  join_topic text,
-  join_source_key text,
-  join_payload jsonb,
-  need_join boolean not null default false,
   status text not null default 'pending',
   need_keymap boolean not null default false,
   keymap_id bigint references _keymap_generic(keymap_id),
@@ -80,6 +75,25 @@ create table if not exists _polling_store (
   created_at timestamptz default now()
 );
 
+create table if not exists _need_join (
+  id bigserial primary key,
+  queue_id uuid not null default gen_random_uuid(),
+  entity text not null,
+  op text not null,
+  join_key text not null,
+  join_topic text not null,
+  join_source_key text,
+  join_payload jsonb,
+  join_fields jsonb,
+  status text not null default 'pending',
+  last_error text,
+  locked_at timestamptz,
+  locked_by text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now(),
+  unique (queue_id)
+);
+
 -- join map untuk menyimpan potongan payload per topic sampai lengkap
 create table if not exists _join_map (
   join_map_id bigserial primary key,
@@ -95,6 +109,7 @@ create table if not exists _join_map_topic (
   join_map_id bigint not null references _join_map(join_map_id) on delete cascade,
   topic text not null,
   source_key text not null default '',
+  join_fields jsonb,
   payload jsonb,
   updated_at timestamptz not null default now(),
   unique (join_map_id, topic, source_key)

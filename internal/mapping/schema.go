@@ -70,8 +70,9 @@ type EntitySource struct {
 }
 
 type Join struct {
-	On   string `json:"on"`
-	Type string `json:"type"`
+	MatchWith  string `json:"match_with,omitempty"`
+	FactColumn string `json:"fact_column,omitempty"`
+	DimColumn  string `json:"dim_column,omitempty"`
 }
 
 type Key struct {
