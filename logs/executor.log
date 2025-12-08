@@ -1,0 +1,619 @@
+go run ./cmd/executor/main.go
+2025/12/08 12:04:08 [INFO] executor: signal context registered
+2025/12/08 12:04:08 [INFO] executor: loading configuration
+📦 Config Loaded:
+Kafka brokers: localhost:29092
+Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+Mapping Path: ./internal/config/json/publication
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-c2j5ja
+2025/12/08 12:04:08 [INFO] executor: configuration loaded
+2025/12/08 12:04:08 [INFO] app: connecting pivot repository
+2025/12/08 12:04:08 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+📦 Config Loaded:
+Kafka brokers: localhost:29092
+Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+Mapping Path: ./internal/config/json/publication
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-supqbv
+2025/12/08 12:04:08 [INFO] app: ensuring pivot schema
+2025/12/08 12:04:08 [INFO] pivot: ensuring schema
+2025/12/08 12:04:08 [INFO] app: pivot schema ensured
+2025/12/08 12:04:08 [INFO] executor: creating executor batchMaxRows=1000 intervalMs=1000
+2025/12/08 12:04:08 [INFO] executor: initializing target pool dsn=postgres://new_user:dsav9das@localhost:5233/new_publication_db?sslmode=disable maxRows=1000 interval=1000ms
+2025/12/08 12:04:08 [INFO] executor: executor ready
+2025/12/08 12:04:08 [INFO] executor: starting run loop
+2025/12/08 12:04:08 [INFO] executor: run loop started interval=1s
+2025/12/08 12:04:09 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:09 [DEBUG] executor: no ready items
+2025/12/08 12:04:10 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:10 [DEBUG] executor: no ready items
+2025/12/08 12:04:11 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:11 [DEBUG] executor: no ready items
+2025/12/08 12:04:12 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:12 [DEBUG] executor: no ready items
+2025/12/08 12:04:13 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:13 [INFO] executor: processing 69 ready items
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=1 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=1 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=1
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=2 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=2 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=1 tgt=928492313
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=2
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=3 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=3 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=3
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=4 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=4 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=1 tgt=137771364
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=4
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=5 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=5 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=5
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=6 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=6 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=3 tgt=661666935
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=6
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=7 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=7 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=3 tgt=169102292
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=7
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=8 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=8 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=5 tgt=615810267
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=8
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=9 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=9 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=5 tgt=570259162
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=9
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=10 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=10 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=10
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=11 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=11 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=7 tgt=392545128
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=11
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=12 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=12 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=12
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=13 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=13 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=7 tgt=24675001
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=13
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=14 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=14 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=14
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=15 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=15 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=9 tgt=51443205
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=15
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=16 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=16 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=9 tgt=464893843
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=16
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=17 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=17 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=17
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=18 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=18 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=11 tgt=483222141
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=18
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=19 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=19 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=11 tgt=986849164
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=19
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=20 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=20 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=20
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=21 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=21 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=13 tgt=961405775
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=21
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=22 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=22 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=22
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=23 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=23 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=13 tgt=63382798
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=23
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=24 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=24 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=24
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=25 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=25 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=15 tgt=870895940
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=25
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=26 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=26 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=26
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=27 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=27 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=15 tgt=78923918
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=27
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=28 entity=researcher-to-author op=c needKeymap=false
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=28 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=28
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=29 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=29 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=17 tgt=773341834
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=29
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=30 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=30 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=17 tgt=549605967
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=30
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=31 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=31 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=17 tgt=129455621
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=31
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=32 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=32 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=20 tgt=995209384
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=32
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=33 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=33 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=20 tgt=438334793
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=33
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=34 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=34 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=22 tgt=743321405
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=34
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=35 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=35 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=22 tgt=848533167
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=35
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=36 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=36 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=24 tgt=738316598
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=36
+2025/12/08 12:04:13 [DEBUG] executor: handling queue id=37 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:13 [DEBUG] pivot: MarkExecuting id=37 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:13 [DEBUG] pivot: FulfillKeymap keymap_id=24 tgt=400783019
+2025/12/08 12:04:13 [DEBUG] pivot: MarkDone id=37
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=38 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=38 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=24 tgt=881131520
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=38
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=39 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=39 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=27 tgt=63294068
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=39
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=40 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=40 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=27 tgt=618428332
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=40
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=41 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=41 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=29 tgt=145197820
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=41
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=42 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=42 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=29 tgt=978165565
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=42
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=43 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=43 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=31 tgt=169126568
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=43
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=44 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=44 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=31 tgt=971558120
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=44
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=45 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=45 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=33 tgt=249048078
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=45
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=46 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=46 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=33 tgt=894056142
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=46
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=47 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=47 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=35 tgt=251045037
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=47
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=48 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=48 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=35 tgt=86365448
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=48
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=49 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=49 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=37 tgt=293632129
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=49
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=50 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=50 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=37 tgt=862870008
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=50
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=51 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=51 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=39 tgt=593610668
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=51
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=52 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=52 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=39 tgt=383781979
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=52
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=53 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=53 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=41 tgt=566159776
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=53
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=54 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=54 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=41 tgt=552203434
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=54
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=55 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=55 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=43 tgt=296508064
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=55
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=56 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=56 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=43 tgt=9366201
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=56
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=57 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=57 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=45 tgt=775021454
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=57
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=58 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=58 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=46 tgt=937670406
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=58
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=59 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=59 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=46 tgt=335311522
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=59
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=60 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=60 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=48 tgt=614365808
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=60
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=61 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=61 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=49 tgt=204189978
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=61
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=62 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=62 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=50 tgt=241755668
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=62
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=63 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=63 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=50 tgt=389160791
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=63
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=64 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=64 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=52 tgt=428002582
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=64
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=65 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=65 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=53 tgt=240292594
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=65
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=66 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=66 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=53 tgt=927038468
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=66
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=67 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=67 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=55 tgt=270507724
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=67
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=68 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=68 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=56 tgt=780443371
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=68
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=69 entity=publication_writer-to-authorship op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=69 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=56 tgt=621396694
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=69
+2025/12/08 12:04:14 [INFO] executor: committed batch items=69
+2025/12/08 12:04:14 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:14 [INFO] executor: processing 30 ready items
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=70 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=70 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=58 tgt=187828599
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=70
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=71 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=71 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=59 tgt=290685409
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=71
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=72 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=72 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=60 tgt=322008129
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=72
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=73 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=73 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=61 tgt=247416155
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=73
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=74 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=74 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=62 tgt=5420253
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=74
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=75 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=75 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=63 tgt=629244163
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=75
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=76 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=76 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=64 tgt=676396549
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=76
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=77 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=77 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=65 tgt=606991291
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=77
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=78 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=78 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=66 tgt=276489998
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=78
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=79 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=79 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=67 tgt=65972434
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=79
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=80 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=80 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=68 tgt=747753795
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=80
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=81 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=81 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=69 tgt=505736621
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=81
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=82 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=82 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=70 tgt=883485098
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=82
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=83 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=83 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=71 tgt=947198876
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=83
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=84 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=84 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=72 tgt=427825910
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=84
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=85 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=85 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=73 tgt=212933270
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=85
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=86 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=86 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=74 tgt=867731529
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=86
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=87 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=87 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=75 tgt=596697987
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=87
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=88 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=88 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=76 tgt=194887663
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=88
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=89 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=89 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=77 tgt=728266501
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=89
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=90 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=90 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=78 tgt=542406899
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=90
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=91 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=91 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=79 tgt=518997646
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=91
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=92 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=92 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=80 tgt=447358133
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=92
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=93 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=93 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=81 tgt=166157452
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=93
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=94 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=94 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=82 tgt=350049831
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=94
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=95 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=95 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=83 tgt=826305417
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=95
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=96 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=96 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=84 tgt=442015172
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=96
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=97 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=97 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=85 tgt=898846626
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=97
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=98 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=98 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=86 tgt=184825033
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=98
+2025/12/08 12:04:14 [DEBUG] executor: handling queue id=99 entity=publication-&-country-to-publication op=c needKeymap=true
+2025/12/08 12:04:14 [DEBUG] pivot: MarkExecuting id=99 worker=executor-a639fcc9-c615-46a8-a2bf-3a422576e9fc
+2025/12/08 12:04:14 [DEBUG] pivot: FulfillKeymap keymap_id=87 tgt=747996863
+2025/12/08 12:04:14 [DEBUG] pivot: MarkDone id=99
+2025/12/08 12:04:14 [INFO] executor: committed batch items=30
+2025/12/08 12:04:15 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:15 [DEBUG] executor: no ready items
+2025/12/08 12:04:16 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:16 [DEBUG] executor: no ready items
+2025/12/08 12:04:17 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:17 [DEBUG] executor: no ready items
+2025/12/08 12:04:18 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:18 [DEBUG] executor: no ready items
+2025/12/08 12:04:19 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:19 [DEBUG] executor: no ready items
+2025/12/08 12:04:20 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:20 [DEBUG] executor: no ready items
+2025/12/08 12:04:21 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:21 [DEBUG] executor: no ready items
+2025/12/08 12:04:22 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:22 [DEBUG] executor: no ready items
+2025/12/08 12:04:23 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:23 [DEBUG] executor: no ready items
+2025/12/08 12:04:24 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:24 [DEBUG] executor: no ready items
+2025/12/08 12:04:25 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:25 [DEBUG] executor: no ready items
+2025/12/08 12:04:26 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:26 [DEBUG] executor: no ready items
+2025/12/08 12:04:27 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:27 [DEBUG] executor: no ready items
+2025/12/08 12:04:28 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:28 [DEBUG] executor: no ready items
+2025/12/08 12:04:29 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:29 [DEBUG] executor: no ready items
+2025/12/08 12:04:30 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:30 [DEBUG] executor: no ready items
+2025/12/08 12:04:31 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:31 [DEBUG] executor: no ready items
+2025/12/08 12:04:32 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:32 [DEBUG] executor: no ready items
+2025/12/08 12:04:33 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:33 [DEBUG] executor: no ready items
+2025/12/08 12:04:34 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:34 [DEBUG] executor: no ready items
+make: *** [Makefile:10: executor] Terminated
+2025/12/08 12:04:35 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:35 [DEBUG] executor: no ready items
+2025/12/08 12:04:36 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:36 [DEBUG] executor: no ready items
+2025/12/08 12:04:37 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:37 [DEBUG] executor: no ready items
+2025/12/08 12:04:38 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:38 [DEBUG] executor: no ready items
+2025/12/08 12:04:39 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:39 [DEBUG] executor: no ready items
+2025/12/08 12:04:40 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:40 [DEBUG] executor: no ready items
+2025/12/08 12:04:41 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:41 [DEBUG] executor: no ready items
+2025/12/08 12:04:42 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:42 [DEBUG] executor: no ready items
+2025/12/08 12:04:43 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:43 [DEBUG] executor: no ready items
+2025/12/08 12:04:44 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:44 [DEBUG] executor: no ready items
+2025/12/08 12:04:45 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:45 [DEBUG] executor: no ready items
+2025/12/08 12:04:46 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:46 [DEBUG] executor: no ready items
+2025/12/08 12:04:47 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:47 [DEBUG] executor: no ready items
+2025/12/08 12:04:48 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:48 [DEBUG] executor: no ready items
+2025/12/08 12:04:49 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:49 [DEBUG] executor: no ready items
+2025/12/08 12:04:50 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:50 [DEBUG] executor: no ready items
+2025/12/08 12:04:51 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:51 [DEBUG] executor: no ready items
+2025/12/08 12:04:52 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:52 [DEBUG] executor: no ready items
+2025/12/08 12:04:53 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:53 [DEBUG] executor: no ready items
+2025/12/08 12:04:54 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:54 [DEBUG] executor: no ready items
+2025/12/08 12:04:55 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:55 [DEBUG] executor: no ready items
+2025/12/08 12:04:56 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:56 [DEBUG] executor: no ready items
+2025/12/08 12:04:57 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:57 [DEBUG] executor: no ready items
+2025/12/08 12:04:58 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:58 [DEBUG] executor: no ready items
+2025/12/08 12:04:59 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:04:59 [DEBUG] executor: no ready items
+2025/12/08 12:05:00 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:00 [DEBUG] executor: no ready items
+2025/12/08 12:05:01 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:01 [DEBUG] executor: no ready items
+2025/12/08 12:05:02 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:02 [DEBUG] executor: no ready items
+2025/12/08 12:05:03 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:03 [DEBUG] executor: no ready items
+2025/12/08 12:05:04 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:04 [DEBUG] executor: no ready items
+2025/12/08 12:05:05 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:05 [DEBUG] executor: no ready items
+2025/12/08 12:05:06 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:06 [DEBUG] executor: no ready items
+2025/12/08 12:05:07 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:07 [DEBUG] executor: no ready items
+2025/12/08 12:05:08 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:08 [DEBUG] executor: no ready items
+2025/12/08 12:05:09 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:09 [DEBUG] executor: no ready items
+2025/12/08 12:05:10 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:10 [DEBUG] executor: no ready items
+2025/12/08 12:05:11 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:11 [DEBUG] executor: no ready items
+2025/12/08 12:05:12 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:12 [DEBUG] executor: no ready items
+2025/12/08 12:05:13 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:13 [DEBUG] executor: no ready items
+2025/12/08 12:05:14 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:14 [DEBUG] executor: no ready items
+2025/12/08 12:05:15 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:15 [DEBUG] executor: no ready items
+2025/12/08 12:05:16 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:16 [DEBUG] executor: no ready items
+2025/12/08 12:05:17 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:17 [DEBUG] executor: no ready items
+2025/12/08 12:05:18 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:18 [DEBUG] executor: no ready items
+2025/12/08 12:05:19 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:19 [DEBUG] executor: no ready items
+2025/12/08 12:05:20 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:20 [DEBUG] executor: no ready items
+2025/12/08 12:05:21 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:21 [DEBUG] executor: no ready items
+2025/12/08 12:05:22 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:22 [DEBUG] executor: no ready items
+2025/12/08 12:05:23 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:23 [DEBUG] executor: no ready items
+2025/12/08 12:05:24 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:24 [DEBUG] executor: no ready items
+2025/12/08 12:05:25 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:25 [DEBUG] executor: no ready items
+2025/12/08 12:05:26 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:26 [DEBUG] executor: no ready items
+2025/12/08 12:05:27 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:27 [DEBUG] executor: no ready items
+2025/12/08 12:05:28 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:28 [DEBUG] executor: no ready items
+2025/12/08 12:05:29 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:29 [DEBUG] executor: no ready items
+2025/12/08 12:05:30 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:30 [DEBUG] executor: no ready items
+2025/12/08 12:05:31 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:31 [DEBUG] executor: no ready items
+2025/12/08 12:05:32 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:32 [DEBUG] executor: no ready items
+2025/12/08 12:05:33 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:33 [DEBUG] executor: no ready items
+2025/12/08 12:05:34 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:34 [DEBUG] executor: no ready items
+2025/12/08 12:05:35 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:35 [DEBUG] executor: no ready items
+2025/12/08 12:05:36 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:36 [DEBUG] executor: no ready items
+2025/12/08 12:05:37 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:37 [DEBUG] executor: no ready items
+2025/12/08 12:05:38 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:38 [DEBUG] executor: no ready items
+2025/12/08 12:05:39 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:39 [DEBUG] executor: no ready items
+2025/12/08 12:05:40 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:40 [DEBUG] executor: no ready items
+2025/12/08 12:05:41 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:41 [DEBUG] executor: no ready items
+2025/12/08 12:05:42 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:42 [DEBUG] executor: no ready items
+2025/12/08 12:05:43 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:43 [DEBUG] executor: no ready items
+2025/12/08 12:05:44 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:44 [DEBUG] executor: no ready items
+2025/12/08 12:05:45 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:45 [DEBUG] executor: no ready items
+2025/12/08 12:05:46 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:46 [DEBUG] executor: no ready items
+2025/12/08 12:05:47 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:47 [DEBUG] executor: no ready items
+2025/12/08 12:05:48 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:48 [DEBUG] executor: no ready items
+2025/12/08 12:05:49 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:49 [DEBUG] executor: no ready items
+2025/12/08 12:05:50 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:50 [DEBUG] executor: no ready items
+2025/12/08 12:05:51 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:51 [DEBUG] executor: no ready items
+2025/12/08 12:05:52 [DEBUG] pivot: FetchReady limit=1000
+2025/12/08 12:05:52 [DEBUG] executor: no ready items

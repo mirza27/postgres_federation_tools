@@ -1,0 +1,1262 @@
+go run ./cmd/parser/main.go
+2025/12/08 12:04:08 [INFO] parser: signal context registered
+2025/12/08 12:04:08 [INFO] parser: loading configuration
+📦 Config Loaded:
+Kafka brokers: localhost:29092
+Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+Mapping Path: ./internal/config/json/publication
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-69o275
+2025/12/08 12:04:08 [INFO] parser: configuration loaded
+2025/12/08 12:04:08 [INFO] app: loading mapping root
+2025/12/08 12:04:08 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/publication
+2025/12/08 12:04:08 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
+2025/12/08 12:04:08 [DEBUG] mapping: default config loaded sources=1 entities=0
+2025/12/08 12:04:08 [INFO] mapping: listing json files path=./internal/config/json/publication
+2025/12/08 12:04:08 [DEBUG] mapping: listJSONFiles result=[internal/config/json/publication/publication&country-to-publication.json internal/config/json/publication/publication_writer-to-authorship.json internal/config/json/publication/researcher-to-author.json]
+2025/12/08 12:04:08 [INFO] mapping: found 3 entity files
+2025/12/08 12:04:08 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country-to-publication.json
+2025/12/08 12:04:08 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication_writer-to-authorship.json
+2025/12/08 12:04:08 [DEBUG] mapping: loading entity file=internal/config/json/publication/researcher-to-author.json
+2025/12/08 12:04:08 [INFO] mapping: Load success entities=3 sources=1
+2025/12/08 12:04:08 [INFO] app: mapping loaded entities=3
+2025/12/08 12:04:08 [1] Entity: publication-&-country-to-publication → target: publication
+2025/12/08 12:04:08 [2] Entity: publication_writer-to-authorship → target: authorship
+2025/12/08 12:04:08 [3] Entity: researcher-to-author → target: author
+==== Planner ====
+Total Entities : 3
+-- Entities --
+1. Entity: publication-&-country-to-publication (table)
+   TargetTable: publication
+   Sources:
+     - alias=p from=publication topic=db_events_publication
+     - alias=c from=country topic=db_events_country
+2. Entity: publication_writer-to-authorship (table)
+   TargetTable: authorship
+   Sources:
+     - alias=pw from=publication_writer topic=db_events_publication_writer
+3. Entity: researcher-to-author (table)
+   TargetTable: author
+   Sources:
+     - alias=r from=researcher topic=db_events_researcher
+-- TopicToEntities --
+Topic: db_events_publication
+   - publication-&-country-to-publication
+Topic: db_events_country
+   - publication-&-country-to-publication
+Topic: db_events_publication_writer
+   - publication_writer-to-authorship
+Topic: db_events_researcher
+   - researcher-to-author
+-- TopicToEntities --
+[db_events_country db_events_publication_writer db_events_researcher db_events_publication]
+2025/12/08 12:04:08 [INFO] parser: planner covers 4 topics
+2025/12/08 12:04:08 [INFO] parser: creating kafka consumer group=db-migrate-engine-69o275
+2025/12/08 12:04:08 [INFO] kafka: NewConsumer brokers=[localhost:29092] groupID=db-migrate-engine-69o275 topics=[db_events_country db_events_publication_writer db_events_researcher db_events_publication]
+2025/12/08 12:04:08 [INFO] parser: kafka consumer ready
+2025/12/08 12:04:08 [INFO] app: connecting pivot repository
+2025/12/08 12:04:08 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+📦 Config Loaded:
+Kafka brokers: localhost:29092
+Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+Mapping Path: ./internal/config/json/publication
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-gf50dq
+2025/12/08 12:04:08 [INFO] app: ensuring pivot schema
+2025/12/08 12:04:08 [INFO] pivot: ensuring schema
+2025/12/08 12:04:08 [INFO] app: pivot schema ensured
+2025/12/08 12:04:08 [INFO] parser: processor ready
+2025/12/08 12:04:08 [INFO] parser: starting synchronous kafka loop
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=1 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=bbe63d56-4be7-4b83-bbc6-29868711a057 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=2 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=bbe8397b-ee65-4e69-868f-4906805e46fb entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:11 [DEBUG] processor: source key=3 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=ca265dee-16f6-4614-8e08-d0511484ff24 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:11 [DEBUG] processor: source key=4 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=b8fbdf95-6654-444a-bc8e-ed9eaef78f89 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK]
+2025/12/08 12:04:11 [DEBUG] processor: source key=5 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=66629556-1118-4d10-8202-18e992bcf965 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:11 [DEBUG] processor: source key=6 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=9ee17efa-665d-416a-bd8c-e23b635f9d31 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:11 [DEBUG] processor: source key=7 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=a4086f86-6f2e-4416-841f-46f9d765f0bd entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=8 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=50c1861d-b196-44bb-88d5-bbd141ce63ed entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:11 [DEBUG] processor: source key=9 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=bcc0ed63-bad5-49b3-a12f-66f434548747 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:11 [DEBUG] processor: source key=10 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=7162ee7f-50ff-4f99-a55d-b6aa11d9679f entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=11 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=1c676440-7df6-4f52-b898-37e2e6591be6 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:11 [DEBUG] processor: source key=12 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=555b94b1-49fb-4b82-9841-2863eb48c690 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:11 [DEBUG] processor: source key=13 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=03b3f6ca-e00b-4552-bf7a-d665ee65eee1 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=14 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=65b3c4fb-2587-426e-8e6c-25984c3305c6 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=1 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[name lastname1 lastname2 code]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=6cbcd6b6-afb3-4434-99c4-1d782866e9ea entity=researcher-to-author op=c sql=insert into author (name,lastname1,lastname2,code) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=1
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=94f9a874-fd48-4c57-8842-6ee95b356ae1 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=2 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[code name lastname1 lastname2]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=62fb36ba-4797-48e3-bcb8-cec2eb35a3ba entity=researcher-to-author op=c sql=insert into author (code,name,lastname1,lastname2) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=1
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=7a1dedc6-f02b-4ef2-8c35-770632576121 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=3 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[code name lastname1 lastname2]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=cb6aabc2-6bd9-4a1f-9217-064fae3aa1a1 entity=researcher-to-author op=c sql=insert into author (code,name,lastname1,lastname2) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=2
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=e9f68d74-9a84-4d71-b6bc-06189700c68c entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=2
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=52025681-38ec-43e0-b238-285f48eb814c entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK]
+2025/12/08 12:04:11 [DEBUG] processor: source key=15 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=7f560ddf-9cfe-4dc9-9eca-231834364296 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=3
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[author_code orderofauthor code paper_doi]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=6e65fc9a-5b96-4d92-8299-5105148bb0f3 entity=publication_writer-to-authorship op=c sql=insert into authorship (author_code,orderofauthor,code,paper_doi... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:11 [DEBUG] processor: source key=16 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=497e88f8-9a8b-4a3d-ad5f-54935a2cb597 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=3
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=b7c0ae30-82fd-4ddd-98d3-27b0d3a6b5a1 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=4 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[code name lastname1 lastname2]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=a34ac751-a22f-4071-a0a5-7a0e78b1d363 entity=researcher-to-author op=c sql=insert into author (code,name,lastname1,lastname2) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:11 [DEBUG] processor: source key=17 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=0d2e4f9d-861c-498b-82aa-e47c27760250 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=4
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=9d238960-5638-4d8a-922d-61c3ba425205 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=5 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[code name lastname1 lastname2]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=425b4723-00f6-4ba8-ab9d-9ddf41d3f16a entity=researcher-to-author op=c sql=insert into author (code,name,lastname1,lastname2) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:11 [DEBUG] processor: source key=18 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=bc1feb8f-579b-40f6-901a-dea9899a3988 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=4
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=c616bdc2-c438-4950-bbdb-dac6af3b551f entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=6 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[code name lastname1 lastname2]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=b45b817b-173c-4641-98b0-ee5a381e55ea entity=researcher-to-author op=c sql=insert into author (code,name,lastname1,lastname2) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=5
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=959d41eb-d0cc-4054-be70-5d9f77c7643f entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:11 [DEBUG] processor: source key=19 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=400a1e38-48d3-44ae-8fc0-24d454f5a043 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=5
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=d797b8b8-4eda-406e-ba96-6b06f7f77dc7 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=20 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=7d6cdac1-1450-4e2a-973e-58848a3d5942 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=7 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[name lastname1 lastname2 code]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=55055cb1-18e7-406a-b684-d2f8901a1d7f entity=researcher-to-author op=c sql=insert into author (name,lastname1,lastname2,code) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=6
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=96dedbbb-f3ae-42e9-94c8-ae4b94358ce9 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:11 [DEBUG] processor: source key=21 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=f49a6211-5a0f-4a57-930e-2f2b9fab4313 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=6
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=1e2e5aac-073c-4f5f-ae4f-5e872b809c4f entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=8 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[code name lastname1 lastname2]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=054bff93-e0de-4a20-b34f-b0f076925f54 entity=researcher-to-author op=c sql=insert into author (code,name,lastname1,lastname2) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:11 [DEBUG] processor: source key=22 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=f1d068e9-69df-49fa-88d6-23afcf05c435 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=7
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=82e36f1e-bcd8-4369-8a0f-306d40f3c63d entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=9 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[lastname1 lastname2 code name]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=011f31ad-03ae-4fc1-a3b5-8c8640c96dee entity=researcher-to-author op=c sql=insert into author (lastname1,lastname2,code,name) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK]
+2025/12/08 12:04:11 [DEBUG] processor: source key=23 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=6ce2a996-7672-4a43-a8f1-ec09d80a7418 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=7
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=400862c8-d880-493c-9ab2-f70b4f0b3ae4 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=10 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[lastname2 code name lastname1]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=b7ad8694-0bb9-4132-bec7-be7e607de4b7 entity=researcher-to-author op=c sql=insert into author (lastname2,code,name,lastname1) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:11 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:11 [DEBUG] processor: source key=24 topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] pivot: EnqueueNeedJoin queue=f5a222d7-cf5d-4104-ab13-42c17345d861 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE topic=db_events_publication
+2025/12/08 12:04:11 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=8
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=7640f0e9-d9e7-4f93-9d01-1ff0fc2d7abb entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value=11 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=researcher-to-author cols=[name lastname1 lastname2 code]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=79cfb037-c570-4818-85b2-81ac5162275c entity=researcher-to-author op=c sql=insert into author (name,lastname1,lastname2,code) values ($1,$2... needKeymap=false
+2025/12/08 12:04:11 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:11 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:11 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:11 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:11 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:11 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=8
+2025/12/08 12:04:11 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:11 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:11 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:11 [DEBUG] pivot: Enqueue queue=f1cac2a1-8610-4822-a2dd-f9755eb5dbcf entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:12 [DEBUG] processor: source key=25 topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] pivot: EnqueueNeedJoin queue=8263874f-4e49-4e4a-adf9-e43fef469690 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_researcher op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=researcher-to-author op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_researcher] for entity=researcher-to-author
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=researcher-to-author topic=db_events_researcher
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=researcher-to-author op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=researcher-to-author strategy=natural
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value=12 needKeymap=false entity=researcher-to-author
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=researcher-to-author
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=r.rese_name
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=r.rese_first_surname
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=r.rese_sec_surname
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=researcher-to-author cols=[name lastname1 lastname2 code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=440ef270-5cff-4cfb-9ec0-a0b8e4e87bf4 entity=researcher-to-author op=c sql=insert into author (name,lastname1,lastname2,code) values ($1,$2... needKeymap=false
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=9
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=28c193af-6da0-4211-b9cb-fa6b275fe862 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:12 [DEBUG] processor: source key=26 topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] pivot: EnqueueNeedJoin queue=05c2060b-fb9e-4152-a6a1-af0ce8a1ff50 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=ES
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=9
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=98924d0a-6085-4bf6-91b3-76eb0e8e8538 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=9
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=e74c5dd4-efcf-463e-b1e7-639ca25b9048 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:12 [DEBUG] processor: source key=27 topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] pivot: EnqueueNeedJoin queue=f7912821-54b4-42da-9d97-22937323a270 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=US
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=10
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1c487e1b-6abe-4dc0-9d62-fe77687221c4 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK]
+2025/12/08 12:04:12 [DEBUG] processor: source key=28 topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] pivot: EnqueueNeedJoin queue=82c91b23-aa39-423e-8deb-c35ea993ab03 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=UK
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=10
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[author_code orderofauthor code paper_doi]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=098bb768-9fe4-477d-9ad0-b74548ebcfea entity=publication_writer-to-authorship op=c sql=insert into authorship (author_code,orderofauthor,code,paper_doi... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=11
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[author_code orderofauthor code paper_doi]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=48e702f6-f12c-4a07-b68c-fe5b0ea296c4 entity=publication_writer-to-authorship op=c sql=insert into authorship (author_code,orderofauthor,code,paper_doi... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:12 [DEBUG] processor: source key=29 topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] pivot: EnqueueNeedJoin queue=9f92dafe-c8c3-494b-bd79-10a1957bac23 entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=DE
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:12 [DEBUG] processor: source key=30 topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] pivot: EnqueueNeedJoin queue=6ea2a155-6b47-4920-aaa1-68bfc6b526be entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR topic=db_events_publication
+2025/12/08 12:04:12 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-to-publication joinKey=p.pub_cntry::c.cntry_id=FR
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=11
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=f69fd416-8b75-4c19-aeb1-2fd693a9b442 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=12
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=90201105-47d5-487a-8f2d-d71d0d004efb entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=12
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=c18dadc7-d9cf-4ead-aad8-f1678931c84a entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=12
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=2bce93fa-da74-44d1-aa86-86c1c82ffbe3 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=13
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=dd2aecb4-6b06-43af-8598-dc25a8127e36 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=13
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=3f09304c-ceea-4c79-94a8-1ec0efafecd2 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=14
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=ee776bc9-8630-4fa0-a629-9a85f45a12e2 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=14
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=f46cf0fa-d35f-4816-b726-93a516f8e0d8 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=15
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=b16bf0a1-33b9-4ded-8f0d-2de6616e116f entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=15
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=2f743fd2-25cb-4838-838e-df9e9db81d3b entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=16
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=9164d474-e514-4b63-8138-2acf20f92850 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=16
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[author_code orderofauthor code paper_doi]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1b64729c-ce48-418a-a2d4-9dd9c74cf26d entity=publication_writer-to-authorship op=c sql=insert into authorship (author_code,orderofauthor,code,paper_doi... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=17
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=9b35900b-3c6b-49da-8671-b3a664a38810 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=17
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=05e42137-7fbc-4541-b949-9dedfa63de1e entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=18
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=c42a0550-5656-4205-91ad-ace7c5dd2f50 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=18
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[author_code orderofauthor code paper_doi]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=e69bed9e-0472-45df-953d-55265a7c56d8 entity=publication_writer-to-authorship op=c sql=insert into authorship (author_code,orderofauthor,code,paper_doi... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=19
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=db18fefa-ae40-4f96-870a-1a766de25e4e entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=19
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=38fd3155-560e-47a0-8d97-6ed6abbb0d71 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=20
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[author_code orderofauthor code paper_doi]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=78cdd2e5-2df1-4be4-a955-7df859f19fae entity=publication_writer-to-authorship op=c sql=insert into authorship (author_code,orderofauthor,code,paper_doi... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=20
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=c29684c6-0e4d-4eb0-84fa-b9ec4d8f0a9d entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=21
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=9fef3b9f-c05f-4e0e-8ec3-62336b7f203d entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=21
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=cf3bedc8-0911-4193-89c0-f8f668738c0d entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=22
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=15749b2d-094a-48d2-8322-6fe5e989c64d entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=23
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=c9edd2e0-e946-465d-83b4-c24246df3de9 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=23
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=f4bb0013-8c20-4c61-bb71-71265ca9b325 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=24
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=863b658a-d0a7-4b3d-95d2-7907e6a35586 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=25
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[paper_doi author_code orderofauthor code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=359c97c8-8b29-4a5a-8123-3cd9f91e7925 entity=publication_writer-to-authorship op=c sql=insert into authorship (paper_doi,author_code,orderofauthor,code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=26
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=96e59e2a-b105-4eff-9dc2-eabfef13b808 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=26
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=8d5b1b61-7621-48ea-b25f-7faeefdcf5fd entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=27
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=8e7add3d-705f-4b2b-a121-eab828a04e90 entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=28
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=704ed83d-ca71-4811-a61f-221b9b6a6520 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=28
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=fe5a2598-08ac-4de5-978c-d93217bdc17d entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=29
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=a5a22daf-517d-4958-ac71-df5cf87dc7f0 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=30
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[code paper_doi author_code orderofauthor]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=fe8e06cd-5646-4a4f-95e2-31e967037b2a entity=publication_writer-to-authorship op=c sql=insert into authorship (code,paper_doi,author_code,orderofauthor... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_publication_writer op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication_writer-to-authorship op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication_writer] for entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: single topic path entity=publication_writer-to-authorship topic=db_events_publication_writer
+2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication_writer-to-authorship op=c payloadTopics=1
+2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication_writer-to-authorship strategy=surrogate
+2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication_writer-to-authorship src=30
+2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication_writer-to-authorship
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pwrit_ord
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.pub_id
+2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=pw.rese_id
+2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication_writer-to-authorship cols=[orderofauthor code paper_doi author_code]
+2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=0cc3cd09-155a-4319-bedd-25cbf1e36f74 entity=publication_writer-to-authorship op=c sql=insert into authorship (orderofauthor,code,paper_doi,author_code... needKeymap=true
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/08 12:04:12 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=ES topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/08 12:04:12 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=US topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:UK]
+2025/12/08 12:04:12 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=UK topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/08 12:04:12 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=FR topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/08 12:04:12 [DEBUG] processor: handling entity=publication-&-country-to-publication op=c
+2025/12/08 12:04:12 [DEBUG] processor: expected topics=[db_events_publication db_events_country] for entity=publication-&-country-to-publication
+2025/12/08 12:04:12 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/08 12:04:12 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=DE topic=db_events_country
+2025/12/08 12:04:12 [DEBUG] processor: stored join fragment entity=publication-&-country-to-publication topic=db_events_country
+make: *** [Makefile:13: parser] Terminated

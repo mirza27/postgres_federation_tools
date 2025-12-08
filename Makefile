@@ -18,6 +18,11 @@ checker:
 joiner:
 	go run ./cmd/joiner/main.go
 
+run:
+	./make/worker_runner.sh
+
+stop:
+	./make/worker_stop.sh
 
 # Debezium Config
 conn-publication:
@@ -36,6 +41,9 @@ up-pivot:
 
 drop-pivot:
 	docker exec -i pivot_db  psql -U pivot_user -d pivot < ./migration/pivot/down.sql
+
+empty-pivot:
+	docker exec -i pivot_db  psql -U pivot_user -d pivot < ./migration/pivot/empty.sql
 
 # CRM ECOM CASE
 db1:
