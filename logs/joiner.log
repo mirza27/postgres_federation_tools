@@ -1,529 +1,733 @@
-go run ./cmd/joiner/main.go
-2025/12/08 12:04:08 [INFO] joiner: signal context registered
-2025/12/08 12:04:08 [INFO] joiner: loading configuration
+2025/12/08 20:08:20 [INFO] joiner: signal context registered
+2025/12/08 20:08:20 [INFO] joiner: loading configuration
 📦 Config Loaded:
 Kafka brokers: localhost:29092
 Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
 Mapping Path: ./internal/config/json/publication
-🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-df7imx
-2025/12/08 12:04:08 [INFO] joiner: configuration loaded
-2025/12/08 12:04:08 [INFO] app: loading mapping root
-2025/12/08 12:04:08 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/publication
-2025/12/08 12:04:08 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
-2025/12/08 12:04:08 [DEBUG] mapping: default config loaded sources=1 entities=0
-2025/12/08 12:04:08 [INFO] mapping: listing json files path=./internal/config/json/publication
-2025/12/08 12:04:08 [DEBUG] mapping: listJSONFiles result=[internal/config/json/publication/publication&country-to-publication.json internal/config/json/publication/publication_writer-to-authorship.json internal/config/json/publication/researcher-to-author.json]
-2025/12/08 12:04:08 [INFO] mapping: found 3 entity files
-2025/12/08 12:04:08 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country-to-publication.json
-2025/12/08 12:04:08 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication_writer-to-authorship.json
-2025/12/08 12:04:08 [DEBUG] mapping: loading entity file=internal/config/json/publication/researcher-to-author.json
-2025/12/08 12:04:08 [INFO] mapping: Load success entities=3 sources=1
-2025/12/08 12:04:08 [INFO] app: mapping loaded entities=3
-2025/12/08 12:04:08 [INFO] app: connecting pivot repository
-2025/12/08 12:04:08 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-8v3pmq
+2025/12/08 20:08:20 [INFO] joiner: configuration loaded
+2025/12/08 20:08:20 [INFO] app: loading mapping root
+2025/12/08 20:08:20 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/publication
+2025/12/08 20:08:20 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
+2025/12/08 20:08:20 [DEBUG] mapping: default config loaded sources=1 entities=0
+2025/12/08 20:08:20 [INFO] mapping: listing json files path=./internal/config/json/publication
+2025/12/08 20:08:20 [DEBUG] mapping: listJSONFiles result=[internal/config/json/publication/publication&country&conference-to-publication.json internal/config/json/publication/publication&country-to-publication.json]
+2025/12/08 20:08:20 [INFO] mapping: found 2 entity files
+2025/12/08 20:08:20 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country&conference-to-publication.json
+2025/12/08 20:08:20 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country-to-publication.json
+2025/12/08 20:08:20 [INFO] mapping: Load success entities=2 sources=1
+2025/12/08 20:08:20 [INFO] app: mapping loaded entities=2
+2025/12/08 20:08:20 [INFO] app: connecting pivot repository
+2025/12/08 20:08:20 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
 📦 Config Loaded:
 Kafka brokers: localhost:29092
 Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
 Mapping Path: ./internal/config/json/publication
-🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-vkxpd4
-2025/12/08 12:04:08 [INFO] app: ensuring pivot schema
-2025/12/08 12:04:08 [INFO] pivot: ensuring schema
-2025/12/08 12:04:08 [INFO] app: pivot schema ensured
-2025/12/08 12:04:08 [INFO] joiner: worker ready
-2025/12/08 12:04:08 [INFO] joiner: starting run loop
-2025/12/08 12:04:08 [INFO] joiner: run loop started interval=1s
-2025/12/08 12:04:09 [DEBUG] joiner: no pending items
-2025/12/08 12:04:10 [DEBUG] joiner: no pending items
-2025/12/08 12:04:11 [DEBUG] joiner: no pending items
-2025/12/08 12:04:12 [INFO] joiner: processing 30 items
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=1
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=a4043389-eb40-4534-8933-969437baf33e entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=1
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=2
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=10bc1f5b-50f9-4b17-9372-e8493b14c7b6 entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=2
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=3
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=5bf57012-485b-4b58-9156-8b2b80a3d83b entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=3
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=4
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=c09f5a4d-e17e-497a-9786-3459169f2db0 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=4
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=5
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=f7ced049-dcdc-4a2e-9bdf-c0c08011977a entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=5
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=6
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[place country year publisher_name code title]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1a127277-fe5e-4b37-949f-ef7dc45b0b5b entity=publication-&-country-to-publication op=c sql=insert into publication (place,country,year,publisher_name,code,... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=6
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=7
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=efe3f1ae-8ffb-4f10-9b3c-27a4e2b12e86 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=7
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=8
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=165b6127-2c24-4a2c-847e-b7691a711883 entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=8
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=9
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=aff907cd-b990-4de3-b430-f805494164b3 entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=9
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=10
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=39c1b0fc-2fe8-4aeb-bd58-aa854744f2c5 entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=10
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=11
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=0e10f3f3-6c6c-4bba-859f-e401396df211 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=11
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=12
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1947e46a-4bfb-4814-b88b-c085ee6f3d18 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=12
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=13
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=03d4b50d-0adc-4ed8-b293-aa70014f0ea3 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=13
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=14
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1384a439-194c-4a5d-843d-98e7f83fe6d5 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=14
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=15
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=f0c1434d-0cca-4147-90d5-2aba35b35e7a entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=15
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=16
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=b6a99895-ee02-4b71-9c28-978e6d2a74f2 entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=16
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=17
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=452fa911-5e1c-4e4c-9a67-eca107b8d0d3 entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=17
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=18
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=a1334f1e-e2da-460d-8b88-e966d295a56e entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=18
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=19
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=f5398864-8d75-4b60-8198-b6cd611ce249 entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=19
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=20
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=441032df-3678-4347-bc61-82479efed43c entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=20
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=21
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=4282052f-b441-469f-8863-69ae17b53d50 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=21
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=22
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=ad83bc19-ea5c-4e46-aab8-169370f072c1 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=22
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=23
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=32ea2b9f-62bc-4dcd-bb6b-a177f9671f8d entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=23
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=24
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=d509444e-627b-48d1-aed3-45ff0271338f entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=24
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=25
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=d2b02a49-aa41-41dd-a0cd-f245164577e5 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=25
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=26
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=efb35f1d-6fc9-4daa-832a-6b602e68efc7 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=26
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=27
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1c396a56-2609-43a1-b34c-36a59457adcf entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=27
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=28
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=1d376102-511f-4160-a2ee-e0533f0dcc3f entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=28
-2025/12/08 12:04:12 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:12 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:12 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=29
-2025/12/08 12:04:12 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:12 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:12 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:12 [DEBUG] pivot: Enqueue queue=84107778-0383-4e7e-84f7-e990a63e2374 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:12 [DEBUG] pivot: MarkNeedJoinDone id=29
-2025/12/08 12:04:13 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
-2025/12/08 12:04:13 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
-2025/12/08 12:04:13 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=30
-2025/12/08 12:04:13 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
-2025/12/08 12:04:13 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
-2025/12/08 12:04:13 [DEBUG] processor: firstAfterField path=p.pub_title
-2025/12/08 12:04:13 [DEBUG] processor: firstAfterField path=p.pub_loc
-2025/12/08 12:04:13 [DEBUG] processor: firstAfterField path=c.cntr_name_en
-2025/12/08 12:04:13 [DEBUG] processor: firstAfterField path=p.pub_year
-2025/12/08 12:04:13 [DEBUG] processor: firstAfterField path=p.pub_edit
-2025/12/08 12:04:13 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
-2025/12/08 12:04:13 [DEBUG] pivot: Enqueue queue=d4c3d082-238d-4b00-a86b-d9a9498efec4 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
-2025/12/08 12:04:13 [DEBUG] pivot: MarkNeedJoinDone id=30
-2025/12/08 12:04:13 [DEBUG] joiner: no pending items
-2025/12/08 12:04:14 [DEBUG] joiner: no pending items
-2025/12/08 12:04:15 [DEBUG] joiner: no pending items
-2025/12/08 12:04:16 [DEBUG] joiner: no pending items
-2025/12/08 12:04:17 [DEBUG] joiner: no pending items
-2025/12/08 12:04:18 [DEBUG] joiner: no pending items
-2025/12/08 12:04:19 [DEBUG] joiner: no pending items
-2025/12/08 12:04:20 [DEBUG] joiner: no pending items
-2025/12/08 12:04:21 [DEBUG] joiner: no pending items
-2025/12/08 12:04:22 [DEBUG] joiner: no pending items
-2025/12/08 12:04:23 [DEBUG] joiner: no pending items
-2025/12/08 12:04:24 [DEBUG] joiner: no pending items
-2025/12/08 12:04:25 [DEBUG] joiner: no pending items
-2025/12/08 12:04:26 [DEBUG] joiner: no pending items
-2025/12/08 12:04:27 [DEBUG] joiner: no pending items
-2025/12/08 12:04:28 [DEBUG] joiner: no pending items
-2025/12/08 12:04:29 [DEBUG] joiner: no pending items
-2025/12/08 12:04:30 [DEBUG] joiner: no pending items
-2025/12/08 12:04:31 [DEBUG] joiner: no pending items
-2025/12/08 12:04:32 [DEBUG] joiner: no pending items
-2025/12/08 12:04:33 [DEBUG] joiner: no pending items
-2025/12/08 12:04:34 [DEBUG] joiner: no pending items
-make: *** [Makefile:19: joiner] Terminated
-2025/12/08 12:04:35 [DEBUG] joiner: no pending items
-2025/12/08 12:04:36 [DEBUG] joiner: no pending items
-2025/12/08 12:04:37 [DEBUG] joiner: no pending items
-2025/12/08 12:04:38 [DEBUG] joiner: no pending items
-2025/12/08 12:04:39 [DEBUG] joiner: no pending items
-2025/12/08 12:04:40 [DEBUG] joiner: no pending items
-2025/12/08 12:04:41 [DEBUG] joiner: no pending items
-2025/12/08 12:04:42 [DEBUG] joiner: no pending items
-2025/12/08 12:04:43 [DEBUG] joiner: no pending items
-2025/12/08 12:04:44 [DEBUG] joiner: no pending items
-2025/12/08 12:04:45 [DEBUG] joiner: no pending items
-2025/12/08 12:04:46 [DEBUG] joiner: no pending items
-2025/12/08 12:04:47 [DEBUG] joiner: no pending items
-2025/12/08 12:04:48 [DEBUG] joiner: no pending items
-2025/12/08 12:04:49 [DEBUG] joiner: no pending items
-2025/12/08 12:04:50 [DEBUG] joiner: no pending items
-2025/12/08 12:04:51 [DEBUG] joiner: no pending items
-2025/12/08 12:04:52 [DEBUG] joiner: no pending items
-2025/12/08 12:04:53 [DEBUG] joiner: no pending items
-2025/12/08 12:04:54 [DEBUG] joiner: no pending items
-2025/12/08 12:04:55 [DEBUG] joiner: no pending items
-2025/12/08 12:04:56 [DEBUG] joiner: no pending items
-2025/12/08 12:04:57 [DEBUG] joiner: no pending items
-2025/12/08 12:04:58 [DEBUG] joiner: no pending items
-2025/12/08 12:04:59 [DEBUG] joiner: no pending items
-2025/12/08 12:05:00 [DEBUG] joiner: no pending items
-2025/12/08 12:05:01 [DEBUG] joiner: no pending items
-2025/12/08 12:05:02 [DEBUG] joiner: no pending items
-2025/12/08 12:05:03 [DEBUG] joiner: no pending items
-2025/12/08 12:05:04 [DEBUG] joiner: no pending items
-2025/12/08 12:05:05 [DEBUG] joiner: no pending items
-2025/12/08 12:05:06 [DEBUG] joiner: no pending items
-2025/12/08 12:05:07 [DEBUG] joiner: no pending items
-2025/12/08 12:05:08 [DEBUG] joiner: no pending items
-2025/12/08 12:05:09 [DEBUG] joiner: no pending items
-2025/12/08 12:05:10 [DEBUG] joiner: no pending items
-2025/12/08 12:05:11 [DEBUG] joiner: no pending items
-2025/12/08 12:05:12 [DEBUG] joiner: no pending items
-2025/12/08 12:05:13 [DEBUG] joiner: no pending items
-2025/12/08 12:05:14 [DEBUG] joiner: no pending items
-2025/12/08 12:05:15 [DEBUG] joiner: no pending items
-2025/12/08 12:05:16 [DEBUG] joiner: no pending items
-2025/12/08 12:05:17 [DEBUG] joiner: no pending items
-2025/12/08 12:05:18 [DEBUG] joiner: no pending items
-2025/12/08 12:05:19 [DEBUG] joiner: no pending items
-2025/12/08 12:05:20 [DEBUG] joiner: no pending items
-2025/12/08 12:05:21 [DEBUG] joiner: no pending items
-2025/12/08 12:05:22 [DEBUG] joiner: no pending items
-2025/12/08 12:05:23 [DEBUG] joiner: no pending items
-2025/12/08 12:05:24 [DEBUG] joiner: no pending items
-2025/12/08 12:05:25 [DEBUG] joiner: no pending items
-2025/12/08 12:05:26 [DEBUG] joiner: no pending items
-2025/12/08 12:05:27 [DEBUG] joiner: no pending items
-2025/12/08 12:05:28 [DEBUG] joiner: no pending items
-2025/12/08 12:05:29 [DEBUG] joiner: no pending items
-2025/12/08 12:05:30 [DEBUG] joiner: no pending items
-2025/12/08 12:05:31 [DEBUG] joiner: no pending items
-2025/12/08 12:05:32 [DEBUG] joiner: no pending items
-2025/12/08 12:05:33 [DEBUG] joiner: no pending items
-2025/12/08 12:05:34 [DEBUG] joiner: no pending items
-2025/12/08 12:05:35 [DEBUG] joiner: no pending items
-2025/12/08 12:05:36 [DEBUG] joiner: no pending items
-2025/12/08 12:05:37 [DEBUG] joiner: no pending items
-2025/12/08 12:05:38 [DEBUG] joiner: no pending items
-2025/12/08 12:05:39 [DEBUG] joiner: no pending items
-2025/12/08 12:05:40 [DEBUG] joiner: no pending items
-2025/12/08 12:05:41 [DEBUG] joiner: no pending items
-2025/12/08 12:05:42 [DEBUG] joiner: no pending items
-2025/12/08 12:05:43 [DEBUG] joiner: no pending items
-2025/12/08 12:05:44 [DEBUG] joiner: no pending items
-2025/12/08 12:05:45 [DEBUG] joiner: no pending items
-2025/12/08 12:05:46 [DEBUG] joiner: no pending items
-2025/12/08 12:05:47 [DEBUG] joiner: no pending items
-2025/12/08 12:05:48 [DEBUG] joiner: no pending items
-2025/12/08 12:05:49 [DEBUG] joiner: no pending items
-2025/12/08 12:05:50 [DEBUG] joiner: no pending items
-2025/12/08 12:05:51 [DEBUG] joiner: no pending items
-2025/12/08 12:05:52 [DEBUG] joiner: no pending items
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-x2y0ol
+2025/12/08 20:08:20 [INFO] app: ensuring pivot schema
+2025/12/08 20:08:20 [INFO] pivot: ensuring schema
+2025/12/08 20:08:20 [INFO] app: pivot schema ensured
+2025/12/08 20:08:20 [INFO] joiner: worker ready
+2025/12/08 20:08:20 [INFO] joiner: starting run loop
+2025/12/08 20:08:20 [INFO] joiner: run loop started interval=1s
+2025/12/08 20:08:21 [INFO] joiner: processing 60 items
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=1
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=af18f6f6-ec4e-4971-aa9f-823de9a96c55 entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=2
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=2
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[place country year publisher_name code title]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=850784c9-602a-4cbe-9617-7223128b8df0 entity=publication-&-country-to-publication op=c sql=insert into publication (place,country,year,publisher_name,code,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=4
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=3
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[place country year publisher_name code title]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=8acc1e5d-46a2-43ae-baf8-7ed2ddb1c901 entity=publication-&-country-to-publication op=c sql=insert into publication (place,country,year,publisher_name,code,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=6
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=4
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=7625cbb4-0aba-48b8-9b69-8849d450b51a entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=8
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=5
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=07ab1541-c239-465a-a406-d18568eb0321 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=10
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=6
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=269fa7c3-5008-4322-a681-0abe244e86b7 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=12
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=7
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=4e8aeb8f-0fc2-4c44-a1a0-b3d98fb1e232 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=14
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=8
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=1a28c0f1-0a36-42ae-96e1-8db7bff2aef7 entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=16
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=9
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=e000e640-fc89-4dd2-913e-a6dc5ceb83f5 entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=18
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=10
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=e18c729f-a5a4-4018-afe7-26fa83434519 entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=20
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=11 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[title place country year publisher_name code]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=c997b866-098e-447c-9bfe-107d0117d502 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=21
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=11
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[year publisher_name code title place country]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=99d8ec7f-e6d4-4617-bd66-f13010d1910a entity=publication-&-country-to-publication op=c sql=insert into publication (year,publisher_name,code,title,place,co... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=22
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=12 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[place country year publisher_name code title]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=66dd05c6-1c6f-4669-ac5c-6ac488000a21 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (place,country,year,publisher_name,code,... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=23
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=12
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=fa7d815c-e2bd-41a7-bffb-1231ee55ead7 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=24
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=13 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=36edb923-1c11-42f9-b894-d9efdf28d15c entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=25
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=13
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=660217f8-56ab-4a82-b4ff-6e65132bad98 entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=26
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=14 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=ed1369f0-aee1-4b9a-8a92-ecb613a8cc56 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=27
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=14
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=05a3f264-74bd-4f88-9481-d9cd5444f9eb entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=28
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=15 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=174c430b-6be5-41bd-9d2b-f0a44d295e55 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=29
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=15
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=297cc365-6b90-45d4-aa55-3874e2dcab87 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=30
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=16 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[place country year publisher_name code title]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=c78144ba-5243-445e-a15a-6ae8b480687a entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (place,country,year,publisher_name,code,... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=31
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=16
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=42c9a0d2-8126-4ee0-a1ab-b01342084668 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=32
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=17 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=87302348-4129-4539-b937-3713f9dbb997 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=33
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=17
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=c32f1ee6-b2b1-4941-bdbb-0a5377ac165e entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=34
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=18 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=8c98b311-1121-4bda-b090-ae57a3ba796b entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=35
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=18
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=737231d8-00f7-4193-b071-db37add4b600 entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=36
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=19 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=3295f8cd-e804-4a7b-b59a-f5e1c1bf7400 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=37
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=19
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[place country year publisher_name code title]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=6dc839e0-8fad-4122-9dd4-66b79298b867 entity=publication-&-country-to-publication op=c sql=insert into publication (place,country,year,publisher_name,code,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=38
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-&-conference-to-publication op=c payloadTopics=3
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-&-conference-to-publication strategy=natural
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value=20 needKeymap=false entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-&-conference-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=f.conf_name
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-&-conference-to-publication cols=[publisher_name code title place country year]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=98fef8f9-c433-42f1-9b1e-3dd7293cbdd7 entity=publication-&-country-&-conference-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=false
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=39
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=20
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=2812f42d-6989-4e72-a43e-f56bba109e0e entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=40
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=21
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=1292b4d9-dc93-4aad-9ba6-69e58b42144c entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=42
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=22
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=ac240dd5-cf7f-4084-bde1-c9886dd89a6c entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=44
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=23
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=fde1ea75-53ba-4b52-a8ab-5595b7e8408e entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=46
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=24
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=19338b9d-5312-4b18-ad25-c7fdfcbab3f0 entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=48
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=25
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[code title place country year publisher_name]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=e3111867-af24-426c-8805-786606f90d5f entity=publication-&-country-to-publication op=c sql=insert into publication (code,title,place,country,year,publisher... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=50
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=26
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=c7bce023-9020-4415-b6e1-35475810cd8c entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=52
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=27
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[publisher_name code title place country year]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=f0b97ac3-1376-4051-9be9-e1e5cfb0f303 entity=publication-&-country-to-publication op=c sql=insert into publication (publisher_name,code,title,place,country... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=54
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=28
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=10276ca2-5ca6-4f56-98ae-66e95b955e76 entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=56
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=29
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[title place country year publisher_name code]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=8a680275-e514-4431-8658-b3d452887265 entity=publication-&-country-to-publication op=c sql=insert into publication (title,place,country,year,publisher_name... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=58
+2025/12/08 20:08:21 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:21 [DEBUG] processor: planAndEnqueue entity=publication-&-country-to-publication op=c payloadTopics=2
+2025/12/08 20:08:21 [DEBUG] processor: resolveKey entity=publication-&-country-to-publication strategy=surrogate
+2025/12/08 20:08:21 [DEBUG] pivot: LookupKey map=_keymap_publication-&-country-to-publication src=30
+2025/12/08 20:08:21 [DEBUG] processor: resolved key value= needKeymap=true entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: route=insert entity=publication-&-country-to-publication
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=c.cntr_name_en
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_year
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_edit
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_title
+2025/12/08 20:08:21 [DEBUG] processor: firstAfterField path=p.pub_loc
+2025/12/08 20:08:21 [DEBUG] processor: built columns entity=publication-&-country-to-publication cols=[country year publisher_name code title place]
+2025/12/08 20:08:21 [DEBUG] pivot: Enqueue queue=25a55e4a-5972-468e-a6c5-ca5804aae963 entity=publication-&-country-to-publication op=c sql=insert into publication (country,year,publisher_name,code,title,... needKeymap=true
+2025/12/08 20:08:21 [DEBUG] pivot: MarkNeedJoinDone id=60
+2025/12/08 20:08:22 [INFO] joiner: processing 20 items
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:22 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:23 [INFO] joiner: processing 20 items
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:23 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:24 [INFO] joiner: processing 20 items
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:24 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:25 [INFO] joiner: processing 20 items
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:25 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:26 [INFO] joiner: processing 20 items
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:26 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:27 [INFO] joiner: processing 20 items
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:27 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:28 [INFO] joiner: processing 20 items
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:28 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:29 [INFO] joiner: processing 20 items
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/08 20:08:29 [DEBUG] joiner: join incomplete entity=publication-&-country-&-conference-to-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/08 20:08:29 [INFO] joiner: run loop canceled
+2025/12/08 20:08:29 [INFO] joiner: shutdown complete

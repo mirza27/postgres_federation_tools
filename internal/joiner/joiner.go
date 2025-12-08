@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 
 	"db_migrate_server/internal/kafka"
@@ -83,6 +84,9 @@ func (w *Worker) tick(ctx context.Context) {
 }
 
 func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
+
+	// util.Debug.Printf("name item event %s", item.Entity)
+
 	ent, ok := w.findEntity(item.Entity)
 	if !ok {
 		return fmt.Errorf("entity %s not found in planner", item.Entity)
@@ -118,6 +122,55 @@ func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 	if err != nil {
 		return err
 	}
+
+	// jika join_key komposit (dipisah '|'), coba ambil fragmen per bagian dan gabungkan
+	allFragments := map[string]*kafka.DebeziumValue{}
+	if len(item.JoinFields) > 0 {
+		var jf map[string]string
+		if err := json.Unmarshal(item.JoinFields, &jf); err == nil {
+			// gunakan keys dari join_fields
+			for k := range jf {
+				partsFrag, _, ferr := w.Pivot.FetchJoinFragments(ctx, item.Entity, k, dimTopics)
+				if ferr != nil {
+					return ferr
+				}
+				for t, p := range partsFrag {
+					allFragments[t] = p
+				}
+			}
+		}
+	}
+	// fallback: split join_key dengan '|'
+	if len(allFragments) == 0 && strings.Contains(item.JoinKey, "|") {
+		for _, k := range strings.Split(item.JoinKey, "|") {
+			k = strings.TrimSpace(k)
+			if k == "" {
+				continue
+			}
+			partsFrag, _, ferr := w.Pivot.FetchJoinFragments(ctx, item.Entity, k, dimTopics)
+			if ferr != nil {
+				return ferr
+			}
+			for t, p := range partsFrag {
+				allFragments[t] = p
+			}
+		}
+	}
+	// jika tidak ada hasil gabungan, pakai hasil fetch awal
+	if len(allFragments) == 0 {
+		for t, p := range fragments {
+			allFragments[t] = p
+		}
+	}
+
+	// cek kelengkapan manual
+	complete = true
+	for _, t := range dimTopics {
+		if _, ok := allFragments[t]; !ok {
+			complete = false
+			break
+		}
+	}
 	if !complete {
 		util.Debug.Printf("joiner: join incomplete entity=%s joinKey=%s", item.Entity, item.JoinKey)
 		return nil
@@ -126,7 +179,7 @@ func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 	payloads := map[string]*kafka.DebeziumValue{
 		item.JoinTopic: &factPayload,
 	}
-	for t, p := range fragments {
+	for t, p := range allFragments {
 		payloads[t] = p
 	}
 
@@ -137,6 +190,8 @@ func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 }
 
 func (w *Worker) findEntity(name string) (mapping.Entity, bool) {
+	// util.Debug.Printf("name %s in entity %s", name, w.Plan.Entities)
+
 	for _, e := range w.Plan.Entities {
 		if e.Entity == name {
 			return e, true

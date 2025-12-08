@@ -1,28 +1,23 @@
 # run container
 run-base:
-	docker compose -f docker-compose.base.yml --env-file .base.env up -d
+	docker compose -f docker-compose.base.yml --env-file .base.env up -d 
 
 run-pub:
 	docker compose -f docker-compose.publication.yml --env-file .publication.env up -d
 
 # RUN worker
 executor:
-	go run ./cmd/executor/main.go
+	go run ./cmd/executor/main.go >  logs/executor.log 2>&1
 
 parser:
-	go run ./cmd/parser/main.go
+	go run ./cmd/parser/main.go >  logs/parser.log 2>&1
 
 checker:
-	go run ./cmd/checker/main.go
+	go run ./cmd/checker/main.go >  logs/checker.log 2>&1
 
 joiner:
-	go run ./cmd/joiner/main.go
+	go run ./cmd/joiner/main.go >  logs/joiner.log 2>&1
 
-run:
-	./worker_runner.sh
-
-stop:
-	./worker_stop.sh
 
 # Debezium Config
 conn-publication:
