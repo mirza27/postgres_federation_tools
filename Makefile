@@ -19,10 +19,10 @@ joiner:
 	go run ./cmd/joiner/main.go
 
 run:
-	./make/worker_runner.sh
+	./worker_runner.sh
 
 stop:
-	./make/worker_stop.sh
+	./worker_stop.sh
 
 # Debezium Config
 conn-publication:
