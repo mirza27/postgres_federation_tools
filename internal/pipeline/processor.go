@@ -62,6 +62,17 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 		util.Debug.Printf("processor: handling entity=%s op=%s", ent.Entity, op)
 
+		// apply fact-only condition jika ada
+		if ent.FactCondition != nil {
+			factTopic := topicName(ent.Sources[0])
+			if ev.Topic == factTopic {
+				if !factConditionMatch(ent.FactCondition, ev.Value) {
+					util.Debug.Printf("processor: skip entity=%s because fact_condition not met", ent.Entity)
+					continue
+				}
+			}
+		}
+
 		// join wait if entity need more than 1 topic
 		allTopics := mapping.ExpectedTopics(ent)
 		util.Debug.Printf("processor: expected topics=%v for entity=%s", allTopics, ent.Entity)
@@ -124,6 +135,11 @@ func (p *Processor) mergePayload(topicBytes map[string]*kafka.DebeziumValue) map
 
 // planAndEnqueue resolves keys, chooses route, builds SQL, and writes to pivot queue.
 func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op string, payload map[string]*kafka.DebeziumValue) error {
+	return p.planAndEnqueueWithQueue(ctx, ent, op, uuid.Nil, payload)
+}
+
+// planAndEnqueueWithQueue sama seperti planAndEnqueue, tapi meneruskan queueID jika ada (untuk joiner).
+func (p *Processor) planAndEnqueueWithQueue(ctx context.Context, ent mapping.Entity, op string, queueID uuid.UUID, payload map[string]*kafka.DebeziumValue) error {
 
 	util.Debug.Printf("processor: planAndEnqueue entity=%s op=%s payloadTopics=%d", ent.Entity, op, len(payload))
 
@@ -177,7 +193,7 @@ func (p *Processor) planAndEnqueue(ctx context.Context, ent mapping.Entity, op s
 		Op:     op,
 		SQL:    stmt.SQL,
 		Args:   stmt.Args,
-
+		QueueID: queueID,
 		NeedKeymap: keyRes.NeedKeymap,
 		Keymap:     keymapReq,
 		Returning:  returning,
@@ -385,6 +401,27 @@ func keyFromSource(keySources []string, eventTopic string, value *kafka.Debezium
 		}
 	}
 	return ""
+}
+
+// factConditionMatch memeriksa apakah payload fact memenuhi kondisi sederhana.
+func factConditionMatch(fc *mapping.FactCondition, value *kafka.DebeziumValue) bool {
+	if fc == nil || value == nil {
+		return true
+	}
+	colVal := stringFromRow(value.Payload.After, fc.Column)
+	if colVal == "" {
+		colVal = stringFromRow(value.Payload.Before, fc.Column)
+	}
+	target := fmt.Sprint(fc.Value)
+	switch strings.ToLower(fc.Op) {
+	case "equal":
+		return colVal == target
+	case "notequals":
+		return colVal != target
+	default:
+		// op tak dikenal dianggap lolos untuk backward compatibility
+		return true
+	}
 }
 
 // buildColumns assembles target columns/values and where clause for insert/update.

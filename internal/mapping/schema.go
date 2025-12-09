@@ -53,13 +53,20 @@ type Entity struct {
 	Sources     []EntitySource `json:"sources"`
 	TargetTable string         `json:"target_table"`
 
-	Key     Key               `json:"key"`
-	Columns map[string]Column `json:"columns"`
+	Key            Key               `json:"key"`
+	Columns        map[string]Column `json:"columns"`
+	FactCondition  *FactCondition    `json:"fact_condition,omitempty"`
 
 	Flatten    *Flatten    `json:"flatten,omitempty"`
 	Aggregates *Aggregates `json:"aggregates,omitempty"`
 
 	Routing Routing `json:"routing"`
+}
+
+type FactCondition struct {
+	Column string      `json:"column"`
+	Op     string      `json:"op"`    // equal | notEquals
+	Value  interface{} `json:"value"` // dibandingkan sebagai string
 }
 
 type EntitySource struct {
