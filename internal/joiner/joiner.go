@@ -85,8 +85,6 @@ func (w *Worker) tick(ctx context.Context) {
 
 func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 
-	// util.Debug.Printf("name item event %s", item.Entity)
-
 	ent, ok := w.findEntity(item.Entity)
 	if !ok {
 		return fmt.Errorf("entity %s not found in planner", item.Entity)
@@ -110,7 +108,7 @@ func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 	}
 	if len(dimTopics) == 0 {
 		// tidak ada dimensi, langsung enqueue
-		if err := w.Proc.HandleJoinReady(ctx, ent, item.Op, map[string]*kafka.DebeziumValue{
+		if err := w.Proc.HandleJoinReadyWithQueue(ctx, ent, item.Op, item.QueueID, map[string]*kafka.DebeziumValue{
 			item.JoinTopic: &factPayload,
 		}); err != nil {
 			return err
@@ -183,7 +181,7 @@ func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 		payloads[t] = p
 	}
 
-	if err := w.Proc.HandleJoinReady(ctx, ent, item.Op, payloads); err != nil {
+	if err := w.Proc.HandleJoinReadyWithQueue(ctx, ent, item.Op, item.QueueID, payloads); err != nil {
 		return err
 	}
 	return w.Pivot.MarkNeedJoinDone(ctx, item.ID)
