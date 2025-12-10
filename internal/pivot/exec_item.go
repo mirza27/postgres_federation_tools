@@ -15,4 +15,8 @@ type ExecItem struct {
 	NeedKeymap bool
 	Keymap     *KeymapRequest
 	Returning  []string
+
+	// split flags untuk menandai pekerjaan tambahan
+	IsSplit   bool
+	SplitName string
 }

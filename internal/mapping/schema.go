@@ -4,7 +4,6 @@ type Root struct {
 	Version  string   `json:"version"`
 	Sources  []Source `json:"sources"`
 	Target   Target   `json:"target"`
-	Topics   *Topics  `json:"topics,omitempty"`
 	Engine   Engine   `json:"engine"`
 	Entities []Entity `json:"entities"`
 }
@@ -19,11 +18,6 @@ type Target struct {
 	Name   string `json:"name"`
 	Type   string `json:"type"`
 	Schema string `json:"schema"`
-}
-
-type Topics struct {
-	Enabled bool              `json:"enabled"`
-	Map     map[string]string `json:"map"`
 }
 
 type Engine struct {
@@ -49,16 +43,13 @@ type Engine struct {
 
 type Entity struct {
 	Entity      string         `json:"entity"`
-	Kind        string         `json:"kind"`
 	Sources     []EntitySource `json:"sources"`
 	TargetTable string         `json:"target_table"`
 
 	Key            Key               `json:"key"`
 	Columns        map[string]Column `json:"columns"`
 	FactCondition  *FactCondition    `json:"fact_condition,omitempty"`
-
-	Flatten    *Flatten    `json:"flatten,omitempty"`
-	Aggregates *Aggregates `json:"aggregates,omitempty"`
+	SplitTables    []SplitTable      `json:"split_table,omitempty"`
 
 	Routing Routing `json:"routing"`
 }
@@ -67,6 +58,12 @@ type FactCondition struct {
 	Column string      `json:"column"`
 	Op     string      `json:"op"`    // equal | notEquals
 	Value  interface{} `json:"value"` // dibandingkan sebagai string
+}
+
+// SplitTable menggambarkan target tambahan yang ditulis bersamaan dengan target utama.
+type SplitTable struct {
+	TableName string            `json:"table_name"`
+	Columns   map[string]Column `json:"columns"`
 }
 
 type EntitySource struct {
@@ -83,7 +80,7 @@ type Join struct {
 }
 
 type Key struct {
-	Strategy string    `json:"strategy"` // natural | shared_key | surrogate
+	Strategy string    `json:"strategy"` // natural | shared_key
 	Source   []string  `json:"source,omitempty"`
 	JoinKey  string    `json:"join_key,omitempty"`
 	Resolver *Resolver `json:"resolver,omitempty"`
@@ -108,17 +105,6 @@ type Column struct {
 	Cast     string      `json:"cast,omitempty"`
 	Default  interface{} `json:"default,omitempty"`
 	Resolver *Resolver   `json:"resolver,omitempty"` // lookup FK via keymap lain
-}
-
-type Flatten struct {
-	FromArray string `json:"from_array"`
-	As        string `json:"as"`
-	RowKey    Column `json:"row_key"`
-}
-
-type Aggregates struct {
-	GroupBy []string          `json:"group_by"`
-	Metrics map[string]Column `json:"metrics"`
 }
 
 type Routing struct {

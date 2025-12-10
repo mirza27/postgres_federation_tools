@@ -13,6 +13,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 type Processor struct {
@@ -31,6 +33,7 @@ type PivotStore interface {
 	AddJoinFragment(ctx context.Context, entity, joinKey, topic, sourceKey string, joinFields map[string]string, payload *kafka.DebeziumValue) error
 	LookupKey(ctx context.Context, mapName, srcKey string) (string, bool, error)
 	Enqueue(ctx context.Context, it pivot.ExecItem) error
+	EnqueueSplit(ctx context.Context, queueID uuid.UUID, sqlText string, args []interface{}, returning []string, keymapPayload []byte) error
 }
 
 // KeyResolution captures resolved key value and optional keymap request info.
@@ -188,7 +191,7 @@ func (p *Processor) planAndEnqueueWithQueue(ctx context.Context, ent mapping.Ent
 		keymapReq = keyRes.Request
 	}
 
-	return p.Pivot.Enqueue(ctx, pivot.ExecItem{
+	if err := p.Pivot.Enqueue(ctx, pivot.ExecItem{
 		Entity: ent.Entity,
 		Op:     op,
 		SQL:    stmt.SQL,
@@ -197,7 +200,29 @@ func (p *Processor) planAndEnqueueWithQueue(ctx context.Context, ent mapping.Ent
 		NeedKeymap: keyRes.NeedKeymap,
 		Keymap:     keymapReq,
 		Returning:  returning,
-	})
+	}); err != nil {
+		return err
+	}
+
+	// split_table: setiap target tambahan ditulis sebagai insert terpisah dengan queue_id yang sama
+	for _, split := range ent.SplitTables {
+		colsSplit, valsSplit, err := evalColumns(ent, keyRes.Value, keyRes.Value != "", payload, split.Columns, true)
+		if err != nil {
+			return err
+		}
+		stmtSplit := buildInsertStmt(split.TableName, colsSplit, valsSplit)
+		var kmPayload []byte
+		if keyRes.NeedKeymap && keyRes.Request != nil {
+			if b, err := json.Marshal(keyRes.Request); err == nil {
+				kmPayload = b
+			}
+		}
+		if err := p.Pivot.EnqueueSplit(ctx, queueID, stmtSplit.SQL, stmtSplit.Args, nil, kmPayload); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // opRoute maps Debezium op to configured routing mode (insert/update).
@@ -239,7 +264,7 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 
 		return KeyResolution{Value: key}, nil
 
-	case "shared_key", "surrogate":
+	case "shared_key":
 		if ent.Key.Resolver == nil || ent.Key.Resolver.Table == "" {
 			return KeyResolution{}, fmt.Errorf("missing resolver for %s", ent.Entity)
 		}
@@ -266,7 +291,7 @@ func (p *Processor) resolveKey(ctx context.Context, ent mapping.Entity, payload 
 		}
 		return KeyResolution{NeedKeymap: true, Request: req}, nil
 	default:
-		return KeyResolution{}, fmt.Errorf("unknown key strategy")
+		return KeyResolution{}, fmt.Errorf("unknown key strategy: %s (supported: natural, shared_key)", ent.Key.Strategy)
 	}
 }
 
@@ -361,7 +386,7 @@ func topicName(s mapping.EntitySource) string {
 }
 
 // deriveKeySource mengambil source key sesuai key.source dan payload gabungan (topic->payload).
-// Ini dipakai untuk keymap (surrogate/shared) agar tidak bergantung pada join key.
+// Ini dipakai untuk keymap (shared_key) agar tidak bergantung pada join key.
 func (p *Processor) deriveKeySource(ent mapping.Entity, payload map[string]*kafka.DebeziumValue) string {
 	aliasTopic := aliasTopics(ent)
 	for _, src := range ent.Key.Source {
@@ -375,6 +400,11 @@ func (p *Processor) deriveKeySource(ent mapping.Entity, payload map[string]*kafk
 // HandleJoinReady dipakai checker saat join fragment sudah lengkap.
 func (p *Processor) HandleJoinReady(ctx context.Context, ent mapping.Entity, op string, payload map[string]*kafka.DebeziumValue) error {
 	return p.planAndEnqueue(ctx, ent, op, payload)
+}
+
+// HandleJoinReadyWithQueue memungkinkan joiner meneruskan queueID agar konsisten dengan _need_join.
+func (p *Processor) HandleJoinReadyWithQueue(ctx context.Context, ent mapping.Entity, op string, queueID uuid.UUID, payload map[string]*kafka.DebeziumValue) error {
+	return p.planAndEnqueueWithQueue(ctx, ent, op, queueID, payload)
 }
 
 // keyFromSource mengambil nilai kolom dari key.source dengan memperhatikan alias->topic.

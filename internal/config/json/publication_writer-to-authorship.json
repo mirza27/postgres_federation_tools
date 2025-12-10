@@ -1,10 +1,9 @@
 {
   "entity": "publication_writer-to-authorship",
-  "kind": "table",
   "sources": [{ "alias": "pw", "from": "publication_writer" }],
   "target_table": "authorship",
   "key": {
-    "strategy": "surrogate",
+    "strategy": "shared_key",
     "source": ["pw.pub_id"],
     "resolver": {
       "type": "mapping_table",

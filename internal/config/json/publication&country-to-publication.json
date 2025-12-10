@@ -1,6 +1,5 @@
 {
   "entity": "publication-&-country-to-publication",
-  "kind": "table",
   "sources": [
     { "alias": "p", "from": "publication" },
     {
@@ -15,7 +14,7 @@
   ],
   "target_table": "publication",
   "key": {
-    "strategy": "surrogate",
+    "strategy": "shared_key",
     "source": ["p.pub_id"],
     "resolver": {
       "type": "mapping_table",

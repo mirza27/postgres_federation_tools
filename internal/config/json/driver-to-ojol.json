@@ -1,6 +1,5 @@
 {
   "entity": "driver-to-ojol",
-  "kind": "table",
   "sources": [
     { "alias": "d", "from": "drivers" },
     {

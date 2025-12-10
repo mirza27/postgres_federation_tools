@@ -1,5 +1,5 @@
 {
-  "entity": "publication-&-country-&-conference-to-publication",
+  "entity": "publication-&-country-&-conference-to-paper-&-publication",
   "sources": [
     { "alias": "p", "from": "publication" },
     {
@@ -21,27 +21,33 @@
       }
     }
   ],
-  "target_table": "publication",
+  "target_table": "paper",
   "key": {
     "strategy": "natural",
     "source": ["p.pub_id"]
   },
   "columns": {
-    "code": {
+    "doi": {
       "from": "$key"
     },
-    "title": { "from": "f.conf_name" },
-    "place": { "from": "p.pub_loc" },
-    "country": { "from": "c.cntr_name_en" },
-    "year": { "from": "p.pub_year" },
-    "publisher_name": { "from": "p.pub_edit" },
-    "publicationtype_name": { "default": "CONFERENCE" }
+    "title": { "from": "p.pub_title" },
+    "startpage": { "from": "f.conf_start_page" },
+    "endpage": { "from": "f.conf_end_page" },
+    "publication_code": { "from": "$key" }
   },
-  "fact_condition": {
-    "column": "pub_draft",
-    "op": "notEquals",
-    "value": "published"
-  },
+  "split_table": [
+    {
+      "table_name": "publication",
+      "columns": {
+        "code": { "from": "$key" },
+        "title": { "from": "c.conf_name" },
+        "place": { "from": "p.pub_name" },
+        "country": { "from": "c.cntr_name_en" },
+        "publisher_name": { "from": "p.pub_edit" },
+        "publicationtype_name": { "default": "PAPER" }
+      }
+    }
+  ],
   "routing": {
     "on_snapshot": { "mode": "insert" },
     "on_create": { "mode": "insert" },

@@ -29,6 +29,10 @@ type PivotStore interface {
 	MarkError(ctx context.Context, id int64, msg string) error
 	FulfillKeymap(ctx context.Context, keymapID int64, tgtKey string) error
 	MarkKeymapError(ctx context.Context, keymapID int64, msg string) error
+	FetchSplits(ctx context.Context, queueID uuid.UUID) ([]pivot.SplitRow, error)
+	MarkSplitDone(ctx context.Context, id int64) error
+	MarkSplitError(ctx context.Context, id int64, msg string) error
+	LookupKey(ctx context.Context, mapName, srcKey string) (string, bool, error)
 }
 
 func New(ctx context.Context, pivotRepo PivotStore, targetDSN string, maxRows, intervalMs int) (*Executor, error) {
@@ -119,6 +123,21 @@ func (e *Executor) tick(ctx context.Context) {
 		if err := e.Pivot.MarkDone(ctx, it.ID); err != nil {
 			util.Warn.Printf("executor: mark done failed id=%d err=%v", it.ID, err)
 		}
+
+		// eksekusi split terkait queue ini
+		splits, err := e.Pivot.FetchSplits(ctx, it.QueueID)
+		if err != nil {
+			util.Warn.Printf("executor: fetch splits failed queue=%s err=%v", it.QueueID, err)
+			continue
+		}
+		for _, sp := range splits {
+			if err := e.executeSplit(ctx, tx, it, sp); err != nil {
+				util.Error.Printf("executor: split execute failed split_id=%d queue=%s err=%v", sp.ID, sp.QueueID, err)
+				_ = e.Pivot.MarkSplitError(ctx, sp.ID, err.Error())
+				continue
+			}
+			_ = e.Pivot.MarkSplitDone(ctx, sp.ID)
+		}
 	}
 
 	if err := tx.Commit(ctx); err != nil {
@@ -154,5 +173,46 @@ func (e *Executor) executeItem(ctx context.Context, tx pgx.Tx, it pivot.Row, arg
 	}
 
 	_, err := tx.Exec(ctx, it.SQL, args...)
+	return err
+}
+
+// executeSplit mengeksekusi baris split, menggantikan placeholder keymap jika diperlukan.
+func (e *Executor) executeSplit(ctx context.Context, tx pgx.Tx, main pivot.Row, sp pivot.SplitRow) error {
+	var args []interface{}
+ 	if err := json.Unmarshal(sp.ArgsJSON, &args); err != nil {
+		return err
+	}
+
+	// jika argumen berisi placeholder dan ada keymap_payload, coba lookup key
+	targetKey := ""
+	if len(sp.KeymapPayload) > 0 {
+		var km pivot.KeymapRequest
+		if err := json.Unmarshal(sp.KeymapPayload, &km); err == nil {
+			if val, ok, errLookup := e.Pivot.LookupKey(ctx, km.MapName, km.SrcKey); errLookup == nil && ok {
+				targetKey = val
+			}
+		}
+	}
+	if targetKey != "" {
+		for i, a := range args {
+			if s, ok := a.(string); ok && s == "__KEYMAP_PLACEHOLDER__" {
+				args[i] = targetKey
+			}
+		}
+	}
+
+	if len(sp.Returning) > 0 {
+		dest := make([]interface{}, len(sp.Returning))
+		scanTargets := make([]interface{}, len(sp.Returning))
+		for i := range dest {
+			scanTargets[i] = &dest[i]
+		}
+		if err := tx.QueryRow(ctx, sp.SQL, args...).Scan(scanTargets...); err != nil {
+			return err
+		}
+		return nil
+	}
+
+	_, err := tx.Exec(ctx, sp.SQL, args...)
 	return err
 }

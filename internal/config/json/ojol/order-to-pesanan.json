@@ -1,12 +1,11 @@
 {
   "entity": "order-to-pesanan",
-  "kind": "table",
   "sources": [
     { "alias": "o", "from": "order" }
   ],
   "target_table": "pesanan",
   "key": {
-    "strategy": "surrogate",
+    "strategy": "shared_key",
     "source": ["o.order_id"],
     "resolver": {
       "type": "mapping_table",

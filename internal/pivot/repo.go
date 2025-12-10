@@ -363,10 +363,29 @@ func (r *Repo) Enqueue(ctx context.Context, it ExecItem) error {
 	_, err = r.DB.Exec(ctx, `
         insert into _exec_queue (
             queue_id, entity, op, sql_text, sql_args,
-            returning_cols, keymap_payload, need_keymap, status
+            returning_cols, keymap_payload, need_keymap, status,
+            is_split, split_name
         )
-        values ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,'pending')`,
-		it.QueueID, it.Entity, it.Op, it.SQL, string(argsJSON), it.Returning, keymapArg, it.NeedKeymap)
+        values ($1,$2,$3,$4,$5::jsonb,$6,$7,$8,'pending',$9,$10)`,
+		it.QueueID, it.Entity, it.Op, it.SQL, string(argsJSON), it.Returning, keymapArg, it.NeedKeymap, it.IsSplit, nullIfEmpty(it.SplitName))
+	return err
+}
+
+// EnqueueSplit menyimpan pekerjaan split (tambahan) ke tabel _exec_split.
+func (r *Repo) EnqueueSplit(ctx context.Context, queueID uuid.UUID, sqlText string, args []interface{}, returning []string, keymapPayload []byte) error {
+	argsJSON, err := json.Marshal(args)
+	if err != nil {
+		return err
+	}
+	var keymapArg interface{}
+	if len(keymapPayload) > 0 {
+		keymapArg = string(keymapPayload)
+	}
+	_, err = r.DB.Exec(ctx, `
+        insert into _exec_split (
+            queue_id, sql_text, sql_args, returning_cols, keymap_payload, status
+        ) values ($1,$2,$3::jsonb,$4,$5,'pending')`,
+		queueID, sqlText, string(argsJSON), returning, keymapArg)
 	return err
 }
 
@@ -379,7 +398,7 @@ func (r *Repo) FetchReady(ctx context.Context, limit int) ([]Row, error) {
 	rows, err := r.DB.Query(ctx, `
         select id, queue_id, entity, op, sql_text,
                coalesce(sql_args,'[]'::jsonb), need_keymap, keymap_id,
-               coalesce(returning_cols,'{}'::text[]), status
+               coalesce(returning_cols,'{}'::text[]), status, is_split, split_name
         from _exec_queue
         where status='ready'
         order by created_at asc
@@ -403,10 +422,12 @@ func (r *Repo) FetchReady(ctx context.Context, limit int) ([]Row, error) {
 			returning  []string
 			status     string
 			queueID    uuid.UUID
+			isSplit    bool
+			splitName  sql.NullString
 		)
 
 		if err := rows.Scan(&id, &queueID, &entity, &op, &sqlText, &args,
-			&needKeymap, &keymapID, &returning, &status); err != nil {
+			&needKeymap, &keymapID, &returning, &status, &isSplit, &splitName); err != nil {
 			// Jika ada format data yang tidak sesuai, hentikan supaya tidak mengembalikan data korup.
 			return nil, err
 		}
@@ -429,6 +450,8 @@ func (r *Repo) FetchReady(ctx context.Context, limit int) ([]Row, error) {
 			KeymapID:   kmPtr,
 			Returning:  returning,
 			Status:     status,
+			IsSplit:    isSplit,
+			SplitName:  splitName.String,
 		})
 	}
 	return out, rows.Err()
@@ -544,16 +567,65 @@ func (r *Repo) MarkError(ctx context.Context, id int64, msg string) error {
 	return err
 }
 
-// Batch log -----------------------------------------------------------------
+// Split helpers --------------------------------------------------------------
 
-// Log mencatat konteks batch ke tabel audit sederhana agar alur ETL mudah ditelusuri.
-func (r *Repo) Log(ctx context.Context, entity, op string, keyValues any, payload any, status, errMsg string) {
-	keyJSON, _ := json.Marshal(keyValues)
-	plJSON, _ := json.Marshal(payload)
-	util.Debug.Printf("pivot: Log entity=%s op=%s status=%s", entity, op, status)
-	_, _ = r.DB.Exec(ctx, `insert into _batch_log (entity, op, key_values, payload, status, error)
-    values ($1,$2,$3::jsonb,$4::jsonb,$5,$6)`,
-		entity, op, string(keyJSON), string(plJSON), status, errMsg)
+// FetchSplits mengambil pekerjaan split untuk queue tertentu.
+func (r *Repo) FetchSplits(ctx context.Context, queueID uuid.UUID) ([]SplitRow, error) {
+	rows, err := r.DB.Query(ctx, `
+        select exec_split_id, queue_id, sql_text,
+               coalesce(sql_args,'[]'::jsonb), coalesce(returning_cols,'{}'::text[]),
+               coalesce(keymap_payload,'{}'::jsonb), status
+        from _exec_split
+        where queue_id=$1 and status='pending'
+        order by created_at asc`, queueID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []SplitRow
+	for rows.Next() {
+		var (
+			id      int64
+			qid     uuid.UUID
+			sqlText string
+			args    []byte
+			returns []string
+			payload []byte
+			status  string
+		)
+		if err := rows.Scan(&id, &qid, &sqlText, &args, &returns, &payload, &status); err != nil {
+			return nil, err
+		}
+		out = append(out, SplitRow{
+			ID:            id,
+			QueueID:       qid,
+			SQL:           sqlText,
+			ArgsJSON:      args,
+			Returning:     returns,
+			KeymapPayload: payload,
+			Status:        status,
+		})
+	}
+	return out, rows.Err()
+}
+
+// MarkSplitDone menandai split selesai.
+func (r *Repo) MarkSplitDone(ctx context.Context, id int64) error {
+	_, err := r.DB.Exec(ctx, `
+        update _exec_split
+        set status='done', last_error=null, updated_at=now()
+        where exec_split_id=$1`, id)
+	return err
+}
+
+// MarkSplitError menandai error pada split.
+func (r *Repo) MarkSplitError(ctx context.Context, id int64, msg string) error {
+	_, err := r.DB.Exec(ctx, `
+        update _exec_split
+        set status='error', last_error=$2, updated_at=now()
+        where exec_split_id=$1`, id, msg)
+	return err
 }
 
 // Helpers -------------------------------------------------------------------

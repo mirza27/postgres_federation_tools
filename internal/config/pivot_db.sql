@@ -27,6 +27,8 @@ create table if not exists _exec_queue (
   sql_args jsonb,
   returning_cols text[],
   keymap_payload jsonb,
+  is_split boolean not null default false,
+  split_name text,
   status text not null default 'pending',
   need_keymap boolean not null default false,
   keymap_id bigint references _keymap_generic(keymap_id),
@@ -39,41 +41,30 @@ create table if not exists _exec_queue (
   unique (queue_id)
 );
 
-create table if not exists _batch_log (
-  id bigserial primary key,
-  entity text not null, 
-  op text not null,
-  key_values jsonb,
-  payload jsonb,
-  status text not null,
-  error text,
-  processed_at timestamptz default now(),
-  batch_id text
-);
-
-
--- check and add foreign key constraint if it doesn't exist
-do $$
-begin
-  if not exists (
-    select 1
-    from information_schema.table_constraints
-    where constraint_name = '_keymap_generic_queue_fk'
-      and table_name = '_keymap_generic'
-  ) then
-    alter table _keymap_generic
-      add constraint _keymap_generic_queue_fk
-      foreign key (queue_id) references _exec_queue(queue_id) on delete set null;
-  end if;
-end;
-$$;
-
-create table if not exists _polling_store (
-  id bigserial primary key,
-  entity text not null,
+create table if not exists _exec_split (
+  exec_split_id bigserial primary key,
+  queue_id uuid not null references _exec_queue(queue_id) on delete cascade,
+  sql_text text not null,
+  sql_args jsonb,
+  returning_cols text[],
+  keymap_payload jsonb,
   status text not null default 'pending',
-  created_at timestamptz default now()
+  last_error text,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
+
+-- create table if not exists _batch_log (
+--   id bigserial primary key,
+--   entity text not null, 
+--   op text not null,
+--   key_values jsonb,
+--   payload jsonb,
+--   status text not null,
+--   error text,
+--   processed_at timestamptz default now(),
+--   batch_id text
+-- );
 
 create table if not exists _need_join (
   id bigserial primary key,

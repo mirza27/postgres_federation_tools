@@ -68,7 +68,6 @@ func setDefaultConfig(path string) (*Root, error) {
 		Version  string   `json:"version"`
 		Sources  []Source `json:"sources"`
 		Target   Target   `json:"target"`
-		Topics   *Topics  `json:"topics,omitempty"`
 		Engine   Engine   `json:"engine"`
 		Entities []Entity `json:"entities"`
 
@@ -87,7 +86,6 @@ func setDefaultConfig(path string) (*Root, error) {
 		Version:  tmp.Version, // kosong jika tidak ada di file — itu OK
 		Sources:  tmp.Sources,
 		Target:   tmp.Target,
-		Topics:   tmp.Topics,
 		Engine:   tmp.Engine,
 		Entities: tmp.Entities,
 	}

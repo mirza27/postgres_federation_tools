@@ -1,6 +1,5 @@
 {
   "entity": "researcher-to-author",
-  "kind": "table",
   "sources": [{ "alias": "r", "from": "researcher" }],
   "target_table": "author",
   "key": {

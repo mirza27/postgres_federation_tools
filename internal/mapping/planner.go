@@ -55,7 +55,7 @@ func (p *Planner) Print() {
 	// Tampilkan daftar entity
 	fmt.Println("-- Entities --")
 	for i, e := range p.Entities {
-		fmt.Printf("%d. Entity: %s (%s)\n", i+1, e.Entity, e.Kind)
+		fmt.Printf("%d. Entity: %s\n", i+1, e.Entity)
 		fmt.Printf("   TargetTable: %s\n", e.TargetTable)
 		fmt.Printf("   Sources:\n")
 		for _, s := range e.Sources {

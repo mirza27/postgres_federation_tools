@@ -1,6 +1,5 @@
 {
   "entity": "order-to-pesanan",
-  "kind": "table",
   "sources": [
     { "alias": "o", "from": "order" }
   ],
