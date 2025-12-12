@@ -54,17 +54,6 @@ create table if not exists _exec_split (
   updated_at timestamptz not null default now()
 );
 
--- create table if not exists _batch_log (
---   id bigserial primary key,
---   entity text not null, 
---   op text not null,
---   key_values jsonb,
---   payload jsonb,
---   status text not null,
---   error text,
---   processed_at timestamptz default now(),
---   batch_id text
--- );
 
 create table if not exists _need_join (
   id bigserial primary key,
@@ -73,7 +62,6 @@ create table if not exists _need_join (
   op text not null,
   join_key text not null,
   join_topic text not null,
-  join_source_key text,
   join_payload jsonb,
   join_fields jsonb,
   status text not null default 'pending',

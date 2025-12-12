@@ -26,6 +26,7 @@ func Load(cfg config.Config) (*Root, error) {
 	}
 	util.Info.Printf("mapping: found %d entity files", len(entityFiles))
 
+	// list each entity json files
 	var entities []Entity
 	for _, file := range entityFiles {
 		util.Debug.Printf("mapping: loading entity file=%s", file)
@@ -44,6 +45,8 @@ func Load(cfg config.Config) (*Root, error) {
 	}
 
 	root := &Root{
+		// conf generated from env
+
 		Version:  conf.Version,
 		Sources:  conf.Sources,
 		Target:   conf.Target,

@@ -16,6 +16,8 @@ func LoadPlan(cfg *config.Config) (*mapping.Planner, error) {
 		return nil, err
 	}
 	util.Info.Printf("app: mapping loaded entities=%d", len(root.Entities))
+
+	// create planner
 	return mapping.NewPlanner(root), nil
 }
 

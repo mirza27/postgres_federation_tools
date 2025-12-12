@@ -8,6 +8,7 @@ import (
 // Event represents a single Debezium event consumed from Kafka.
 // The value payload is decoded into structured fields so downstream
 // processors can access data without reparsing raw bytes.
+// pemetaan yang digunakan sistem
 type Event struct {
 	Topic  string
 	Key    []byte
@@ -19,17 +20,16 @@ type Event struct {
 // DebeziumValue mirrors the useful portions of the Debezium envelope.
 // Only a subset of fields is captured for the processor's needs.
 type DebeziumValue struct {
-	Payload     DebeziumPayload
-	Op          string
-	TsMs        *int64
-	Transaction *DebeziumTransaction
+	Payload DebeziumPayload
+	Op      string // add op for easy access
 }
 
 // DebeziumPayload contains the before/after rows and the source metadata.
 type DebeziumPayload struct {
-	Before map[string]any
-	After  map[string]any
-	Source *DebeziumSource
+	Before map[string]any  `json:"before"`
+	After  map[string]any  `json:"after"`
+	Source *DebeziumSource `json:"source"`
+	Op     string          `json:"op"`
 }
 
 // DebeziumSource captures metadata about the event origin.
@@ -48,47 +48,28 @@ type DebeziumSource struct {
 	Xmin      *int64  `json:"xmin"`
 }
 
-// DebeziumTransaction represents transaction metadata when available.
-type DebeziumTransaction struct {
-	ID                  string `json:"id"`
-	TotalOrder          int64  `json:"total_order"`
-	DataCollectionOrder int64  `json:"data_collection_order"`
-}
-
 // DecodeEventValue decodes the raw Debezium envelope into structured fields.
-func DecodeEventValue(raw []byte) (*DebeziumValue, *DebeziumSource, error) {
-	var env struct {
-		Payload *struct {
-			Before      map[string]any       `json:"before"`
-			After       map[string]any       `json:"after"`
-			Source      *DebeziumSource      `json:"source"`
-			Op          string               `json:"op"`
-			TsMs        *int64               `json:"ts_ms"`
-			Transaction *DebeziumTransaction `json:"transaction"`
-		} `json:"payload"`
+func DecodeEventValue(raw []byte) (*DebeziumValue, error) {
+	// get value from debezium with key "payload"
+	var tmp struct {
+		Payload *DebeziumPayload `json:"payload"`
 	}
 
-	if err := json.Unmarshal(raw, &env); err != nil {
-		return nil, nil, err
+	if err := json.Unmarshal(raw, &tmp); err != nil {
+		return nil, err
 	}
 
-	if env.Payload == nil {
-		return &DebeziumValue{}, nil, nil
+	if tmp.Payload == nil {
+		return &DebeziumValue{}, nil
 	}
 
-	payload := env.Payload
-	value := &DebeziumValue{
-		Payload: DebeziumPayload{
-			Before: payload.Before,
-			After:  payload.After,
-			Source: payload.Source,
-		},
-		Op:          payload.Op,
-		TsMs:        payload.TsMs,
-		Transaction: payload.Transaction,
+	payload := tmp.Payload
+	debeziumValue := &DebeziumValue{
+		Payload: *payload,
+		Op:      payload.Op, // copy op for easy access
 	}
 
-	return value, payload.Source, nil
+	return debeziumValue, nil
 }
 
 // String renders the event in JSON form for debugging.
@@ -128,20 +109,17 @@ func (v *DebeziumValue) String() string {
 		Source *DebeziumSource `json:"source,omitempty"`
 	}
 	type dbg struct {
-		Op          string               `json:"op,omitempty"`
-		TsMs        *int64               `json:"ts_ms,omitempty"`
-		Payload     payload              `json:"payload"`
-		Transaction *DebeziumTransaction `json:"transaction,omitempty"`
+		Op      string  `json:"op,omitempty"`
+		TsMs    *int64  `json:"ts_ms,omitempty"`
+		Payload payload `json:"payload"`
 	}
 	d := dbg{
-		Op:   v.Op,
-		TsMs: v.TsMs,
+		Op: v.Op,
 		Payload: payload{
 			Before: v.Payload.Before,
 			After:  v.Payload.After,
 			Source: v.Payload.Source,
 		},
-		Transaction: v.Transaction,
 	}
 	b, err := json.Marshal(d)
 	if err != nil {

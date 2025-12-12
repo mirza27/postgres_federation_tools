@@ -48,13 +48,9 @@ type KeyResolution struct {
 // single-topic planning.
 func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
-	op := ev.Op
-	if op == "" && ev.Value != nil {
-		op = ev.Value.Op
-	}
+	// get matched entities with hash map
 	entities := p.Plan.TopicToEntities[ev.Topic]
-
-	util.Debug.Printf("processor: Handle topic=%s op=%s matchedEntities=%d", ev.Topic, op, len(entities))
+	util.Debug.Printf("processor: Handle topic=%s op=%s matchedEntities=%d", ev.Topic, ev.Op, len(entities))
 
 	if len(entities) == 0 {
 		util.Debug.Printf("no entity matched topic=%s", ev.Topic)
@@ -63,17 +59,12 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 	for _, ent := range entities {
 
-		util.Debug.Printf("processor: handling entity=%s op=%s", ent.Entity, op)
+		util.Debug.Printf("processor: handling entity=%s op=%s", ent.Entity, ev.Op)
 
-		// apply fact-only condition jika ada
-		if ent.FactCondition != nil {
-			factTopic := topicName(ent.Sources[0])
-			if ev.Topic == factTopic {
-				if !factConditionMatch(ent.FactCondition, ev.Value) {
-					util.Debug.Printf("processor: skip entity=%s because fact_condition not met", ent.Entity)
-					continue
-				}
-			}
+		// check fact condition
+		if !CheckFactCondition(ev, &ent) {
+			util.Debug.Printf("processor: skip entity=%s because fact_condition not met", ent.Entity)
+			continue
 		}
 
 		// join wait if entity need more than 1 topic
@@ -99,13 +90,12 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 				raw, _ := json.Marshal(ev.Value)
 				fieldsRaw, _ := json.Marshal(joinCtx.Fields)
 				item := pivot.NeedJoinItem{
-					Entity:        ent.Entity,
-					Op:            op,
-					JoinKey:       joinKey,
-					JoinTopic:     ev.Topic,
-					JoinSourceKey: sourceKey,
-					JoinPayload:   raw,
-					JoinFields:    fieldsRaw,
+					Entity:      ent.Entity,
+					Op:          ev.Op,
+					JoinKey:     joinKey,
+					JoinTopic:   ev.Topic,
+					JoinPayload: raw,
+					JoinFields:  fieldsRaw,
 				}
 				if err := p.Pivot.EnqueueNeedJoin(ctx, item); err != nil {
 					return err
@@ -122,7 +112,7 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 		} else {
 			util.Debug.Printf("processor: single topic path entity=%s topic=%s", ent.Entity, ev.Topic)
 
-			if err := p.planAndEnqueue(ctx, ent, op, map[string]*kafka.DebeziumValue{ev.Topic: ev.Value}); err != nil {
+			if err := p.planAndEnqueue(ctx, ent, ev.Op, map[string]*kafka.DebeziumValue{ev.Topic: ev.Value}); err != nil {
 				return err
 			}
 		}
@@ -192,11 +182,11 @@ func (p *Processor) planAndEnqueueWithQueue(ctx context.Context, ent mapping.Ent
 	}
 
 	if err := p.Pivot.Enqueue(ctx, pivot.ExecItem{
-		Entity: ent.Entity,
-		Op:     op,
-		SQL:    stmt.SQL,
-		Args:   stmt.Args,
-		QueueID: queueID,
+		Entity:     ent.Entity,
+		Op:         op,
+		SQL:        stmt.SQL,
+		Args:       stmt.Args,
+		QueueID:    queueID,
 		NeedKeymap: keyRes.NeedKeymap,
 		Keymap:     keymapReq,
 		Returning:  returning,
@@ -431,27 +421,6 @@ func keyFromSource(keySources []string, eventTopic string, value *kafka.Debezium
 		}
 	}
 	return ""
-}
-
-// factConditionMatch memeriksa apakah payload fact memenuhi kondisi sederhana.
-func factConditionMatch(fc *mapping.FactCondition, value *kafka.DebeziumValue) bool {
-	if fc == nil || value == nil {
-		return true
-	}
-	colVal := stringFromRow(value.Payload.After, fc.Column)
-	if colVal == "" {
-		colVal = stringFromRow(value.Payload.Before, fc.Column)
-	}
-	target := fmt.Sprint(fc.Value)
-	switch strings.ToLower(fc.Op) {
-	case "equal":
-		return colVal == target
-	case "notequals":
-		return colVal != target
-	default:
-		// op tak dikenal dianggap lolos untuk backward compatibility
-		return true
-	}
 }
 
 // buildColumns assembles target columns/values and where clause for insert/update.

@@ -1,22 +1,22 @@
-2025/12/10 07:20:31 [INFO] parser: signal context registered
-2025/12/10 07:20:31 [INFO] parser: loading configuration
+2025/12/13 00:48:33 [INFO] parser: signal context registered
+2025/12/13 00:48:33 [INFO] parser: loading configuration
 📦 Config Loaded:
 Kafka brokers: localhost:29092
 Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
 Mapping Path: ./internal/config/json/publication
-🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-2qianu
-2025/12/10 07:20:31 [INFO] parser: configuration loaded
-2025/12/10 07:20:31 [INFO] app: loading mapping root
-2025/12/10 07:20:31 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/publication
-2025/12/10 07:20:31 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
-2025/12/10 07:20:31 [DEBUG] mapping: default config loaded sources=1 entities=0
-2025/12/10 07:20:31 [INFO] mapping: listing json files path=./internal/config/json/publication
-2025/12/10 07:20:31 [DEBUG] mapping: listJSONFiles result=[internal/config/json/publication/publication&country&conference-to-publication&paper.json]
-2025/12/10 07:20:31 [INFO] mapping: found 1 entity files
-2025/12/10 07:20:31 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country&conference-to-publication&paper.json
-2025/12/10 07:20:31 [INFO] mapping: Load success entities=1 sources=1
-2025/12/10 07:20:31 [INFO] app: mapping loaded entities=1
-2025/12/10 07:20:31 [1] Entity: publication-&-country-&-conference-to-paper-&-publication → target: paper
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-uf4ek3
+2025/12/13 00:48:33 [INFO] parser: configuration loaded
+2025/12/13 00:48:33 [INFO] app: loading mapping root
+2025/12/13 00:48:33 [INFO] mapping: Load start defaultPath=./internal/config/json/default.json mappingPath=./internal/config/json/publication
+2025/12/13 00:48:33 [INFO] mapping: setDefaultConfig path=./internal/config/json/default.json
+2025/12/13 00:48:33 [DEBUG] mapping: default config loaded sources=1 entities=0
+2025/12/13 00:48:33 [INFO] mapping: listing json files path=./internal/config/json/publication
+2025/12/13 00:48:33 [DEBUG] mapping: listJSONFiles result=[internal/config/json/publication/publication&country&conference-to-publication&paper.json]
+2025/12/13 00:48:33 [INFO] mapping: found 1 entity files
+2025/12/13 00:48:33 [DEBUG] mapping: loading entity file=internal/config/json/publication/publication&country&conference-to-publication&paper.json
+2025/12/13 00:48:33 [INFO] mapping: Load success entities=1 sources=1
+2025/12/13 00:48:33 [INFO] app: mapping loaded entities=1
+2025/12/13 00:48:33 [1] Entity: publication-&-country-&-conference-to-paper-&-publication → target: paper
 ==== Planner ====
 Total Entities : 1
 -- Entities --
@@ -34,321 +34,321 @@ Topic: db_events_country
 Topic: db_events_conference
    - publication-&-country-&-conference-to-paper-&-publication
 -- TopicToEntities --
-[db_events_publication db_events_country db_events_conference]
-2025/12/10 07:20:31 [INFO] parser: planner covers 3 topics
-2025/12/10 07:20:31 [INFO] parser: creating kafka consumer group=db-migrate-engine-2qianu
-2025/12/10 07:20:31 [INFO] kafka: NewConsumer brokers=[localhost:29092] groupID=db-migrate-engine-2qianu topics=[db_events_publication db_events_country db_events_conference]
-2025/12/10 07:20:31 [INFO] parser: kafka consumer ready
-2025/12/10 07:20:31 [INFO] app: connecting pivot repository
-2025/12/10 07:20:31 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
+[db_events_conference db_events_publication db_events_country]
+2025/12/13 00:48:33 [INFO] parser: planner covers 3 topics
+2025/12/13 00:48:33 [INFO] parser: creating kafka consumer group=db-migrate-engine-uf4ek3
+2025/12/13 00:48:33 [INFO] kafka: NewConsumer brokers=[localhost:29092] groupID=db-migrate-engine-uf4ek3 topics=[db_events_conference db_events_publication db_events_country]
+2025/12/13 00:48:33 [INFO] parser: kafka consumer ready
+2025/12/13 00:48:33 [INFO] app: connecting pivot repository
+2025/12/13 00:48:33 [INFO] pivot: connecting dsn=postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
 📦 Config Loaded:
 Kafka brokers: localhost:29092
 Pivot DSN: postgres://pivot_user:djsadsaj@localhost:5435/pivot?sslmode=disable
 Mapping Path: ./internal/config/json/publication
-🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-31r469
-2025/12/10 07:20:31 [INFO] app: ensuring pivot schema
-2025/12/10 07:20:31 [INFO] pivot: ensuring schema
-2025/12/10 07:20:31 [INFO] app: pivot schema ensured
-2025/12/10 07:20:31 [INFO] parser: processor ready
-2025/12/10 07:20:31 [INFO] parser: starting synchronous kafka loop
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:ES]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=ES topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:US]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=US topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:UK]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=UK topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:FR]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=FR topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:DE]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=DE topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=11 topic=db_events_conference fields=map[p.pub_id::f.conf_id:11]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=11 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=12 topic=db_events_conference fields=map[p.pub_id::f.conf_id:12]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=12 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=13 topic=db_events_conference fields=map[p.pub_id::f.conf_id:13]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=13 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=14 topic=db_events_conference fields=map[p.pub_id::f.conf_id:14]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=14 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=15 topic=db_events_conference fields=map[p.pub_id::f.conf_id:15]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=15 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=16 topic=db_events_conference fields=map[p.pub_id::f.conf_id:16]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=16 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=17 topic=db_events_conference fields=map[p.pub_id::f.conf_id:17]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=17 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=18 topic=db_events_conference fields=map[p.pub_id::f.conf_id:18]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=18 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=19 topic=db_events_conference fields=map[p.pub_id::f.conf_id:19]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=19 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_id::f.conf_id=20 topic=db_events_conference fields=map[p.pub_id::f.conf_id:20]
-2025/12/10 07:20:34 [DEBUG] processor: source key=p.pub_id::f.conf_id=20 topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:1]
-2025/12/10 07:20:34 [DEBUG] processor: source key=1 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=ccb7203c-b383-4700-9d1b-ea15d9c43e56 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:2]
-2025/12/10 07:20:34 [DEBUG] processor: source key=2 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=a01e6b10-45af-4bf0-82a0-d15dabc136d3 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:3]
-2025/12/10 07:20:34 [DEBUG] processor: source key=3 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=6c5cd9f0-418b-42d0-925d-1c99948487d3 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:4]
-2025/12/10 07:20:34 [DEBUG] processor: source key=4 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=bd1f2ba1-38db-4333-92ab-b781999fdd20 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:5]
-2025/12/10 07:20:34 [DEBUG] processor: source key=5 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=e3f82580-13b2-4b84-a283-9e369b3ee967 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:6]
-2025/12/10 07:20:34 [DEBUG] processor: source key=6 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=b8ef47eb-b101-42a7-93be-a954d2463433 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:7]
-2025/12/10 07:20:34 [DEBUG] processor: source key=7 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=72951599-0acb-46cb-b625-3ecaac42dda2 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:8]
-2025/12/10 07:20:34 [DEBUG] processor: source key=8 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=38bf89b3-3aaa-4c84-b25e-2737defcdf9e entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:9]
-2025/12/10 07:20:34 [DEBUG] processor: source key=9 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=d7169838-b35c-4e5b-95cf-c836f482a7e8 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:10]
-2025/12/10 07:20:34 [DEBUG] processor: source key=10 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=3358d091-2d16-41fe-bfa4-fbe11ace8694 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=11 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:11]
-2025/12/10 07:20:34 [DEBUG] processor: source key=11 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=01fa038d-2170-436e-a5d9-f1f2ab925732 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=11 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=11
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=12 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:12]
-2025/12/10 07:20:34 [DEBUG] processor: source key=12 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=72e15aac-ae79-463d-a850-e5f1ddbb5db2 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=12 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=12
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=13 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:13]
-2025/12/10 07:20:34 [DEBUG] processor: source key=13 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=9d4bb8f2-4763-4908-8c94-6b1d74a58f22 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=13 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=13
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=14 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:14]
-2025/12/10 07:20:34 [DEBUG] processor: source key=14 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=6acfedd5-c8ef-467f-9f70-53e095264350 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=14 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=14
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=15 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:15]
-2025/12/10 07:20:34 [DEBUG] processor: source key=15 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=31956dec-812b-44ab-9dc2-2a85bcd00b7e entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=15 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=15
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=16 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:16]
-2025/12/10 07:20:34 [DEBUG] processor: source key=16 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=f29d8db2-3ba7-4be5-9815-89c696438b38 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=16 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=16
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=17 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:17]
-2025/12/10 07:20:34 [DEBUG] processor: source key=17 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=a81de2ca-e1ed-49eb-b2f3-e8b834d760a3 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=17 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=17
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=18 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:18]
-2025/12/10 07:20:34 [DEBUG] processor: source key=18 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=29ff9f30-2b6f-4025-afbf-2cbbc52c2bc9 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=18 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=18
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=19 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:19]
-2025/12/10 07:20:34 [DEBUG] processor: source key=19 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=6a561e83-f2d9-4587-885b-361ec0aed79d entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=19 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=19
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=20 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:20]
-2025/12/10 07:20:34 [DEBUG] processor: source key=20 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=f89d1886-8cbc-48b3-bd6e-e98528724ac0 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=20 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=20
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:21]
-2025/12/10 07:20:34 [DEBUG] processor: source key=21 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=97e9d5ff-36ba-4ae0-89e0-f987b7bf74a6 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:22]
-2025/12/10 07:20:34 [DEBUG] processor: source key=22 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=0a9900a5-319c-4cf1-821c-0ec3e126ffd9 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:23]
-2025/12/10 07:20:34 [DEBUG] processor: source key=23 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=89f7f599-734b-4d41-9c72-5ff35cdf3caf entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:24]
-2025/12/10 07:20:34 [DEBUG] processor: source key=24 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=db48446a-f227-4d23-af06-4b7398095d4c entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:25]
-2025/12/10 07:20:34 [DEBUG] processor: source key=25 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=e3ea3d39-4aa0-4606-81ad-463544b9c28c entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:26]
-2025/12/10 07:20:34 [DEBUG] processor: source key=26 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=a2d343c5-f8ee-49c9-9aca-3ca0398b86c9 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:27]
-2025/12/10 07:20:34 [DEBUG] processor: source key=27 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=a8503e6d-9fd1-42f2-9423-53f5fb038c60 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:28]
-2025/12/10 07:20:34 [DEBUG] processor: source key=28 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=24f7eeeb-1fc3-4711-bd95-867ba0597b27 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:29]
-2025/12/10 07:20:34 [DEBUG] processor: source key=29 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=a174ab57-1a2b-46c1-a936-65d776c0155b entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
-2025/12/10 07:20:34 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
-2025/12/10 07:20:34 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
-2025/12/10 07:20:34 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
-2025/12/10 07:20:34 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:30]
-2025/12/10 07:20:34 [DEBUG] processor: source key=30 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] pivot: EnqueueNeedJoin queue=6cde7556-5afa-4017-b678-6df3cbe2027a entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30 topic=db_events_publication
-2025/12/10 07:20:34 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
-2025/12/10 07:20:44 [INFO] parser: shutdown complete
+🔁 Kafka group ID reset aktif. Group ID baru: db-migrate-engine-at12x7
+2025/12/13 00:48:33 [INFO] app: ensuring pivot schema
+2025/12/13 00:48:33 [INFO] pivot: ensuring schema
+2025/12/13 00:48:33 [INFO] app: pivot schema ensured
+2025/12/13 00:48:33 [INFO] parser: processor ready
+2025/12/13 00:48:33 [INFO] parser: starting synchronous kafka loop
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:ES]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=ES topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:US]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=US topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:UK]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=UK topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:FR]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=FR topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_country op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE topic=db_events_country fields=map[p.pub_cntry::c.cntry_id:DE]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_cntry::c.cntry_id=DE topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_country
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:1]
+2025/12/13 00:48:36 [DEBUG] processor: source key=1 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=bf2826e8-641c-4f02-8587-9edb82410bca entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=1
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:2]
+2025/12/13 00:48:36 [DEBUG] processor: source key=2 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=7e3d0b8c-805e-4f5a-852f-62b24d14a2e5 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:3]
+2025/12/13 00:48:36 [DEBUG] processor: source key=3 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=0668634c-9079-4f5d-ba75-fe55d039955c entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=3
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:4]
+2025/12/13 00:48:36 [DEBUG] processor: source key=4 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=68019b1b-9b54-4420-a5a4-cb2487b0fb6e entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=4
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:5]
+2025/12/13 00:48:36 [DEBUG] processor: source key=5 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=5dda1535-b51e-4c6b-8daf-eb4f0bb58439 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=5
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:6]
+2025/12/13 00:48:36 [DEBUG] processor: source key=6 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=7dcda4cf-4019-4a13-8be6-c160992b9db1 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=6
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:7]
+2025/12/13 00:48:36 [DEBUG] processor: source key=7 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=7fb341de-28ff-4077-91fe-947becf065bd entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=7
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:8]
+2025/12/13 00:48:36 [DEBUG] processor: source key=8 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=b31652fa-fbf1-4ae6-9311-6e84d4222dcb entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=8
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:9]
+2025/12/13 00:48:36 [DEBUG] processor: source key=9 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=d845e9dd-4657-4d1e-b4d9-e1dbebdb4fb9 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=9
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=11 topic=db_events_conference fields=map[p.pub_id::f.conf_id:11]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=11 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:10]
+2025/12/13 00:48:36 [DEBUG] processor: source key=10 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=7297cc42-5663-4d00-9bb8-de947039dd7d entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=10
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=12 topic=db_events_conference fields=map[p.pub_id::f.conf_id:12]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=12 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=13 topic=db_events_conference fields=map[p.pub_id::f.conf_id:13]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=13 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=14 topic=db_events_conference fields=map[p.pub_id::f.conf_id:14]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=14 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=15 topic=db_events_conference fields=map[p.pub_id::f.conf_id:15]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=15 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=16 topic=db_events_conference fields=map[p.pub_id::f.conf_id:16]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=16 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=17 topic=db_events_conference fields=map[p.pub_id::f.conf_id:17]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=17 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=18 topic=db_events_conference fields=map[p.pub_id::f.conf_id:18]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=18 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=19 topic=db_events_conference fields=map[p.pub_id::f.conf_id:19]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=19 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_conference op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_id::f.conf_id=20 topic=db_events_conference fields=map[p.pub_id::f.conf_id:20]
+2025/12/13 00:48:36 [DEBUG] processor: source key=p.pub_id::f.conf_id=20 topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: stored join fragment entity=publication-&-country-&-conference-to-paper-&-publication topic=db_events_conference
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=11 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:11]
+2025/12/13 00:48:36 [DEBUG] processor: source key=11 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=59508424-2fa3-4a34-a72e-ea1d258e54c9 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=11 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=11
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=12 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:12]
+2025/12/13 00:48:36 [DEBUG] processor: source key=12 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=2925359e-d96f-4680-b057-38517bafe80a entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=12 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=12
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=13 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:13]
+2025/12/13 00:48:36 [DEBUG] processor: source key=13 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=2542a495-be4b-4643-a4f7-bd0f98af477b entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=13 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=13
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=14 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:14]
+2025/12/13 00:48:36 [DEBUG] processor: source key=14 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=05d35652-2bbf-42cd-ab52-cab57c667226 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=14 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=14
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=15 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:15]
+2025/12/13 00:48:36 [DEBUG] processor: source key=15 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=4972b65e-a490-48f7-a8e2-f796cb314129 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=15 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=15
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=16 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:16]
+2025/12/13 00:48:36 [DEBUG] processor: source key=16 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=9d93beec-4604-4926-885e-10a98ee0438e entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=16 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=16
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=17 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:17]
+2025/12/13 00:48:36 [DEBUG] processor: source key=17 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=6db36202-8fc6-437d-8da4-e573f1958094 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=17 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=17
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=18 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:18]
+2025/12/13 00:48:36 [DEBUG] processor: source key=18 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=d2dce10e-94f7-4e98-9b3e-640b7c469728 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=18 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=18
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=19 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:19]
+2025/12/13 00:48:36 [DEBUG] processor: source key=19 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=c602960c-09f4-4e22-ac8c-16c370d94e59 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=19 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=19
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=20 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:20]
+2025/12/13 00:48:36 [DEBUG] processor: source key=20 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=7d4c3753-2cd6-4ae5-8555-a1b67288d1a5 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=20 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=20
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:21]
+2025/12/13 00:48:36 [DEBUG] processor: source key=21 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=15b099f7-3c3a-4636-a650-595e7b1d6b84 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=21
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:22]
+2025/12/13 00:48:36 [DEBUG] processor: source key=22 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=34a4e9a4-5b29-4732-bfd7-bf4f997dc9fa entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=22
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:23]
+2025/12/13 00:48:36 [DEBUG] processor: source key=23 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=1ebdcf23-787e-4e73-b7fc-d08967972cc2 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=23
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:24]
+2025/12/13 00:48:36 [DEBUG] processor: source key=24 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=c4351fec-c82b-4522-ac71-32c9d4f47d46 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=24
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:25]
+2025/12/13 00:48:36 [DEBUG] processor: source key=25 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=347529cd-e581-4db8-97e6-c9927e94cb6f entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=25
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:ES p.pub_id::f.conf_id:26]
+2025/12/13 00:48:36 [DEBUG] processor: source key=26 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=8d79d020-c24f-439b-ab44-c6a06c9311c7 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=26
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:US p.pub_id::f.conf_id:27]
+2025/12/13 00:48:36 [DEBUG] processor: source key=27 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=9df8b0c0-da7c-4ed1-a9b9-67163a58a5c8 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=US|p.pub_id::f.conf_id=27
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:UK p.pub_id::f.conf_id:28]
+2025/12/13 00:48:36 [DEBUG] processor: source key=28 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=c4d2af16-a2a1-476b-a56f-0c53fbdbf359 entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=UK|p.pub_id::f.conf_id=28
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:DE p.pub_id::f.conf_id:29]
+2025/12/13 00:48:36 [DEBUG] processor: source key=29 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=923d4997-5a3f-4dca-9182-03c391be049f entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=DE|p.pub_id::f.conf_id=29
+2025/12/13 00:48:36 [DEBUG] processor: Handle topic=db_events_publication op=c matchedEntities=1
+2025/12/13 00:48:36 [DEBUG] processor: handling entity=publication-&-country-&-conference-to-paper-&-publication op=c
+2025/12/13 00:48:36 [DEBUG] processor: expected topics=[db_events_publication db_events_country db_events_conference] for entity=publication-&-country-&-conference-to-paper-&-publication
+2025/12/13 00:48:36 [DEBUG] processor: join key=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30 topic=db_events_publication fields=map[p.pub_cntry::c.cntry_id:FR p.pub_id::f.conf_id:30]
+2025/12/13 00:48:36 [DEBUG] processor: source key=30 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] pivot: EnqueueNeedJoin queue=a3d3e232-8147-43a8-9971-4dc42f0cc48f entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30 topic=db_events_publication
+2025/12/13 00:48:36 [DEBUG] processor: enqueued join placeholder entity=publication-&-country-&-conference-to-paper-&-publication joinKey=p.pub_cntry::c.cntry_id=FR|p.pub_id::f.conf_id=30
+2025/12/13 00:48:51 [INFO] parser: shutdown complete

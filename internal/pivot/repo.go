@@ -200,18 +200,18 @@ func (r *Repo) EnqueueNeedJoin(ctx context.Context, it NeedJoinItem) error {
 	util.Debug.Printf("pivot: EnqueueNeedJoin queue=%s entity=%s joinKey=%s topic=%s", it.QueueID, it.Entity, it.JoinKey, it.JoinTopic)
 	_, err := r.DB.Exec(ctx, `
         insert into _need_join (
-            queue_id, entity, op, join_key, join_topic, join_source_key,
+            queue_id, entity, op, join_key, join_topic,
             join_payload, join_fields, status
         )
-        values ($1,$2,$3,$4,$5,$6,$7::jsonb,$8::jsonb,'pending')`,
-		it.QueueID, it.Entity, it.Op, it.JoinKey, it.JoinTopic, nullIfEmpty(it.JoinSourceKey), payloadJSON, fieldsJSON)
+        values ($1,$2,$3,$4,$5,$6::jsonb,$7::jsonb,'pending')`,
+		it.QueueID, it.Entity, it.Op, it.JoinKey, it.JoinTopic, payloadJSON, fieldsJSON)
 	return err
 }
 
 // FetchNeedJoin mengambil pekerjaan join pending untuk worker joiner.
 func (r *Repo) FetchNeedJoin(ctx context.Context, limit int) ([]NeedJoinItem, error) {
 	rows, err := r.DB.Query(ctx, `
-        select id, queue_id, entity, op, join_key, join_topic, coalesce(join_source_key,''), 
+        select id, queue_id, entity, op, join_key, join_topic,
                coalesce(join_payload,'{}'::jsonb), coalesce(join_fields,'{}'::jsonb), status
         from _need_join
         where status='pending'
@@ -231,12 +231,11 @@ func (r *Repo) FetchNeedJoin(ctx context.Context, limit int) ([]NeedJoinItem, er
 			op      string
 			joinKey string
 			joinTopic string
-			joinSourceKey string
 			joinPayload []byte
 			joinFields []byte
 			status  string
 		)
-		if err := rows.Scan(&id, &queueID, &entity, &op, &joinKey, &joinTopic, &joinSourceKey, &joinPayload, &joinFields, &status); err != nil {
+		if err := rows.Scan(&id, &queueID, &entity, &op, &joinKey, &joinTopic, &joinPayload, &joinFields, &status); err != nil {
 			return nil, err
 		}
 		out = append(out, NeedJoinItem{
@@ -246,7 +245,6 @@ func (r *Repo) FetchNeedJoin(ctx context.Context, limit int) ([]NeedJoinItem, er
 			Op:            op,
 			JoinKey:       joinKey,
 			JoinTopic:     joinTopic,
-			JoinSourceKey: joinSourceKey,
 			JoinPayload:   joinPayload,
 			JoinFields:    joinFields,
 			Status:        status,

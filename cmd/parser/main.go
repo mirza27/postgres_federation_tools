@@ -39,12 +39,15 @@ func main() {
 	defer consumer.Close()
 	util.Info.Println("parser: kafka consumer ready")
 
+	// check if database pivot schema is ready
+	// make object connection to db pivot
 	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
 	if err != nil {
 		panic(err)
 	}
 	defer pivotRepo.Close()
 
+	// make processor
 	proc := pipeline.NewProcessor(plan, pivotRepo)
 	util.Info.Println("parser: processor ready")
 

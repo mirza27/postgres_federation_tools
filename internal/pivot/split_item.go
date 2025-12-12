@@ -3,6 +3,7 @@ package pivot
 import "github.com/google/uuid"
 
 // SplitRow merepresentasikan baris split yang perlu dieksekusi setelah queue utama.
+// _exec_split table representation
 type SplitRow struct {
 	ID            int64
 	QueueID       uuid.UUID

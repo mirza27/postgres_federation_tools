@@ -27,7 +27,9 @@ func NewConsumer(brokers []string, groupID string, topics []string) *Consumer {
 	return &Consumer{reader: r}
 }
 
-func (c *Consumer) Close() error { return c.reader.Close() }
+func (c *Consumer) Close() error {
+	return c.reader.Close()
+}
 
 // for testing
 func (c *Consumer) ListenSync(ctx context.Context, handler func(Event) error) error {
@@ -36,20 +38,21 @@ func (c *Consumer) ListenSync(ctx context.Context, handler func(Event) error) er
 		if err != nil {
 			return err
 		}
-		value, src, err := DecodeEventValue(m.Value)
+		value, err := DecodeEventValue(m.Value)
 		if err != nil {
 			util.Error.Printf("kafka: decode message err=%v topic=%s partition=%d offset=%d", err, m.Topic, m.Partition, m.Offset)
 			continue
 		}
+
+		// create mapping event
 		ev := Event{
 			Topic:  string(m.Topic),
 			Key:    m.Key,
 			Value:  value,
-			Source: src,
+			Source: value.Payload.Source,
+			Op:     value.Op,
 		}
-		if value != nil {
-			ev.Op = value.Op
-		}
+
 		if err := handler(ev); err != nil {
 			return err
 		}
@@ -74,17 +77,19 @@ func (c *Consumer) Listen(ctx context.Context, out chan<- Event) error {
 		util.Debug.Printf("kafka: received message topic=%s partition=%d offset=%d key=%s len=%d",
 			m.Topic, m.Partition, m.Offset, string(m.Key), len(m.Value))
 
-		value, src, err := DecodeEventValue(m.Value)
+		value, err := DecodeEventValue(m.Value)
 		if err != nil {
 			util.Error.Printf("kafka: decode message err=%v topic=%s partition=%d offset=%d", err, m.Topic, m.Partition, m.Offset)
 			continue
 		}
 
+		// create mapping event
 		ev := Event{
 			Topic:  string(m.Topic),
 			Key:    m.Key,
+			Op:     value.Op,
 			Value:  value,
-			Source: src,
+			Source: value.Payload.Source,
 		}
 		if value != nil {
 			ev.Op = value.Op

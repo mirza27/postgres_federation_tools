@@ -18,11 +18,20 @@ type Planner struct {
 }
 
 func NewPlanner(root *Root) *Planner {
+
 	mp := map[string][]Entity{}
+
+	// save topic_name as key -> array of entities
+	// example :
+	// db_events_orders : [ orders-to-pesanan, ]
+	// db_events_publication : [ publication-to-publication&paper, ]
+
 	for _, e := range root.Entities {
 
 		for _, s := range e.Sources {
-			if topic := sourceTopic(s); topic != "" {
+
+			topic := SourceTopic(s)
+			if topic != "" {
 				mp[topic] = append(mp[topic], e)
 			}
 		}
@@ -40,7 +49,7 @@ func NewPlanner(root *Root) *Planner {
 func ExpectedTopics(e Entity) []string {
 	out := []string{}
 	for _, s := range e.Sources {
-		if topic := sourceTopic(s); topic != "" && !slices.Contains(out, topic) {
+		if topic := SourceTopic(s); topic != "" && !slices.Contains(out, topic) {
 			out = append(out, topic)
 		}
 	}
@@ -59,7 +68,7 @@ func (p *Planner) Print() {
 		fmt.Printf("   TargetTable: %s\n", e.TargetTable)
 		fmt.Printf("   Sources:\n")
 		for _, s := range e.Sources {
-			fmt.Printf("     - alias=%s from=%s topic=%s\n", s.Alias, s.From, sourceTopic(s))
+			fmt.Printf("     - alias=%s from=%s topic=%s\n", s.Alias, s.From, SourceTopic(s))
 		}
 	}
 
@@ -77,20 +86,22 @@ func (p *Planner) Print() {
 
 }
 
-func sourceTopic(s EntitySource) string {
-	if trimmed := strings.TrimSpace(s.Topic); trimmed != "" {
-		return trimmed
-	}
+// get key 'from' from each item in sources[]
+func SourceTopic(s EntitySource) string {
+
 	name := strings.TrimSpace(s.From)
 	if name == "" {
 		return ""
 	}
+
+	// get base name
 	parts := strings.Split(name, ".")
 	base := parts[len(parts)-1]
 	base = strings.ToLower(strings.TrimSpace(base))
 	if base == "" {
 		return ""
 	}
-	base = strings.ReplaceAll(base, " ", "_")
+
+	// add prefix db_events_
 	return fmt.Sprintf("db_events_%s", base)
 }

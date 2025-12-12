@@ -10,7 +10,6 @@ type NeedJoinItem struct {
 	Op            string
 	JoinKey       string
 	JoinTopic     string
-	JoinSourceKey string
 	JoinPayload   []byte
 	JoinFields    []byte
 	Status        string
