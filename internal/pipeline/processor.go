@@ -68,12 +68,13 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 		}
 
 		// join wait if entity need more than 1 topic
-		allTopics := mapping.ExpectedTopics(ent)
+		allTopics := mapping.ExpectedTopics(ent) // check if entity has multiple sources
 		util.Debug.Printf("processor: expected topics=%v for entity=%s", allTopics, ent.Entity)
 
-		if len(allTopics) > 1 {
+		if len(allTopics) > 1 { // if need mutiple sources / join
 
-			aliasTopic := aliasTopics(ent)
+			aliasTopic := mapping.AliasToTopicHashMap(ent)
+
 			joinCtx := join.DeriveContext(ent, ev.Topic, ev.Value, aliasTopic)
 			joinKey := joinCtx.JoinKey
 			util.Debug.Printf("processor: join key=%s topic=%s fields=%v", joinKey, ev.Topic, joinCtx.Fields)
@@ -344,18 +345,6 @@ func firstSourceTable(ent mapping.Entity) string {
 	return ent.Sources[0].From
 }
 
-// aliasTopics builds a map alias->topic name for the entity sources.
-func aliasTopics(ent mapping.Entity) map[string]string {
-	out := map[string]string{}
-	for _, s := range ent.Sources {
-		topic := topicName(s)
-		if s.Alias != "" && topic != "" {
-			out[s.Alias] = topic
-		}
-	}
-	return out
-}
-
 // topicName derives topic from explicit field or table name.
 func topicName(s mapping.EntitySource) string {
 	if trimmed := strings.TrimSpace(s.Topic); trimmed != "" {
@@ -378,7 +367,7 @@ func topicName(s mapping.EntitySource) string {
 // deriveKeySource mengambil source key sesuai key.source dan payload gabungan (topic->payload).
 // Ini dipakai untuk keymap (shared_key) agar tidak bergantung pada join key.
 func (p *Processor) deriveKeySource(ent mapping.Entity, payload map[string]*kafka.DebeziumValue) string {
-	aliasTopic := aliasTopics(ent)
+	aliasTopic := mapping.AliasToTopicHashMap(ent)
 	for _, src := range ent.Key.Source {
 		if key := keyFromSource([]string{src}, "", payload[aliasTopic[strings.Split(src, ".")[0]]], aliasTopic); key != "" {
 			return key

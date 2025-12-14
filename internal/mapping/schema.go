@@ -46,10 +46,10 @@ type Entity struct {
 	Sources     []EntitySource `json:"sources"`
 	TargetTable string         `json:"target_table"`
 
-	Key            Key               `json:"key"`
-	Columns        map[string]Column `json:"columns"`
-	FactCondition  *FactCondition    `json:"fact_condition,omitempty"`
-	SplitTables    []SplitTable      `json:"split_table,omitempty"`
+	Key           Key               `json:"key"`
+	Columns       map[string]Column `json:"columns"`
+	FactCondition *FactCondition    `json:"fact_condition,omitempty"`
+	SplitTables   []SplitTable      `json:"split_table,omitempty"`
 
 	Routing Routing `json:"routing"`
 }
@@ -74,7 +74,6 @@ type EntitySource struct {
 }
 
 type Join struct {
-	MatchWith  string `json:"match_with,omitempty"`
 	FactColumn string `json:"fact_column,omitempty"`
 	DimColumn  string `json:"dim_column,omitempty"`
 }

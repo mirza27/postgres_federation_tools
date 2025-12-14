@@ -6,7 +6,6 @@
       "alias": "c",
       "from": "country",
       "join": {
-        "match_with": "p",
         "fact_column": "pub_cntry",
         "dim_column": "cntry_id"
       }

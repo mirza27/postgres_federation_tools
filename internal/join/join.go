@@ -43,18 +43,17 @@ func joinKeyFromFields(fields map[string]string) string {
 // collectSpecs rewrites mapping join config into internal spec list.
 func collectSpecs(ent mapping.Entity) []spec {
 	var specs []spec
-	defaultFact := ""
+
+	fact := ""
 	if len(ent.Sources) > 0 {
-		defaultFact = ent.Sources[0].Alias
+		fact = ent.Sources[0].Alias
 	}
+
 	for _, s := range ent.Sources {
 		if s.Join == nil {
 			continue
 		}
-		fact := s.Join.MatchWith
-		if fact == "" {
-			fact = defaultFact
-		}
+
 		specs = append(specs, spec{
 			FactAlias: fact,
 			FactCol:   s.Join.FactColumn,
@@ -62,6 +61,7 @@ func collectSpecs(ent mapping.Entity) []spec {
 			DimCol:    s.Join.DimColumn,
 		})
 	}
+
 	return specs
 }
 

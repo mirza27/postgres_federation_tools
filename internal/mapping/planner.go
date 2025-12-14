@@ -47,9 +47,13 @@ func NewPlanner(root *Root) *Planner {
 
 // ExpectedTopics mengembalikan list topik yg dibutuhkan entity e (untuk join-wait).
 func ExpectedTopics(e Entity) []string {
-	out := []string{}
+
+	out := []string{} // tmp save each sources
 	for _, s := range e.Sources {
-		if topic := SourceTopic(s); topic != "" && !slices.Contains(out, topic) {
+
+		topic := SourceTopic(s)
+
+		if topic != "" && !slices.Contains(out, topic) {
 			out = append(out, topic)
 		}
 	}
@@ -86,7 +90,7 @@ func (p *Planner) Print() {
 
 }
 
-// get key 'from' from each item in sources[]
+// get key 'from' from each item in sources[] the concat with prefix "db_events_"
 func SourceTopic(s EntitySource) string {
 
 	name := strings.TrimSpace(s.From)
@@ -104,4 +108,20 @@ func SourceTopic(s EntitySource) string {
 
 	// add prefix db_events_
 	return fmt.Sprintf("db_events_%s", base)
+}
+
+// membuat hashmap alias -> nama topik
+// example : "u" -> "db_events_users", "p" -> "db_events_publication"
+func AliasToTopicHashMap(ent Entity) map[string]string {
+	out := map[string]string{}
+
+	for _, s := range ent.Sources {
+
+		topic := SourceTopic(s)
+
+		if s.Alias != "" && topic != "" {
+			out[s.Alias] = topic
+		}
+	}
+	return out
 }

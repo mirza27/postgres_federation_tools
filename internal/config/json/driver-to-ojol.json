@@ -6,7 +6,6 @@
       "alias": "u",
       "from": "users",
       "join": {
-        "match_with": "d",
         "fact_column": "user_id",
         "dim_column": "id"
       }

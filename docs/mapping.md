@@ -29,9 +29,9 @@ Contoh kerangka (tanpa field `kind`, karena tidak dipakai di pipeline):
 - `from` : nama tabel sumber (dipakai juga untuk derivasi topic jika `topic` kosong).
 - `topic` : override nama topic Debezium.
 - `join` (opsional, untuk dimensi/fragment):
-  - `match_with` : alias fact yang dicocokkan (default = alias sumber pertama).
   - `fact_column` : kolom di fact untuk join.
   - `dim_column`  : kolom di dimensi/fragment untuk join.
+  - catatan: alias sumber pertama dalam `sources` selalu dianggap fact; join selalu mengacu ke fact tersebut.
 
 Jika entitas memiliki lebih dari satu source, worker parser akan menyimpan payload fact ke `_need_join` dan fragment ke `_join_map_topic`, lalu joiner menunggu semua topic lengkap sebelum menulis eksekusi.
 
