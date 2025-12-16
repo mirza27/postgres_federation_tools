@@ -6,7 +6,7 @@
   "target_table": "pesanan",
   "key": {
     "strategy": "natural",
-    "source": ["d.order_id"]
+    "source": "d.order_id"
   },
   "columns": {
     "id": { "from": "$key" },

@@ -75,10 +75,12 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 			aliasTopic := mapping.AliasToTopicHashMap(ent)
 
+			// check if event is fact or dim then derive join key
 			joinCtx := join.DeriveContext(ent, ev.Topic, ev.Value, aliasTopic)
 			joinKey := joinCtx.JoinKey
 			util.Debug.Printf("processor: join key=%s topic=%s fields=%v", joinKey, ev.Topic, joinCtx.Fields)
 
+			// get value source key for keymap (if needed)
 			sourceKey := p.deriveKeySource(ent, map[string]*kafka.DebeziumValue{ev.Topic: ev.Value})
 			if sourceKey == "" {
 				sourceKey = joinKey
@@ -87,7 +89,7 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 
 			factTopic := topicName(ent.Sources[0])
 			if ev.Topic == factTopic {
-				// enqueue placeholder needing join
+				// store need join row if fact event
 				raw, _ := json.Marshal(ev.Value)
 				fieldsRaw, _ := json.Marshal(joinCtx.Fields)
 				item := pivot.NeedJoinItem{
@@ -102,6 +104,8 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 					return err
 				}
 				util.Debug.Printf("processor: enqueued join placeholder entity=%s joinKey=%s", ent.Entity, joinKey)
+
+				// store join fragment if dim event
 			} else {
 				if err := p.Pivot.AddJoinFragment(ctx, ent.Entity, joinKey, ev.Topic, sourceKey, joinCtx.Fields, ev.Value); err != nil {
 					return err
@@ -109,7 +113,6 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 				util.Debug.Printf("processor: stored join fragment entity=%s topic=%s", ent.Entity, ev.Topic)
 			}
 
-			// if entity need only one topic
 		} else {
 			util.Debug.Printf("processor: single topic path entity=%s topic=%s", ent.Entity, ev.Topic)
 
@@ -117,6 +120,7 @@ func (p *Processor) Handle(ctx context.Context, ev kafka.Event) error {
 				return err
 			}
 		}
+
 	}
 
 	return nil
@@ -320,8 +324,8 @@ func sourceKeyColumn(ent mapping.Entity) string {
 	if ent.Key.Resolver != nil && ent.Key.Resolver.SourceKeyCol != "" {
 		return ent.Key.Resolver.SourceKeyCol
 	}
-	if len(ent.Key.Source) > 0 {
-		parts := strings.Split(ent.Key.Source[0], ".")
+	if strings.TrimSpace(ent.Key.Source) != "" {
+		parts := strings.Split(ent.Key.Source, ".")
 		return parts[len(parts)-1]
 	}
 	return ""
@@ -368,12 +372,16 @@ func topicName(s mapping.EntitySource) string {
 // Ini dipakai untuk keymap (shared_key) agar tidak bergantung pada join key.
 func (p *Processor) deriveKeySource(ent mapping.Entity, payload map[string]*kafka.DebeziumValue) string {
 	aliasTopic := mapping.AliasToTopicHashMap(ent)
-	for _, src := range ent.Key.Source {
-		if key := keyFromSource([]string{src}, "", payload[aliasTopic[strings.Split(src, ".")[0]]], aliasTopic); key != "" {
-			return key
-		}
+
+	src := strings.TrimSpace(ent.Key.Source)
+	if src == "" {
+		return ""
 	}
-	return ""
+	alias := strings.Split(src, ".")[0]
+
+	topic := aliasTopic[alias]
+
+	return keyFromSource(src, "", payload[topic], aliasTopic)
 }
 
 // HandleJoinReady dipakai checker saat join fragment sudah lengkap.
@@ -387,29 +395,19 @@ func (p *Processor) HandleJoinReadyWithQueue(ctx context.Context, ent mapping.En
 }
 
 // keyFromSource mengambil nilai kolom dari key.source dengan memperhatikan alias->topic.
-func keyFromSource(keySources []string, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) string {
-	if value == nil || len(keySources) == 0 {
+func keyFromSource(src string, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) string {
+	src = strings.TrimSpace(src)
+	if value == nil || src == "" {
 		return ""
 	}
-	for _, src := range keySources {
-		parts := strings.Split(src, ".")
-		if len(parts) == 0 {
-			continue
-		}
-		alias := parts[0]
-		col := parts[len(parts)-1]
-		topic := aliasTopic[alias]
-		if topic != "" && eventTopic != "" && topic != eventTopic {
-			continue
-		}
-		if key := stringFromRow(value.Payload.After, col); key != "" {
-			return key
-		}
-		if key := stringFromRow(value.Payload.Before, col); key != "" {
-			return key
-		}
+	parts := strings.Split(src, ".")
+	alias := parts[0]
+	col := parts[len(parts)-1]
+	topic := aliasTopic[alias]
+	if topic != "" && eventTopic != "" && topic != eventTopic {
+		return ""
 	}
-	return ""
+	return stringFromRow(value.Payload.After, col)
 }
 
 // buildColumns assembles target columns/values and where clause for insert/update.

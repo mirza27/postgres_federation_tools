@@ -80,7 +80,7 @@ type Join struct {
 
 type Key struct {
 	Strategy string    `json:"strategy"` // natural | shared_key
-	Source   []string  `json:"source,omitempty"`
+	Source   string    `json:"source,omitempty"`
 	JoinKey  string    `json:"join_key,omitempty"`
 	Resolver *Resolver `json:"resolver,omitempty"`
 }

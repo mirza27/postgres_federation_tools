@@ -6,7 +6,7 @@
   "target_table": "pesanan",
   "key": {
     "strategy": "shared_key",
-    "source": ["o.order_id"],
+    "source": "o.order_id",
     "resolver": {
       "type": "mapping_table",
       "table": "_keymap_order"

@@ -4,7 +4,7 @@
   "target_table": "authorship",
   "key": {
     "strategy": "shared_key",
-    "source": ["pw.pub_id"],
+    "source": "pw.pub_id",
     "resolver": {
       "type": "mapping_table",
       "table": "_keymap_publication_writer-to-authorship"

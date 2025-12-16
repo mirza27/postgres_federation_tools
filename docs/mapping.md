@@ -37,7 +37,7 @@ Jika entitas memiliki lebih dari satu source, worker parser akan menyimpan paylo
 
 ### Key
 - `strategy` : `natural` | `shared_key` (alias sebelumnya `surrogate` tidak lagi didukung).
-- `source[]` : daftar `<alias>.<kolom>` yang dipakai untuk menghasilkan `$key` (natural atau lookup untuk keymap).
+- `source` : satu `<alias>.<kolom>` yang dipakai untuk menghasilkan `$key` (natural atau lookup untuk keymap).
 - `join_key` : opsional, dipakai jika kunci join berbeda dari `source`.
 - `resolver` (wajib untuk `shared_key`):
   - `type` : `mapping_table` / `mapping_table_lookup`.

@@ -22,7 +22,7 @@
   "target_table": "publication",
   "key": {
     "strategy": "natural",
-    "source": ["p.pub_id"]
+    "source": "p.pub_id"
   },
   "columns": {
     "code": {

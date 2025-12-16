@@ -14,7 +14,7 @@
   "target_table": "publication",
   "key": {
     "strategy": "shared_key",
-    "source": ["p.pub_id"],
+    "source": "p.pub_id",
     "resolver": {
       "type": "mapping_table",
       "table": "_keymap_publication-&-country-to-publication"

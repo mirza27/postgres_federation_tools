@@ -22,7 +22,7 @@
   "target_table": "paper",
   "key": {
     "strategy": "natural",
-    "source": ["p.pub_id"]
+    "source": "f.conf_ref"
   },
   "columns": {
     "doi": {

@@ -14,7 +14,7 @@
   "target_table": "ojol",
   "key": {
     "strategy": "shared_key",
-    "source": ["d.driver_id"],
+    "source": "d.driver_id",
     "resolver" : {
       "type": "mapping_table",
       "table": "_keymap_user",

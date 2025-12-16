@@ -23,6 +23,56 @@ type spec struct {
 	DimCol    string
 }
 
+// DeriveContext picks join field values for the current topic, producing the
+// composite join key, the field map used, dan flag apakah event ini fact.
+func DeriveContext(ent mapping.Entity, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) Context {
+
+	specs := collectSpecs(ent) // create join fk mappinng from this entity
+	// example if join 3 tables (need 2 dim table): [
+	// {factAlias:"p" factCol:"pub_cntry" dimAlias:"c" dimCol:"cntry_id"},
+	// {factAlias:"p" factCol:"pub_conf" dimAlias:"f" dimCol:"conf_id"}
+	// ...]
+
+	fields := map[string]string{}
+	isFact := false
+
+	// bruto force check each join spec (nested loop)
+	for _, spec := range specs {
+		currentIsFact := aliasTopic[spec.FactAlias] == eventTopic
+		currentIsDim := aliasTopic[spec.DimAlias] == eventTopic
+		if !currentIsFact && !currentIsDim {
+			continue
+		}
+
+		if currentIsFact {
+			isFact = true
+		}
+
+		col := spec.DimCol // if dim, pakai col dim
+
+		if currentIsFact { // if fact, pakai col fact
+			col = spec.FactCol
+		}
+
+		val := valueFromPayload(value, col) // get fk value from payload
+		if val == "" {
+			continue
+		}
+		key := fmt.Sprintf("%s.%s::%s.%s", spec.FactAlias, spec.FactCol, spec.DimAlias, spec.DimCol)
+		fields[key] = val
+		// example key: "p.pub_cntry::c.cntry_id" value:"DE"
+	}
+
+	joinKey := joinKeyFromFields(fields)
+	// example value of joinKey if dim event come --> "p.pub_id::f.conf_id=14"
+	// example value of joinKey if fact event come --> "p.pub_cntry::c.cntry_id=ES|p.pub_id::f.conf_id=2"
+
+	if joinKey == "" {
+		util.Debug.Printf("join: derive missing value entity=%s topic=%s", ent.Entity, eventTopic)
+	}
+	return Context{JoinKey: joinKey, Fields: fields, IsFact: isFact}
+}
+
 // joinKeyFromFields builds a deterministic composite join key from field-value pairs.
 func joinKeyFromFields(fields map[string]string) string {
 	if len(fields) == 0 {
@@ -74,41 +124,6 @@ func valueFromPayload(row *kafka.DebeziumValue, column string) string {
 		return v
 	}
 	return stringFromRow(row.Payload.Before, column)
-}
-
-// DeriveContext picks join field values for the current topic, producing the
-// composite join key, the field map used, dan flag apakah event ini fact.
-func DeriveContext(ent mapping.Entity, eventTopic string, value *kafka.DebeziumValue, aliasTopic map[string]string) Context {
-	specs := collectSpecs(ent)
-	fields := map[string]string{}
-	isFact := false
-
-	for _, spec := range specs {
-		currentIsFact := aliasTopic[spec.FactAlias] == eventTopic
-		currentIsDim := aliasTopic[spec.DimAlias] == eventTopic
-		if !currentIsFact && !currentIsDim {
-			continue
-		}
-		if currentIsFact {
-			isFact = true
-		}
-		col := spec.DimCol
-		if currentIsFact {
-			col = spec.FactCol
-		}
-		val := valueFromPayload(value, col)
-		if val == "" {
-			continue
-		}
-		key := fmt.Sprintf("%s.%s::%s.%s", spec.FactAlias, spec.FactCol, spec.DimAlias, spec.DimCol)
-		fields[key] = val
-	}
-
-	joinKey := joinKeyFromFields(fields)
-	if joinKey == "" {
-		util.Debug.Printf("join: derive missing value entity=%s topic=%s", ent.Entity, eventTopic)
-	}
-	return Context{JoinKey: joinKey, Fields: fields, IsFact: isFact}
 }
 
 func stringFromRow(row map[string]any, key string) string {
