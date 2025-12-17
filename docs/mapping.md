@@ -1,13 +1,10 @@
 # Mapping Config Guide
 
-Dokumen ini merangkum struktur dan variasi konfigurasi JSON yang dipakai untuk mendefinisikan mapping entitas. File mapping ditempatkan di `mappingPath` (lihat `config.DefaultConfigPath` untuk default.json yang memuat bagian global seperti `sources`, `target`, `engine`).
+Dokumen ini merangkum struktur dan variasi konfigurasi JSON yang dipakai untuk mendefinisikan mapping entitas. File mapping ditempatkan di `mappingPath`; default.json tidak lagi dipakai, setiap file biasanya berisi satu Entity.
 
-## Struktur Root (default.json)
+## Struktur Root
 - `version` : string versi mapping (opsional).
-- `sources[]` : daftar sumber Debezium (name/type/default_schema).
-- `target` : info DB target (`name`, `type`, `schema`).
-- `engine` : setelan runtime (dialect, batch.maxRows/maxIntervalMs, logging, pivotDb, expr.dialect).
-- `entities[]` : entitas bisa langsung ditaruh di root default.json, namun biasanya diletakkan di file terpisah per entitas pada `mappingPath`.
+- `entities[]` : daftar entitas (jika Anda memakai satu file berisi banyak entitas).
 
 ## Entity
 Contoh kerangka (tanpa field `kind`, karena tidak dipakai di pipeline):

@@ -2,43 +2,7 @@ package mapping
 
 type Root struct {
 	Version  string   `json:"version"`
-	Sources  []Source `json:"sources"`
-	Target   Target   `json:"target"`
-	Engine   Engine   `json:"engine"`
 	Entities []Entity `json:"entities"`
-}
-
-type Source struct {
-	Name          string `json:"name"`
-	Type          string `json:"type"`
-	DefaultSchema string `json:"default_schema"`
-}
-
-type Target struct {
-	Name   string `json:"name"`
-	Type   string `json:"type"`
-	Schema string `json:"schema"`
-}
-
-type Engine struct {
-	Language   string `json:"language"`
-	SQLDialect string `json:"sqlDialect"`
-	Batch      struct {
-		MaxRows       int `json:"maxRows"`
-		MaxIntervalMs int `json:"maxIntervalMs"`
-	} `json:"batch"`
-	Logging struct {
-		Enabled bool   `json:"enabled"`
-		Table   string `json:"table"`
-		Level   string `json:"level"`
-	} `json:"logging"`
-	PivotDb struct {
-		Type string `json:"type"`
-		DSN  string `json:"dsn"`
-	} `json:"pivotDb"`
-	Expr struct {
-		Dialect string `json:"dialect"`
-	} `json:"expr"`
 }
 
 type Entity struct {
