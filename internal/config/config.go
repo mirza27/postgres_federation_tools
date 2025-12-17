@@ -22,6 +22,7 @@ type Config struct {
 	JoinWaitTTL         int    `mapstructure:"JOIN_WAIT_TTL"`
 	KafkaGroupID        string `mapstructure:"KAFKA_GROUP_ID"`
 	KafkaCounsumerReset bool   `mapstructure:"KAFKA_CONSUMER_RESET"`
+	RunApiPort          int    `mapstructure:"RUN_API_PORT"`
 }
 
 func Load() *Config {
