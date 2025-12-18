@@ -29,6 +29,10 @@ type Config struct {
 	PivotSchemaPath string `mapstructure:"PIVOT_SCHEMA_PATH"`
 	MappingPath     string `mapstructure:"MAPPING_PATH"`
 
+	DebeziumHost          string `mapstructure:"DEBEZIUM_HOST"`
+	DebeziumPort          int    `mapstructure:"DEBEZIUM_PORT"`
+	DebeziumConnectorName string `mapstructure:"DEBEZIUM_CONNECTOR_NAME"`
+
 	BatchMaxRows        int    `mapstructure:"BATCH_MAX_ROWS"`
 	BatchMaxInterval    int    `mapstructure:"BATCH_MAX_INTERVAL"`
 	KafkaBrokers        string `mapstructure:"KAFKA_BROKERS"`

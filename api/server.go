@@ -54,7 +54,7 @@ func (server *Server) applyRoutes() {
 	server.Engine.POST("/database/target", server.SaveTargetDatabase)
 
 	// kafka debezium connector
-	server.Engine.GET("/connector/status")
+	server.Engine.GET("/connector", server.CheckAndCreateDebeziumConnector)
 
 	// progress
 	server.Engine.GET("/progress", server.GetProgress)

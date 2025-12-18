@@ -1,0 +1,29 @@
+{
+  "name": "",
+  "config": {
+    "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+    "provide.transaction.metadata": "true",
+
+    "database.hostname": "",
+    "database.port": "",
+    "database.user": "",
+    "database.password": "",
+    "database.dbname": "",
+
+    "plugin.name": "pgoutput",
+    "slot.name": "db_migrate_slot",
+    "publication.name": "db_migrate_publication",
+    "table.include.list": "public.(.*)",
+    "tombstones.on.delete": "true",
+    "transforms": "route",
+
+    "decimal.handling.mode": "string",
+
+    "snapshot.mode": "initial",
+    "slot.drop.on.stop": "true",
+
+    "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+    "transforms.route.replacement": "db_events_$3"
+  }
+}

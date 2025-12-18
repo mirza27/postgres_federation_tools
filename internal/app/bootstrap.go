@@ -57,6 +57,9 @@ var DefaultConfigKey = []string{
 	"SOURCE_PORT",
 	"SOURCE_USER",
 	"SOURCE_PASSWORD",
+	"DEBEZIUM_HOST",
+	"DEBEZIUM_PORT",
+	"DEBEZIUM_CONNECTOR_NAME",
 	"PIVOT_DSN",
 	"PIVOT_SCHEMA_PATH",
 	"MAPPING_PATH",
@@ -75,28 +78,31 @@ func ApplyBaseConfig(config *config.Config, pivotRepo *pivot.Repo) (*config.Conf
 	config.TargetDSN = getTargetDBConfig(config)
 
 	values := map[string]string{
-		"TARGET_DATABASE_TYPE": config.TargetDatabaseType,
-		"TARGET_DATABASE":      config.TargetDatabaseName,
-		"TARGET_HOST":          config.TargetDatabaseHost,
-		"TARGET_PORT":          fmt.Sprintf("%d", config.TargetDatabasePort),
-		"TARGET_USER":          config.TargetDatabaseUser,
-		"TARGET_PASSWORD":      config.TargetDatabasePass,
-		"TARGET_DSN":           config.TargetDSN,
-		"SOURCE_DATABASE_TYPE": config.SourceDatabaseType,
-		"SOURCE_DATABASE":      config.SourceDatabaseName,
-		"SOURCE_HOST":          config.SourceDatabaseHost,
-		"SOURCE_PORT":          fmt.Sprintf("%d", config.SourceDatabasePort),
-		"SOURCE_USER":          config.SourceDatabaseUser,
-		"SOURCE_PASSWORD":      config.SourceDatabasePass,
-		"PIVOT_DSN":            config.PivotDSN,
-		"PIVOT_SCHEMA_PATH":    config.PivotSchemaPath,
-		"MAPPING_PATH":         config.MappingPath,
-		"BATCH_MAX_ROWS":       fmt.Sprintf("%d", config.BatchMaxRows),
-		"BATCH_MAX_INTERVAL":   fmt.Sprintf("%d", config.BatchMaxInterval),
-		"KAFKA_BROKERS":        config.KafkaBrokers,
-		"KAFKA_GROUP_ID":       config.KafkaGroupID,
-		"KAFKA_CONSUMER_RESET": fmt.Sprintf("%t", config.KafkaCounsumerReset),
-		"RUN_API_PORT":         fmt.Sprintf("%d", config.RunApiPort),
+		"TARGET_DATABASE_TYPE":    config.TargetDatabaseType,
+		"TARGET_DATABASE":         config.TargetDatabaseName,
+		"TARGET_HOST":             config.TargetDatabaseHost,
+		"TARGET_PORT":             fmt.Sprintf("%d", config.TargetDatabasePort),
+		"TARGET_USER":             config.TargetDatabaseUser,
+		"TARGET_PASSWORD":         config.TargetDatabasePass,
+		"TARGET_DSN":              config.TargetDSN,
+		"SOURCE_DATABASE_TYPE":    config.SourceDatabaseType,
+		"SOURCE_DATABASE":         config.SourceDatabaseName,
+		"SOURCE_HOST":             config.SourceDatabaseHost,
+		"SOURCE_PORT":             fmt.Sprintf("%d", config.SourceDatabasePort),
+		"SOURCE_USER":             config.SourceDatabaseUser,
+		"SOURCE_PASSWORD":         config.SourceDatabasePass,
+		"DEBEZIUM_HOST":           config.DebeziumHost,
+		"DEBEZIUM_PORT":           fmt.Sprintf("%d", config.DebeziumPort),
+		"DEBEZIUM_CONNECTOR_NAME": config.DebeziumConnectorName,
+		"PIVOT_DSN":               config.PivotDSN,
+		"PIVOT_SCHEMA_PATH":       config.PivotSchemaPath,
+		"MAPPING_PATH":            config.MappingPath,
+		"BATCH_MAX_ROWS":          fmt.Sprintf("%d", config.BatchMaxRows),
+		"BATCH_MAX_INTERVAL":      fmt.Sprintf("%d", config.BatchMaxInterval),
+		"KAFKA_BROKERS":           config.KafkaBrokers,
+		"KAFKA_GROUP_ID":          config.KafkaGroupID,
+		"KAFKA_CONSUMER_RESET":    fmt.Sprintf("%t", config.KafkaCounsumerReset),
+		"RUN_API_PORT":            fmt.Sprintf("%d", config.RunApiPort),
 	}
 
 	for _, key := range DefaultConfigKey {
@@ -173,6 +179,12 @@ func applyConfigValue(cfg *config.Config, key, val string) {
 		cfg.SourceDatabaseUser = val
 	case "SOURCE_PASSWORD":
 		cfg.SourceDatabasePass = val
+	case "DEBEZIUM_HOST":
+		cfg.DebeziumHost = val
+	case "DEBEZIUM_PORT":
+		cfg.DebeziumPort = parseInt(val, cfg.DebeziumPort)
+	case "DEBEZIUM_CONNECTOR_NAME":
+		cfg.DebeziumConnectorName = val
 	case "PIVOT_DSN":
 		cfg.PivotDSN = val
 	case "PIVOT_SCHEMA_PATH":

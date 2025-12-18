@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"db_migrate_server/api"
+	"db_migrate_server/internal/app"
 	"db_migrate_server/internal/config"
 	"db_migrate_server/internal/pivot"
 	"log"
@@ -26,8 +27,14 @@ func main() {
 		log.Fatalf("failed to initialize pivot database: %v", err)
 	}
 	defer pivotDb.Close()
-
 	log.Println("Pivot database initialized successfully")
+
+	// apply base config
+	config, err = app.ApplyBaseConfig(config, pivotDb)
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Base configuration applied successfully")
 
 	// run server
 	apiServer := api.NewServer(pivotDb, config)
