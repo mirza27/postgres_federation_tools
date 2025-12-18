@@ -19,17 +19,24 @@ func main() {
 	defer util.Info.Println("executor: shutdown complete")
 
 	util.Info.Println("executor: loading configuration")
-	cfg := config.Load()
+	config := config.Load()
 	util.Info.Println("executor: configuration loaded")
 
-	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
+	pivotRepo, err := app.InitPivot(ctx, config.PivotDSN)
 	if err != nil {
 		panic(err)
 	}
 	defer pivotRepo.Close()
 
-	util.Info.Printf("executor: creating executor batchMaxRows=%d intervalMs=%d", cfg.BatchMaxRows, cfg.BatchMaxInterval)
-	exec, err := executor.New(ctx, pivotRepo, cfg.TargetDSN, cfg.BatchMaxRows, cfg.BatchMaxInterval)
+	// apply base config
+	config, err = app.ApplyBaseConfig(config, pivotRepo)
+	if err != nil {
+		panic(err)
+	}
+
+	// make executor
+	util.Info.Printf("executor: creating executor batchMaxRows=%d intervalMs=%d", config.BatchMaxRows, config.BatchMaxInterval)
+	exec, err := executor.New(ctx, pivotRepo, config.TargetDSN, config.BatchMaxRows, config.BatchMaxInterval)
 	if err != nil {
 		panic(err)
 	}

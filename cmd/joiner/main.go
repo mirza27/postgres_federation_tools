@@ -19,21 +19,30 @@ func main() {
 	defer util.Info.Println("joiner: shutdown complete")
 
 	util.Info.Println("joiner: loading configuration")
-	cfg := config.Load()
+	config := config.Load()
 	util.Info.Println("joiner: configuration loaded")
 
-	plan, err := app.LoadPlan(cfg)
-	if err != nil {
-		panic(err)
-	}
-
-	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
+	// make object connection to db pivot
+	pivotRepo, err := app.InitPivot(ctx, config.PivotDSN)
 	if err != nil {
 		panic(err)
 	}
 	defer pivotRepo.Close()
 
-	w := joiner.New(pivotRepo, plan, cfg.BatchMaxRows, cfg.BatchMaxInterval)
+	// apply base config
+	config, err = app.ApplyBaseConfig(config, pivotRepo)
+	if err != nil {
+		panic(err)
+	}
+
+	// load entity plan
+	plan, err := app.LoadPlan(config)
+	if err != nil {
+		panic(err)
+	}
+
+	// make joiner worker
+	w := joiner.New(pivotRepo, plan, config.BatchMaxRows, config.BatchMaxInterval)
 	util.Info.Println("joiner: worker ready")
 
 	util.Info.Println("joiner: starting run loop")

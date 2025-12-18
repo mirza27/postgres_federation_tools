@@ -1,5 +1,12 @@
 create extension if not exists "pgcrypto";
 
+-- base config
+create table if not exists configuration (
+  config_key text primary key,
+  config_value text not null,
+  updated_at timestamptz not null default now()
+);
+
 create table if not exists _keymap_generic (
   keymap_id bigserial primary key,
   map_name text not null,

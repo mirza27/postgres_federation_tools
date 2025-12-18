@@ -20,32 +20,40 @@ func main() {
 	defer util.Info.Println("parser: shutdown complete")
 
 	util.Info.Println("parser: loading configuration")
-	cfg := config.Load()
+	config := config.Load()
 	util.Info.Println("parser: configuration loaded")
 
-	plan, err := app.LoadPlan(cfg)
+	// check pivot db connection
+	pivotRepo, err := app.InitPivot(ctx, config.PivotDSN)
+	if err != nil {
+		panic(err)
+	}
+	defer pivotRepo.Close()
+
+	// apply base config
+	config, err = app.ApplyBaseConfig(config, pivotRepo)
 	if err != nil {
 		panic(err)
 	}
 
+	// load entity plan
+	plan, err := app.LoadPlan(config)
+	if err != nil {
+		panic(err)
+	}
+
+	// check loaded plan
 	for i, e := range plan.Entities {
 		log.Printf("[%d] Entity: %s → target: %s", i+1, e.Entity, e.TargetTable)
 	}
 	plan.Print()
 	util.Info.Printf("parser: planner covers %d topics", len(plan.TopicList))
 
-	util.Info.Printf("parser: creating kafka consumer group=%s", cfg.KafkaGroupID)
-	consumer := kafka.NewConsumer([]string{cfg.KafkaBrokers}, cfg.KafkaGroupID, plan.TopicList)
+	// make kafka consumer
+	util.Info.Printf("parser: creating kafka consumer group=%s", config.KafkaGroupID)
+	consumer := kafka.NewConsumer([]string{config.KafkaBrokers}, config.KafkaGroupID, plan.TopicList)
 	defer consumer.Close()
 	util.Info.Println("parser: kafka consumer ready")
-
-	// check if database pivot schema is ready
-	// make object connection to db pivot
-	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
-	if err != nil {
-		panic(err)
-	}
-	defer pivotRepo.Close()
 
 	// make processor
 	proc := pipeline.NewProcessor(plan, pivotRepo)

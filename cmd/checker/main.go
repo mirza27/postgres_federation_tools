@@ -19,21 +19,30 @@ func main() {
 	defer util.Info.Println("checker: shutdown complete")
 
 	util.Info.Println("checker: loading configuration")
-	cfg := config.Load()
+	config := config.Load()
 	util.Info.Println("checker: configuration loaded")
 
-	plan, err := app.LoadPlan(cfg)
-	if err != nil {
-		panic(err)
-	}
-
-	pivotRepo, err := app.InitPivot(ctx, cfg.PivotDSN)
+	// check database pivot
+	pivotRepo, err := app.InitPivot(ctx, config.PivotDSN)
 	if err != nil {
 		panic(err)
 	}
 	defer pivotRepo.Close()
 
-	ch := checker.New(pivotRepo, plan, cfg.BatchMaxRows, cfg.BatchMaxInterval)
+	// apply base config
+	config, err = app.ApplyBaseConfig(config, pivotRepo)
+	if err != nil {
+		panic(err)
+	}
+
+	// load entity plan
+	plan, err := app.LoadPlan(config)
+	if err != nil {
+		panic(err)
+	}
+
+	// make checker worker
+	ch := checker.New(pivotRepo, plan, config.BatchMaxRows, config.BatchMaxInterval)
 	util.Info.Println("checker: worker ready")
 
 	util.Info.Println("checker: starting run loop")

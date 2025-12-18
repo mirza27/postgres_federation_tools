@@ -1,6 +1,10 @@
 package pivot
 
-import "github.com/google/uuid"
+import (
+    "time"
+
+    "github.com/google/uuid"
+)
 
 // Row merepresentasikan baris yang dibaca executor dari _exec_queue. Struktur
 // ini menampung payload SQL mentah, argumen dalam bentuk JSON, serta metadata
@@ -57,6 +61,13 @@ type KeymapRequest struct {
 	TgtColumn string `json:"tgt_column,omitempty"`
 	SrcTable  string `json:"src_table,omitempty"`
 	TgtTable  string `json:"tgt_table,omitempty"`
+}
+
+// default config in pivot database configuration table
+type Configuration struct {
+	ConfigKey   string
+	ConfigValue string
+	UpdatedAt   time.Time
 }
 
 // MODEL HELPER
