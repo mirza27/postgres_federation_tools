@@ -13,17 +13,19 @@ import (
 func (server *Server) GetDatabaseConnection(c *gin.Context) {
 
 	configList := map[string]any{
-		"SOURCE_HOST":     "",
-		"SOURCE_PORT":     int(0),
-		"SOURCE_USER":     "",
-		"SOURCE_PASSWORD": "",
-		"SOURCE_DATABASE": "",
-		"TARGET_HOST":     "",
-		"TARGET_PORT":     int(0),
-		"TARGET_USER":     "",
-		"TARGET_PASSWORD": "",
-		"TARGET_DATABASE": "",
-		"TARGET_DSN":      "",
+		"SOURCE_DATABASE_TYPE": "",
+		"SOURCE_HOST":          "",
+		"SOURCE_PORT":          int(0),
+		"SOURCE_USER":          "",
+		"SOURCE_PASSWORD":      "",
+		"SOURCE_DATABASE":      "",
+		"TARGET_DATABASE_TYPE": "",
+		"TARGET_HOST":          "",
+		"TARGET_PORT":          int(0),
+		"TARGET_USER":          "",
+		"TARGET_PASSWORD":      "",
+		"TARGET_DATABASE":      "",
+		"TARGET_DSN":           "",
 	}
 
 	for key, _ := range configList {
@@ -50,6 +52,7 @@ func (server *Server) GetDatabaseConnection(c *gin.Context) {
 }
 
 type SaveDatabaseCredentialsRequest struct {
+	Type     string `json:"type" binding:"required"`
 	Host     string `json:"host" binding:"required"`
 	Port     int    `json:"port" binding:"required"`
 	User     string `json:"user" binding:"required"`
@@ -70,6 +73,10 @@ func (server *Server) SaveSourceDatabase(c *gin.Context) {
 	}
 
 	// save to pivot db
+	server.PivotDB.UpdateConfigurationByName(&pivot.Configuration{
+		ConfigKey:   "SOURCE_DATABASE_TYPE",
+		ConfigValue: req.Type,
+	})
 	server.PivotDB.UpdateConfigurationByName(&pivot.Configuration{
 		ConfigKey:   "SOURCE_HOST",
 		ConfigValue: req.Host,
@@ -109,8 +116,8 @@ func (server *Server) SaveTargetDatabase(c *gin.Context) {
 		return
 	}
 
-	targetDSN := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
-		req.User, req.Password,
+	targetDSN := fmt.Sprintf("%s://%s:%s@%s:%d/%s?sslmode=disable",
+		req.Type, req.User, req.Password,
 		req.Host, req.Port,
 		req.DbName,
 	)
@@ -137,6 +144,11 @@ func (server *Server) SaveTargetDatabase(c *gin.Context) {
 	pool.Close()
 
 	// save to pivot db
+
+	server.PivotDB.UpdateConfigurationByName(&pivot.Configuration{
+		ConfigKey:   "TARGET_DATABASE_TYPE",
+		ConfigValue: req.Type,
+	})
 	server.PivotDB.UpdateConfigurationByName(&pivot.Configuration{
 		ConfigKey:   "TARGET_HOST",
 		ConfigValue: req.Host,
