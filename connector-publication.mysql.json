@@ -1,0 +1,32 @@
+{
+  "name": "publication-mysql-connector",
+  "config": {
+    "connector.class": "io.debezium.connector.mysql.MySqlConnector",
+
+    "topic.prefix": "publication",
+
+    "database.hostname": "old_publication_db",
+    "database.port": "3306",
+    "database.user": "old_user",
+    "database.password": "jdfmhuvdas",
+    "database.server.id": "184054",
+    "database.include.list": "old_publication_db",
+
+    "table.include.list": "old_publication_db.publication",
+
+    "snapshot.mode": "initial",
+
+    "include.schema.changes": "false",
+
+    "tombstones.on.delete": "true",
+
+    "decimal.handling.mode": "string",
+
+    "provide.transaction.metadata": "true",
+
+    "transforms": "route",
+    "transforms.route.type": "org.apache.kafka.connect.transforms.RegexRouter",
+    "transforms.route.regex": "([^.]+)\\.([^.]+)\\.([^.]+)",
+    "transforms.route.replacement": "db_events_$3"
+  }
+}
