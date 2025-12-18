@@ -49,10 +49,12 @@ func (server *Server) applyRoutes() {
 	server.Engine.GET("/mapping/list", server.GetMappingList)
 
 	// database
-	server.Engine.GET("/database/", server.CheckDatabaseConnection)
+	server.Engine.GET("/database", server.GetDatabaseConnection)
 	server.Engine.POST("/database/source", server.SaveSourceDatabase)
 	server.Engine.POST("/database/target", server.SaveTargetDatabase)
-	server.Engine.GET("/database/pivot", server.CheckPivotDatabases)
+
+	// kafka debezium connector
+	server.Engine.GET("/connector/status")
 
 	// progress
 	server.Engine.GET("/progress", server.GetProgress)
