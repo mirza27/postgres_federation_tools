@@ -110,6 +110,8 @@ func (dc *DebeziumConnector) Status() (string, error) {
 
 	if resp.StatusCode >= 300 {
 		b, _ := io.ReadAll(resp.Body)
+
+		// return empty string if not found
 		return "", fmt.Errorf("status error: %s (%s)", resp.Status, string(b))
 	}
 

@@ -2,7 +2,6 @@ package api
 
 import (
 	"db_migrate_server/internal/debezium"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -17,10 +16,9 @@ func (server *Server) CheckAndCreateDebeziumConnector(c *gin.Context) {
 	dc, _ := debezium.NewDebeziumConnector(connectorName, server.Config, true)
 	dcStatus, err := dc.Status()
 
-	// if contains 404, means connector not found
-	if strings.Contains(dcStatus, "404") {
-		fmt.Println("not found")
-		// create connector if not exists
+	// if not found
+	if dcStatus == "" {
+
 		err := dc.Create()
 		if err != nil {
 			c.JSON(500, ErrorResponse{

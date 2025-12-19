@@ -1,6 +1,7 @@
 {
   "name": "",
   "config": {
+    "topic.prefix": "db_migrate_event",
     "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
     "provide.transaction.metadata": "true",
 

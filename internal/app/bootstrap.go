@@ -118,10 +118,13 @@ func ApplyBaseConfig(config *config.Config, pivotRepo *pivot.Repo) (*config.Conf
 			if err := pivotRepo.InsertConfigurationByName(&pivot.Configuration{ConfigKey: key, ConfigValue: val}); err != nil {
 				return nil, err
 			}
+
+		// update with env value
 		case cfgRow.ConfigValue != val:
 			if err := pivotRepo.UpdateConfigurationByName(&pivot.Configuration{ConfigKey: key, ConfigValue: val}); err != nil {
 				return nil, err
 			}
+
 		default:
 			val = cfgRow.ConfigValue
 		}
