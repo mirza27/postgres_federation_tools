@@ -4,6 +4,7 @@ import (
 	"db_migrate_server/internal/debezium"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 )
@@ -26,25 +27,28 @@ func (server *Server) CheckAndCreateDebeziumConnector(c *gin.Context) {
 				Status:  "error",
 				Message: "Failed to create Debezium connector",
 			})
+			return
 		}
 
-		return
+		// delay get status
+		time.Sleep(1 * time.Second)
+		dcStatus, err = dc.Status()
 	}
 
 	// if connector exists, return success
-	if strings.Contains(dcStatus, connectorName) {
-		c.JSON(http.StatusOK, DefaultResponse{
-			Status:  "success",
-			Message: "Connector checked/created successfully",
+	isConnectorExists := strings.Contains(dcStatus, connectorName)
+	if !isConnectorExists {
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Status:  "error",
+			Message: "Connector not found",
+			Error:   err.Error(),
 		})
-
 		return
 	}
 
-	c.JSON(http.StatusOK, ErrorResponse{
-		Status:  "error",
-		Message: "Internal Server Error",
-		Error:   err.Error(),
+	c.JSON(http.StatusOK, DefaultResponse{
+		Status:  "Success",
+		Message: "Connector checked/created successfully",
 	})
 
 }
