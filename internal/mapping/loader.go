@@ -16,27 +16,16 @@ func Load(cfg config.Config) (*Root, error) {
 
 	util.Info.Printf("mapping: Load start mappingPath=%s", cfg.MappingPath)
 
-	entityFiles, err := listJSONFiles(cfg.MappingPath)
+	entityFiles, err := ListJSONFiles(cfg.MappingPath)
 	if err != nil {
 		return nil, fmt.Errorf("error reading json files : %w", err)
 	}
 	util.Info.Printf("mapping: found %d entity files", len(entityFiles))
 
-	var entities []Entity
-	for _, file := range entityFiles {
-		util.Debug.Printf("mapping: loading entity file=%s", file)
-		b, err := os.ReadFile(file)
-		if err != nil {
-			return nil, fmt.Errorf("baca %s: %w", file, err)
-		}
-
-		var e Entity
-		if err := json.Unmarshal(b, &e); err == nil && e.Entity != "" {
-			entities = append(entities, e)
-			continue
-		}
-
-		return nil, fmt.Errorf("format file %s tidak dikenali (bukan Entity)", file)
+	// get entities content
+	entities, err := GetEntitiesContentFromMappingList(entityFiles)
+	if err != nil {
+		return nil, fmt.Errorf("error loading entity files: %w", err)
 	}
 
 	root := &Root{
@@ -48,7 +37,7 @@ func Load(cfg config.Config) (*Root, error) {
 	return root, nil
 }
 
-func listJSONFiles(path string) ([]string, error) {
+func ListJSONFiles(path string) ([]string, error) {
 
 	util.Info.Printf("mapping: listing json files path=%s", path)
 	var out []string
@@ -73,4 +62,50 @@ func listJSONFiles(path string) ([]string, error) {
 	sort.Strings(out)
 	util.Debug.Printf("mapping: listJSONFiles result=%v", out)
 	return out, nil
+}
+
+func GetEntitiesContentFromMappingList(entityFiles []string) ([]Entity, error) {
+	var entities []Entity
+
+	for _, file := range entityFiles {
+		util.Debug.Printf("mapping: loading entity file=%s", file)
+		b, err := os.ReadFile(file)
+		if err != nil {
+			return nil, fmt.Errorf("baca %s: %w", file, err)
+		}
+
+		var e Entity
+		if err := json.Unmarshal(b, &e); err == nil && e.Entity != "" {
+			entities = append(entities, e)
+			continue
+		}
+
+		return nil, fmt.Errorf("format file %s tidak dikenali (bukan Entity)", file)
+	}
+
+	return entities, nil
+}
+
+func CreateEntityMappingFile(path string, entity Entity) error {
+	b, err := json.MarshalIndent(entity, "", "  ")
+
+	if err != nil {
+		return fmt.Errorf("marshal entity: %w", err)
+	}
+
+	err = os.WriteFile(path, b, 0644)
+	if err != nil {
+		return fmt.Errorf("write entity file: %w", err)
+	}
+
+	return nil
+}
+
+func DeleteEntityMappingFile(path string) error {
+	err := os.Remove(path)
+	if err != nil {
+		return fmt.Errorf("delete entity file: %w", err)
+	}
+
+	return nil
 }
