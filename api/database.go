@@ -4,11 +4,26 @@ import (
 	"context"
 	"db_migrate_server/internal/pivot"
 	"fmt"
+	"strconv"
+
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
+
+type databaseConnectionResponse struct {
+	SourceDatabase databaseCredentials `json:"source_database"`
+	TargetDatabase databaseCredentials `json:"target_database"`
+}
+type databaseCredentials struct {
+	Type     string `json:"type"`
+	Host     string `json:"host"`
+	Port     int    `json:"port"`
+	User     string `json:"user"`
+	Password string `json:"password"`
+	DbName   string `json:"db_name"`
+}
 
 func (server *Server) GetDatabaseConnection(c *gin.Context) {
 
@@ -44,10 +59,36 @@ func (server *Server) GetDatabaseConnection(c *gin.Context) {
 		}
 	}
 
+	// database port
+	source_port, _ := strconv.Atoi(configList["SOURCE_PORT"].(string))
+	target_port, _ := strconv.Atoi(configList["TARGET_PORT"].(string))
+	configList["SOURCE_PORT"] = source_port
+	configList["TARGET_PORT"] = target_port
+
+	// build response
+	DatabaseResponse := databaseConnectionResponse{
+		SourceDatabase: databaseCredentials{
+			Type:     configList["SOURCE_DATABASE_TYPE"].(string),
+			Host:     configList["SOURCE_HOST"].(string),
+			Port:     configList["SOURCE_PORT"].(int),
+			User:     configList["SOURCE_USER"].(string),
+			Password: configList["SOURCE_PASSWORD"].(string),
+			DbName:   configList["SOURCE_DATABASE"].(string),
+		},
+		TargetDatabase: databaseCredentials{
+			Type:     configList["TARGET_DATABASE_TYPE"].(string),
+			Host:     configList["TARGET_HOST"].(string),
+			Port:     configList["TARGET_PORT"].(int),
+			User:     configList["TARGET_USER"].(string),
+			Password: configList["TARGET_PASSWORD"].(string),
+			DbName:   configList["TARGET_DATABASE"].(string),
+		},
+	}
+
 	c.JSON(http.StatusOK, DefaultResponse{
 		Status:  "success",
 		Message: "Source database saved successfully",
-		Data:    configList,
+		Data:    DatabaseResponse,
 	})
 }
 
