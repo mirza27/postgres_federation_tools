@@ -9,6 +9,7 @@ import (
 	"db_migrate_server/internal/config"
 	"db_migrate_server/internal/pivot"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
 
@@ -21,6 +22,13 @@ type Server struct {
 func NewServer(pivotDb *pivot.Repo, config *config.Config) *Server {
 
 	router := gin.Default()
+
+	router.Use(cors.New(cors.Config{
+		AllowAllOrigins:  true,
+		AllowMethods:     []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowHeaders:     []string{"Origin", "Content-Type", "Accept", "Authorization"},
+		AllowCredentials: false,
+	}))
 
 	server := &Server{
 		Engine:  router,
