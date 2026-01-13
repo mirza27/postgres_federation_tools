@@ -87,7 +87,7 @@ func (server *Server) GetDatabaseConnection(c *gin.Context) {
 
 	c.JSON(http.StatusOK, DefaultResponse{
 		Status:  "success",
-		Message: "Source database saved successfully",
+		Message: "get database credentials successfully",
 		Data:    DatabaseResponse,
 	})
 }
