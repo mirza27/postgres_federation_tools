@@ -1,9 +1,16 @@
-import { EntityEditor } from "@/page/entity";
-import { ExecutionLog } from "@/page/execution-log";
+import { EntityEditor } from "@/page/entity/entity-page";
+import { ExecutionLog } from "@/page/execution/execution-log-page";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { DefaultPaths } from "./path";
 import { ConnectionLayout } from "./layout/connection-layout";
 import MainLayout from "./layout/main-layout";
+import { DebeziumPage } from "./page/connection/debezium-page";
+import { DatabasePage } from "./page/connection/database-page";
+import { databaseCredentialsLoader } from "./page/connection/loader";
+import {
+  saveDatabaseSourceCredentials,
+  saveDatabaseTargetCredentials,
+} from "./page/connection/action";
 
 export const router = createBrowserRouter([
   {
@@ -17,7 +24,7 @@ export const router = createBrowserRouter([
             to={
               DefaultPaths.CONNECTION_PAGE.path +
               "/" +
-              DefaultPaths.CONNECTION_PAGE.childPaths.SOURCE_DATABASE.path
+              DefaultPaths.CONNECTION_PAGE.childPaths.DATABASE.path
             }
             replace
           />
@@ -31,24 +38,30 @@ export const router = createBrowserRouter([
             index: true,
             element: (
               <Navigate
-                to={
-                  DefaultPaths.CONNECTION_PAGE.childPaths.SOURCE_DATABASE.path
-                }
+                to={DefaultPaths.CONNECTION_PAGE.childPaths.DATABASE.path}
                 replace
               />
             ),
           },
+
           {
-            element: <div>Connection Source Database</div>,
-            path: DefaultPaths.CONNECTION_PAGE.childPaths.SOURCE_DATABASE.path,
-          },
-          {
-            path: DefaultPaths.CONNECTION_PAGE.childPaths.TARGET_DATABASE.path,
-            element: <div>Connection Target Database</div>,
+            path: DefaultPaths.CONNECTION_PAGE.childPaths.DATABASE.path,
+            element: <DatabasePage />,
+            loader: databaseCredentialsLoader,
+            children: [
+              {
+                path: "save-source",
+                action: saveDatabaseSourceCredentials,
+              },
+              {
+                path: "save-target",
+                action: saveDatabaseTargetCredentials,
+              },
+            ],
           },
           {
             path: DefaultPaths.CONNECTION_PAGE.childPaths.DEBEZIUM.path,
-            element: <div>Connection Debezium</div>,
+            element: <DebeziumPage />,
           },
         ],
       },

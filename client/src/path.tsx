@@ -4,13 +4,9 @@ export const DefaultPaths = {
     path: "/connection",
     pathname: "connection",
     childPaths: {
-      SOURCE_DATABASE: {
-        path: "source-database",
-        pathname: "source-database",
-      },
-      TARGET_DATABASE: {
-        path: "target-database",
-        pathname: "target-database",
+      DATABASE: {
+        path: "database",
+        pathname: "database",
       },
       DEBEZIUM: {
         path: "debezium",

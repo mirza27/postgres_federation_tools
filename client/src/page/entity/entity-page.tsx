@@ -2,11 +2,11 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, Save, X } from "lucide-react";
-import { GeneralSection } from "../components/entity-sections/general-section.tsx";
-import { SourcesJoinsSection } from "../components/entity-sections/sources-join-section.tsx";
-import { KeyIdentitySection } from "../components/entity-sections/key-identity-section.tsx";
-import { ColumnsMappingSection } from "../components/entity-sections/columns-mapping-section.tsx";
-import { RoutingSection } from "../components/entity-sections/routing-section.tsx";
+import { GeneralSection } from "../../components/entity-sections/general-section.tsx";
+import { SourcesJoinsSection } from "../../components/entity-sections/sources-join-section.tsx";
+import { KeyIdentitySection } from "../../components/entity-sections/key-identity-section.tsx";
+import { ColumnsMappingSection } from "../../components/entity-sections/columns-mapping-section.tsx";
+import { RoutingSection } from "../../components/entity-sections/routing-section.tsx";
 
 interface EntityState {
   general: {
