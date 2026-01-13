@@ -113,6 +113,32 @@ func (server *Server) SaveSourceDatabase(c *gin.Context) {
 		return
 	}
 
+	targetDSN := fmt.Sprintf("%s://%s:%s@%s:%d/%s?sslmode=disable",
+		req.Type, req.User, req.Password,
+		req.Host, req.Port,
+		req.DbName,
+	)
+
+	// check connection
+	pool, err := pgxpool.New(context.Background(), targetDSN)
+	pingErr := error(nil)
+	if err == nil {
+		pingErr = pool.Ping(context.Background())
+	}
+	if err != nil || pingErr != nil {
+		e := err
+		if e == nil {
+			e = pingErr
+		}
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   e.Error(),
+			Status:  "error",
+			Message: "Failed to connect to target database",
+		})
+		return
+	}
+	pool.Close()
+
 	// save to pivot db
 	server.PivotDB.UpdateConfigurationByName(&pivot.Configuration{
 		ConfigKey:   "SOURCE_DATABASE_TYPE",
