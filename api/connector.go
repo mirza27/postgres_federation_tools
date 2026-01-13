@@ -47,7 +47,7 @@ func (server *Server) CheckAndCreateDebeziumConnector(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, DefaultResponse{
-		Status:  "Success",
+		Status:  "success",
 		Message: "Connector checked/created successfully",
 	})
 
