@@ -87,7 +87,6 @@ export function DatabasePage() {
           action="save-source"
           className="flex-1 overflow-auto p-6"
         >
-          <input type="hidden" name="_form" value="source" />
           <Card className="p-6 border border-border bg-card">
             <h2 className="text-lg font-semibold mb-6">
               Source Database Credentials
@@ -245,7 +244,6 @@ export function DatabasePage() {
           action="save-target"
           className="flex-1 overflow-auto p-6"
         >
-          <input type="hidden" name="_form" value="target" />
           <Card className="p-6 border border-border bg-card">
             <h2 className="text-lg font-semibold mb-6">
               Target Database Credentials
@@ -392,10 +390,6 @@ export function DatabasePage() {
           </Card>
         </fetcherTarget.Form>
       </div>
-
-      {/* <div className="flex justify-end mt-6">
-        <Button type="submit">Save Connections</Button>
-      </div> */}
     </div>
   );
 }

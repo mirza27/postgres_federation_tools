@@ -37,11 +37,44 @@ export async function databaseCredentialsLoader() {
     return {
       ok: true,
       data: data,
-      message: "Database credentials fetched successfully",
+      message: response.message,
     };
   } catch (error) {
     return {
       data: null,
+      ok: false,
+      message: `Network error: Unable to reach the server, ${error}`,
+    };
+  }
+}
+
+export async function checkDebeziumConnectorStatus() {
+  try {
+    const res = await fetch(`${apiUrl}/connector`);
+    if (!res.ok) {
+      return {
+        ok: false,
+        message: "Failed to fetch create debezium connector",
+      };
+    }
+
+    const response = await res.json();
+    if (response.status !== "success") {
+      console.log("kok sini", response);
+      return {
+        ok: false,
+        message: response.message,
+      };
+    }
+
+    console.log("DEBEZIUM CONNECTOR STATUS RESPONSE", response);
+
+    return {
+      ok: true,
+      message: response.message,
+    };
+  } catch (error) {
+    return {
       ok: false,
       message: `Network error: Unable to reach the server, ${error}`,
     };

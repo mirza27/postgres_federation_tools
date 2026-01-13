@@ -6,7 +6,10 @@ import { ConnectionLayout } from "./layout/connection-layout";
 import MainLayout from "./layout/main-layout";
 import { DebeziumPage } from "./page/connection/debezium-page";
 import { DatabasePage } from "./page/connection/database-page";
-import { databaseCredentialsLoader } from "./page/connection/loader";
+import {
+  checkDebeziumConnectorStatus,
+  databaseCredentialsLoader,
+} from "./page/connection/loader";
 import {
   saveDatabaseSourceCredentials,
   saveDatabaseTargetCredentials,
@@ -62,6 +65,7 @@ export const router = createBrowserRouter([
           {
             path: DefaultPaths.CONNECTION_PAGE.childPaths.DEBEZIUM.path,
             element: <DebeziumPage />,
+            loader: checkDebeziumConnectorStatus,
           },
         ],
       },

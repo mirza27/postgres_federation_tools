@@ -17,9 +17,6 @@ export async function saveDatabaseSourceCredentials({
     db_name: data.get("db_name") as string,
   };
 
-  // disinguise source db
-  const formType = data.get("_form");
-
   try {
     const res = await fetch(`${apiUrl}/database/source`, {
       method: "POST",
@@ -39,10 +36,9 @@ export async function saveDatabaseSourceCredentials({
     }
     return {
       ok: true,
-      message: "Source database credentials saved successfully",
+      message: response.message,
     }; // refetch
   } catch (error) {
-    console.error(error);
     return {
       ok: false,
       message: `Network error: Unable to reach the server, ${error}`,
@@ -64,9 +60,6 @@ export async function saveDatabaseTargetCredentials({
     db_name: data.get("db_name") as string,
   };
 
-  // disinguise source db
-  const formType = data.get("_form");
-
   try {
     const res = await fetch(`${apiUrl}/database/target`, {
       method: "POST",
@@ -86,10 +79,9 @@ export async function saveDatabaseTargetCredentials({
     }
     return {
       ok: true,
-      message: "Target database credentials saved successfully",
+      message: response.message,
     }; // refetch
   } catch (error) {
-    console.error(error);
     return {
       ok: false,
       message: `Network error: Unable to reach the server, ${error}`,
