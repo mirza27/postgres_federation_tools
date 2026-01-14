@@ -87,6 +87,13 @@ func GetEntitiesContentFromMappingList(entityFiles []string) ([]Entity, error) {
 }
 
 func CreateEntityMappingFile(path string, entity Entity) error {
+	// check if file already exists
+	if _, err := os.Stat(path); err == nil {
+		return fmt.Errorf("file %s already exists", path)
+	} else if !os.IsNotExist(err) {
+		return fmt.Errorf("check file %s: %w", path, err)
+	}
+
 	b, err := json.MarshalIndent(entity, "", "  ")
 
 	if err != nil {

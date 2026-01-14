@@ -121,7 +121,7 @@ func (server *Server) CreateMappingByName(c *gin.Context) {
 	// create mapping file
 	err := mapping.CreateEntityMappingFile(path+"/"+entity.Entity+".json", entity)
 	if err != nil {
-		c.JSON(500, ErrorResponse{
+		c.JSON(http.StatusBadRequest, ErrorResponse{
 			Error:   err.Error(),
 			Status:  "error",
 			Message: "Failed to create mapping file",
@@ -153,7 +153,7 @@ func (server *Server) UpdateMappingByName(c *gin.Context) {
 	// delete existing mapping file
 	err = mapping.DeleteEntityMappingFile(path + "/" + req.Name + ".json")
 	if err != nil {
-		c.JSON(500, ErrorResponse{
+		c.JSON(http.StatusBadRequest, ErrorResponse{
 			Error:   err.Error(),
 			Status:  "error",
 			Message: "Failed to delete existing mapping file",
@@ -175,7 +175,7 @@ func (server *Server) UpdateMappingByName(c *gin.Context) {
 	// create new mapping file from request body
 	err = mapping.CreateEntityMappingFile(path+"/"+entity.Entity+".json", entity)
 	if err != nil {
-		c.JSON(500, ErrorResponse{
+		c.JSON(http.StatusBadRequest, ErrorResponse{
 			Error:   err.Error(),
 			Status:  "error",
 			Message: "Failed to create mapping file",
@@ -205,7 +205,7 @@ func (server *Server) DeleteMappingByName(c *gin.Context) {
 	path := server.Config.MappingPath
 	err = mapping.DeleteEntityMappingFile(path + "/" + req.Name + ".json")
 	if err != nil {
-		c.JSON(500, ErrorResponse{
+		c.JSON(http.StatusBadRequest, ErrorResponse{
 			Error:   err.Error(),
 			Status:  "error",
 			Message: "Failed to delete mapping file",
