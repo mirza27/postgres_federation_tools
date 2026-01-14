@@ -1,9 +1,9 @@
-import { EntityEditor } from "@/page/entity/entity-page";
 import { ExecutionLog } from "@/page/execution/execution-log-page";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { DefaultPaths } from "./path";
 import { ConnectionLayout } from "./layout/connection-layout";
 import MainLayout from "./layout/main-layout";
+import { EntityLayout } from "./layout/entity-layout";
 import { DebeziumPage } from "./page/connection/debezium-page";
 import { DatabasePage } from "./page/connection/database-page";
 import {
@@ -14,6 +14,17 @@ import {
   saveDatabaseSourceCredentials,
   saveDatabaseTargetCredentials,
 } from "./page/connection/action";
+import { EntityListPage } from "./page/entity-json/entity-list-page";
+import {
+  GetEntityLoader,
+  ListAllEntitiesLoader,
+} from "./page/entity-json/entity-loader";
+import { EntityPage as EntityDetailPage } from "./page/entity-json/entity-page";
+import {
+  CreateNewEntity,
+  DeleteEntity,
+  UpdateEntity,
+} from "./page/entity-json/entity-action";
 
 export const router = createBrowserRouter([
   {
@@ -70,8 +81,35 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: DefaultPaths.ENTITY_EDITOR.path,
-        element: <EntityEditor />,
+        path: DefaultPaths.ENTITY_LIST.path,
+        id: "entity-list-route",
+        element: <EntityLayout />,
+        loader: ListAllEntitiesLoader,
+        children: [
+          {
+            index: true,
+            element: <EntityListPage />,
+          },
+          {
+            path: ":name",
+            element: <EntityDetailPage />,
+            loader: GetEntityLoader,
+            children: [
+              {
+                path: "update-entity",
+                action: UpdateEntity,
+              },
+            ],
+          },
+          {
+            path: "delete-entity",
+            action: DeleteEntity,
+          },
+          {
+            path: "create-entity",
+            action: CreateNewEntity,
+          },
+        ],
       },
       {
         path: DefaultPaths.EXECUTION_LOG.path,

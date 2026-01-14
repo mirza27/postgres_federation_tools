@@ -14,7 +14,7 @@ export const DefaultPaths = {
       },
     },
   },
-  ENTITY_EDITOR: {
+  ENTITY_LIST: {
     path: "/entity",
     pathname: "entity",
     childPaths: [],

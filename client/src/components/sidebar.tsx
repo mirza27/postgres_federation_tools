@@ -1,22 +1,30 @@
 import { ChevronDown, Database, Settings, BarChart3 } from "lucide-react";
-import { useNavigate, useLocation, useSearchParams } from "react-router-dom";
+import { useNavigate, useLocation, useRouteLoaderData } from "react-router-dom";
 import { DefaultPaths } from "../path";
 import clsx from "clsx";
+import type { EntityListDataResponse } from "@/page/entity-json/entity-loader";
 
 export function Sidebar() {
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchParams] = useSearchParams();
-
   const pathname = location.pathname;
-  const activeEntity = searchParams.get("name");
+  const entityLoaderData = useRouteLoaderData("entity-list-route") as
+    | {
+        ok: boolean;
+        data: EntityListDataResponse | null;
+        message?: string;
+      }
+    | undefined;
 
-  // for entity mapping menu
-  const entities = [
-    { id: "1", name: "users" },
-    { id: "2", name: "orders" },
-    { id: "3", name: "products" },
-  ];
+  const entities = entityLoaderData?.data?.entities ?? [];
+  const activeEntity = pathname.startsWith(`${DefaultPaths.ENTITY_LIST.path}/`)
+    ? decodeURIComponent(
+        pathname.slice(DefaultPaths.ENTITY_LIST.path.length + 1)
+      )
+    : null;
+
+  console.log("sidebar entities", entities);
+  console.log("active entity", activeEntity);
 
   const isPathActive = (current: string, target: string) => {
     if (target === "/") return current === "/";
@@ -26,8 +34,7 @@ export function Sidebar() {
   const expandedMenu = (() => {
     if (isPathActive(pathname, DefaultPaths.CONNECTION_PAGE.path))
       return "connection";
-    if (isPathActive(pathname, DefaultPaths.ENTITY_EDITOR.path))
-      return "entity";
+    if (isPathActive(pathname, DefaultPaths.ENTITY_LIST.path)) return "entity";
     if (isPathActive(pathname, DefaultPaths.EXECUTION_LOG.path)) return "";
     return null;
   })();
@@ -101,10 +108,10 @@ export function Sidebar() {
         {/* Entity */}
         <div>
           <button
-            onClick={() => navigate(DefaultPaths.ENTITY_EDITOR.path)}
+            onClick={() => navigate(DefaultPaths.ENTITY_LIST.path)}
             className={clsx(
               baseButton,
-              isPathActive(pathname, DefaultPaths.ENTITY_EDITOR.path) &&
+              isPathActive(pathname, DefaultPaths.ENTITY_LIST.path) &&
                 "bg-sidebar-accent/30"
             )}
           >
@@ -120,19 +127,20 @@ export function Sidebar() {
             />
           </button>
 
-          {expandedMenu === "entity" && (
+          {expandedMenu === "entity" && entities.length > 0 && (
             <div className="ml-4 mt-2 space-y-1">
               {entities.map((entity) => {
-                const isActive =
-                  pathname === DefaultPaths.ENTITY_EDITOR.path &&
-                  activeEntity === entity.name;
+                const entityName = entity.entity;
+                const isActive = activeEntity === entityName;
 
                 return (
                   <button
-                    key={entity.id}
+                    key={entityName}
                     onClick={() =>
                       navigate(
-                        `${DefaultPaths.ENTITY_EDITOR.path}?name=${entity.name}`
+                        `${DefaultPaths.ENTITY_LIST.path}/${encodeURIComponent(
+                          entityName
+                        )}`
                       )
                     }
                     className={clsx(
@@ -142,10 +150,15 @@ export function Sidebar() {
                         : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20"
                     )}
                   >
-                    {entity.name}
+                    {entityName}
                   </button>
                 );
               })}
+            </div>
+          )}
+          {expandedMenu === "entity" && entities.length === 0 && (
+            <div className="ml-4 mt-2 text-xs text-sidebar-foreground/70">
+              No entities available yet
             </div>
           )}
         </div>
