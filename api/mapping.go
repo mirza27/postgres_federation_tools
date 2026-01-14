@@ -12,10 +12,13 @@ type GetMappingNameParamsRequest struct {
 	Name string `form:"name" binding:"required"`
 }
 type GetMappingListResponse struct {
+	Data    DataResponseMappingList `json:"data"`
+	Message string                  `json:"message"`
+	Status  string                  `json:"status"`
+}
+type DataResponseMappingList struct {
 	Files    []string         `json:"files"`
 	Entities []mapping.Entity `json:"entities"`
-	Message  string           `json:"message"`
-	Status   string           `json:"status"`
 }
 
 // list all mapping files
@@ -43,18 +46,24 @@ func (server *Server) GetMappingList(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, GetMappingListResponse{
-		Files:    listJSONFiles,
-		Entities: Entities,
-		Status:   "Success",
-		Message:  "Successsfully retrieved mapping files",
+		Data: DataResponseMappingList{
+			Files:    listJSONFiles,
+			Entities: Entities,
+		},
+		Status:  "success",
+		Message: "Successsfully retrieved mapping files",
 	})
 }
 
 type GetMappingResponse struct {
-	File    string         `json:"file"`
-	Entity  mapping.Entity `json:"entity"`
-	Message string         `json:"message"`
-	Status  string         `json:"status"`
+	Data    DataResponseMapping `json:"data"`
+	Message string              `json:"message"`
+	Status  string              `json:"status"`
+}
+
+type DataResponseMapping struct {
+	File   string         `json:"file"`
+	Entity mapping.Entity `json:"entity"`
 }
 
 // get entity mapping by name (filename)
@@ -82,9 +91,11 @@ func (server *Server) GetMappingByName(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, GetMappingResponse{
-		File:    req.Name + ".json",
-		Entity:  Entities[0],
-		Status:  "Success",
+		Data: DataResponseMapping{
+			File:   req.Name + ".json",
+			Entity: Entities[0],
+		},
+		Status:  "success",
 		Message: "Successfully retrieved mapping file",
 	})
 }
@@ -119,7 +130,7 @@ func (server *Server) CreateMappingByName(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, DefaultResponse{
-		Status:  "Success",
+		Status:  "success",
 		Message: "Mapping file created successfully",
 	})
 }
@@ -173,7 +184,7 @@ func (server *Server) UpdateMappingByName(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, DefaultResponse{
-		Status:  "Success",
+		Status:  "success",
 		Message: "Mapping file updated (recreate) successfully",
 	})
 }
@@ -203,7 +214,7 @@ func (server *Server) DeleteMappingByName(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, DefaultResponse{
-		Status:  "Success",
+		Status:  "success",
 		Message: "Mapping file deleted successfully",
 	})
 
