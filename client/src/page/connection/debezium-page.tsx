@@ -37,7 +37,14 @@ export function DebeziumPage() {
       ok?: boolean;
       message?: string;
     };
-    if (typeof d.ok === "boolean") setConnectorStatus(d.ok);
+
+    if (typeof d.ok === "boolean") {
+      setConnectorStatus(d.ok);
+      toast.success("debezium is connected successfully");
+    } else {
+      toast.error("failed to connect debezium");
+    }
+
     if (d.message) setMessage(d.message);
   }, [fetcher.data]);
 
@@ -171,7 +178,7 @@ WHERE name IN ('wal_level', 'max_replication_slots', 'max_wal_senders');`}
                 </div>
 
                 <div className="p-4 bg-primary/5 rounded-lg border border-border text-sm">
-                  <p className="font-semibold mb-2 text-primary">
+                  <p className="font-semibold mb-2 text-foreground/80">
                     📝 Important Notes
                   </p>
                   <ul className="list-disc pl-5 space-y-2 text-muted-foreground">

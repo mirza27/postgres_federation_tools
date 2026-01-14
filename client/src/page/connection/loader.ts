@@ -19,6 +19,7 @@ export async function databaseCredentialsLoader() {
     const res = await fetch(`${apiUrl}/database`);
     if (!res.ok) {
       return {
+        data: null,
         ok: false,
         message: "Failed to fetch database credentials",
       };
@@ -27,6 +28,7 @@ export async function databaseCredentialsLoader() {
     const response = await res.json();
     if (response.status !== "success") {
       return {
+        data: null,
         ok: false,
         message: response.message || "Failed to fetch database credentials",
       };
@@ -60,14 +62,11 @@ export async function checkDebeziumConnectorStatus() {
 
     const response = await res.json();
     if (response.status !== "success") {
-      console.log("kok sini", response);
       return {
         ok: false,
         message: response.message,
       };
     }
-
-    console.log("DEBEZIUM CONNECTOR STATUS RESPONSE", response);
 
     return {
       ok: true,
