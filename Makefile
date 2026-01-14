@@ -24,6 +24,9 @@ checker:
 joiner:
 	go run ./cmd/joiner/main.go >  logs/joiner.log 2>&1
 
+api:
+	go run main.go
+
 
 # Debezium Config
 conn-publication:
@@ -91,3 +94,6 @@ add-old-northwind:
 
 drop-old-northwind:
 	docker exec -i old_northwind psql -U old_user -d old_northwind_db < ./migration/northwind/old/down.sql
+
+
+.PHONY: api
