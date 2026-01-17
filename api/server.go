@@ -69,6 +69,7 @@ func (server *Server) applyRoutes() {
 	server.Engine.GET("/progress/summary", server.GetProgressSummary)
 
 	// worker
+	server.Engine.GET("/worker/status", server.GetWorkerStatus)
 	server.Engine.POST("/worker/start", server.RunWorker)
 	server.Engine.POST("/worker/stop", server.StopWorker)
 
