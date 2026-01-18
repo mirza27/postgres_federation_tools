@@ -2,26 +2,35 @@
 export const DefaultPaths = {
   CONNECTION_PAGE: {
     path: "/connection",
-    pathname: "connection",
+    pathname: "Connection",
     childPaths: {
       DATABASE: {
         path: "database",
-        pathname: "database",
+        pathname: "Database",
       },
       DEBEZIUM: {
         path: "debezium",
-        pathname: "debezium",
+        pathname: "Debezium",
       },
     },
   },
   ENTITY_LIST: {
     path: "/entity",
-    pathname: "entity",
-    childPaths: [],
+    pathname: "Entities",
+    childPaths: {},
   },
   EXECUTION_LOG: {
-    path: "/execution-log",
-    pathname: "execution-log",
-    childPaths: [],
+    path: "/execution",
+    pathname: "Execution",
+    childPaths: {
+      RUNNER: {
+        path: "runner",
+        pathname: "Runner",
+      },
+      LOGS: {
+        path: "logs",
+        pathname: "Logs",
+      },
+    },
   },
 };

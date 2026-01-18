@@ -1,4 +1,4 @@
-import { ExecutionLog } from "@/page/execution/execution-log-page";
+import { ExecutionLogPage } from "@/page/execution/execution-log-page";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { DefaultPaths } from "./path";
 import { ConnectionLayout } from "./layout/connection-layout";
@@ -25,6 +25,8 @@ import {
   DeleteEntity,
   UpdateEntity,
 } from "./page/entity-json/entity-action";
+import { ExecutionLayout } from "./layout/execution-layout";
+import { RunnerPage } from "./page/execution/runner-page";
 
 export const router = createBrowserRouter([
   {
@@ -113,7 +115,30 @@ export const router = createBrowserRouter([
       },
       {
         path: DefaultPaths.EXECUTION_LOG.path,
-        element: <ExecutionLog onBack={() => null} />,
+        element: <ExecutionLayout />,
+        children: [
+          {
+            index: true,
+            element: (
+              <Navigate
+                to={
+                  DefaultPaths.EXECUTION_LOG.path +
+                  "/" +
+                  DefaultPaths.EXECUTION_LOG.childPaths.RUNNER.path
+                }
+                replace
+              />
+            ),
+          },
+          {
+            path: DefaultPaths.EXECUTION_LOG.childPaths.RUNNER.path,
+            element: <RunnerPage />,
+          },
+          {
+            path: DefaultPaths.EXECUTION_LOG.childPaths.LOGS.path,
+            element: <ExecutionLogPage />,
+          },
+        ],
       },
     ],
   },

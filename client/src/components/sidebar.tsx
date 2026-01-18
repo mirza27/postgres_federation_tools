@@ -1,4 +1,4 @@
-import { ChevronDown, Database, Settings, BarChart3 } from "lucide-react";
+import { ChevronDown, Database, Settings, FileInput } from "lucide-react";
 import { useNavigate, useLocation, useRouteLoaderData } from "react-router-dom";
 import { DefaultPaths } from "../path";
 import clsx from "clsx";
@@ -23,9 +23,6 @@ export function Sidebar() {
       )
     : null;
 
-  console.log("sidebar entities", entities);
-  console.log("active entity", activeEntity);
-
   const isPathActive = (current: string, target: string) => {
     if (target === "/") return current === "/";
     return current === target || current.startsWith(`${target}/`);
@@ -35,7 +32,8 @@ export function Sidebar() {
     if (isPathActive(pathname, DefaultPaths.CONNECTION_PAGE.path))
       return "connection";
     if (isPathActive(pathname, DefaultPaths.ENTITY_LIST.path)) return "entity";
-    if (isPathActive(pathname, DefaultPaths.EXECUTION_LOG.path)) return "";
+    if (isPathActive(pathname, DefaultPaths.EXECUTION_LOG.path))
+      return "execution";
     return null;
   })();
 
@@ -67,8 +65,8 @@ export function Sidebar() {
             )}
           >
             <div className="flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              <span>Connection</span>
+              <Database className="w-4 h-4" />
+              <span>{DefaultPaths.CONNECTION_PAGE.pathname}</span>
             </div>
             <ChevronDown
               className={clsx(
@@ -116,8 +114,8 @@ export function Sidebar() {
             )}
           >
             <div className="flex items-center gap-2">
-              <Database className="w-4 h-4" />
-              <span>Entities</span>
+              <Settings className="w-4 h-4" />
+              <span>{DefaultPaths.ENTITY_LIST.pathname}</span>
             </div>
             <ChevronDown
               className={clsx(
@@ -174,10 +172,42 @@ export function Sidebar() {
             )}
           >
             <div className="flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" />
-              <span>Execution Log</span>
+              <FileInput className="w-4 h-4" />
+              <span>{DefaultPaths.EXECUTION_LOG.pathname}</span>
             </div>
+            <ChevronDown
+              className={clsx(
+                "w-4 h-4 transition-transform",
+                expandedMenu === "execution" && "rotate-180"
+              )}
+            />
           </button>
+
+          {expandedMenu === "execution" && (
+            <div className="ml-4 mt-2 space-y-1">
+              {Object.values(DefaultPaths.EXECUTION_LOG.childPaths).map(
+                (child) => {
+                  const fullPath = `${DefaultPaths.EXECUTION_LOG.path}/${child.path}`;
+                  const isActive = pathname === fullPath;
+
+                  return (
+                    <button
+                      key={child.path}
+                      onClick={() => navigate(fullPath)}
+                      className={clsx(
+                        childButton,
+                        isActive
+                          ? "bg-sidebar-primary/30 text-sidebar-primary font-medium"
+                          : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20"
+                      )}
+                    >
+                      {child.pathname}
+                    </button>
+                  );
+                }
+              )}
+            </div>
+          )}
         </div>
       </div>
 
