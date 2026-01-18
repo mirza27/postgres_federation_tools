@@ -28,6 +28,7 @@ export function DatabasePage() {
   const loaderData = useLoaderData() as {
     ok: boolean;
     data: DatabaseCredentials | undefined;
+    message?: string;
   };
 
   const [source, setSource] = useState<DBCredential>(
@@ -39,6 +40,12 @@ export function DatabasePage() {
 
   const fetcherSource = useFetcher();
   const fetcherTarget = useFetcher();
+
+  useEffect(() => {
+    if (loaderData.ok === false) {
+      toast.error(loaderData.message);
+    }
+  }, [loaderData]);
 
   useEffect(() => {
     if (!fetcherSource.data) return;
