@@ -108,7 +108,7 @@ func (server *Server) GetWorkerStatus(c *gin.Context) {
 		if err != nil {
 			if err == syscall.ESRCH {
 				c.JSON(http.StatusOK, DefaultResponse{
-					Status:  "success",
+					Status:  "error",
 					Message: fmt.Sprintf("process %s (%d) not running", name, pid),
 				})
 				return
