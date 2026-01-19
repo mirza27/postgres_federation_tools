@@ -46,7 +46,7 @@ export function RunnerPage() {
       </div>
 
       <div className="flex-1 overflow-auto p-6">
-        <Card className="max-w-3xl border border-border bg-card">
+        <Card className="max-w border border-border bg-card">
           <CardHeader>
             <div className="flex items-center justify-between gap-4">
               <div>
