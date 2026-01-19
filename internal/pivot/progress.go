@@ -7,59 +7,82 @@ import (
 	"github.com/google/uuid"
 )
 
+type _ExecSplit struct {
+	SQLText string
+	Status  string
+	SQLArgs string
+}
+
 type _ExecQueue struct {
 	QueueID   uuid.UUID
 	Entity    string
 	SQLText   string
+	SQLArgs   string
 	Status    string
+	ExecSplit []_ExecSplit
 	LastError sql.NullString
 }
 
 func (r *Repo) GetLastUpdatedQueueList(limit int) ([]_ExecQueue, error) {
-
 	ctx := context.Background()
 
-	rows, err := r.DB.Query(ctx, `
-		select q.queue_id, q.entity,
-			   coalesce(s.sql_text, q.sql_text) as sql_text,
-			   coalesce(s.status, q.status) as status,
-			   coalesce(s.last_error, q.last_error) as last_error,
-			   greatest(coalesce(s.updated_at, q.updated_at), q.updated_at) as last_upd
+	// First pick the most recently updated queue_ids (considering splits)
+	idRows, err := r.DB.Query(ctx, `
+		select q.queue_id
 		from _exec_queue q
 		left join _exec_split s on s.queue_id = q.queue_id
-		order by last_upd desc
+		group by q.queue_id, q.updated_at
+		order by coalesce(max(s.updated_at), q.updated_at) desc
 		limit $1`, limit)
 	if err != nil {
-		return []_ExecQueue{}, err
+		return nil, err
 	}
-	defer rows.Close()
+	defer idRows.Close()
 
-	var out []_ExecQueue
-	for rows.Next() {
-		var (
-			queueID uuid.UUID
-			entity  string
-			sqlText string
-			status  string
-			lastErr sql.NullString
-			_dummy  interface{}
-		)
-		if err := rows.Scan(&queueID, &entity, &sqlText, &status, &lastErr, &_dummy); err != nil {
+	var ids []uuid.UUID
+	for idRows.Next() {
+		var id uuid.UUID
+		if scanErr := idRows.Scan(&id); scanErr != nil {
 			continue
 		}
-		// if lastErr.Valid {
-		// 	errMsg = lastErr.String
-		// }
-		out = append(out, _ExecQueue{
-			QueueID:   queueID,
-			Entity:    entity,
-			SQLText:   sqlText,
-			Status:    status,
-			LastError: lastErr,
-		})
+		ids = append(ids, id)
 	}
-	return out, nil
 
+	if len(ids) == 0 {
+		return []_ExecQueue{}, nil
+	}
+
+	var out []_ExecQueue
+	for _, qid := range ids {
+		var q _ExecQueue
+		// fetch queue row
+		if err := r.DB.QueryRow(ctx, `
+			select queue_id, entity, sql_text, sql_args,status, last_error
+			from _exec_queue where queue_id=$1`, qid).Scan(&q.QueueID, &q.Entity, &q.SQLText, &q.SQLArgs, &q.Status, &q.LastError); err != nil {
+			// skip if cannot fetch
+			continue
+		}
+
+		// fetch splits for this queue
+		srows, serr := r.DB.Query(ctx, `
+			select sql_text, sql_args, status
+			from _exec_split where queue_id=$1
+			order by created_at asc`, qid)
+		if serr == nil {
+			for srows.Next() {
+				var s _ExecSplit
+				if scanErr := srows.Scan(&s.SQLText, &s.SQLArgs, &s.Status); scanErr != nil {
+					continue
+				}
+				q.ExecSplit = append(q.ExecSplit, s)
+			}
+			srows.Close()
+		}
+
+		out = append(out, q)
+	}
+
+	return out, nil
 }
 
 type ExecQueueSummary struct {
