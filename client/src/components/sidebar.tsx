@@ -48,7 +48,7 @@ export function Sidebar() {
       <div className="p-4 border-b border-sidebar-border">
         <h1 className="flex items-center gap-2 text-lg font-semibold">
           <Database className="w-5 h-5 text-sidebar-primary" />
-          Mapper
+          DB Migrator
         </h1>
       </div>
 

@@ -27,6 +27,11 @@ import {
 } from "./page/entity-json/entity-action";
 import { ExecutionLayout } from "./layout/execution-layout";
 import { RunnerPage } from "./page/execution/runner-page";
+import { CheckWorkerStatus } from "./page/execution/worker-loader";
+import {
+  RunWorkerAction,
+  StopWorkerAction,
+} from "./page/execution/woker-action";
 
 export const router = createBrowserRouter([
   {
@@ -133,6 +138,17 @@ export const router = createBrowserRouter([
           {
             path: DefaultPaths.EXECUTION_LOG.childPaths.RUNNER.path,
             element: <RunnerPage />,
+            loader: CheckWorkerStatus,
+            children: [
+              {
+                path: "run-worker",
+                action: RunWorkerAction,
+              },
+              {
+                path: "stop-worker",
+                action: StopWorkerAction,
+              },
+            ],
           },
           {
             path: DefaultPaths.EXECUTION_LOG.childPaths.LOGS.path,
