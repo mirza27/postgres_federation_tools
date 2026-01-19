@@ -1,68 +1,115 @@
-import { useState } from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Fragment, useEffect, useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, MoreHorizontal } from "lucide-react";
+import { ChevronRight, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
+import type { ExecutionQueueList } from "./queue-loader";
+import { useLoaderData, useRevalidator } from "react-router-dom";
 
-interface ExecutionLogProps {
-  onBack: () => void;
-}
+type ExecutionQueueLoaderResponse = {
+  ok: boolean;
+  data: ExecutionQueueList[] | null;
+  message?: string;
+};
 
-export function ExecutionLog({ onBack }: ExecutionLogProps) {
-  const [filters, setFilters] = useState({
-    entity: "",
-    status: "All",
-    timeRange: "",
-  });
+const statusPalette: Record<string, string> = {
+  success: "border-emerald-400/30 bg-emerald-500/10 text-emerald-500",
+  completed: "border-emerald-400/30 bg-emerald-500/10 text-emerald-500",
+  running: "border-sky-400/30 bg-sky-500/10 text-sky-500",
+  processing: "border-sky-400/30 bg-sky-500/10 text-sky-500",
+  pending: "border-amber-400/30 bg-amber-500/10 text-amber-500",
+  queued: "border-amber-400/30 bg-amber-500/10 text-amber-500",
+  error: "border-red-400/30 bg-red-500/10 text-red-500",
+  failed: "border-red-400/30 bg-red-500/10 text-red-500",
+};
 
-  const mockExecutions = [
-    {
-      id: "1",
-      timestamp: "2024-01-15 14:32:45",
-      entity: "users",
-      operation: "INSERT",
-      items: 1250,
-      duration: "2.3s",
-      status: "success",
-    },
-    {
-      id: "2",
-      timestamp: "2024-01-15 14:15:22",
-      entity: "orders",
-      operation: "UPSERT",
-      items: 856,
-      duration: "1.8s",
-      status: "success",
-    },
-    {
-      id: "3",
-      timestamp: "2024-01-15 13:48:10",
-      entity: "products",
-      operation: "UPDATE",
-      items: 542,
-      duration: "3.1s",
-      status: "error",
-    },
-  ];
+const getStatusBadgeClasses = (status: string) => {
+  if (!status) return "border border-border/60 bg-muted text-muted-foreground";
+  const paletteKey = status.toLowerCase();
+  return (
+    "border px-2 py-1 rounded-full text-[11px] font-semibold tracking-wide uppercase " +
+    (statusPalette[paletteKey] ||
+      "border-border/60 bg-muted text-muted-foreground")
+  );
+};
+
+const prettyStatusLabel = (status: string) => {
+  if (!status) return "Unknown";
+  return status
+    .replace(/_/g, " ")
+    .toLowerCase()
+    .replace(/^.|\s./g, (match) => match.toUpperCase());
+};
+
+const normalizeNullableField = (value: unknown): string | null => {
+  if (value === null || value === undefined) return null;
+  if (typeof value === "string") return value.length > 0 ? value : null;
+  if (typeof value === "object") {
+    const maybe = value as { String?: unknown; Valid?: unknown };
+    if (typeof maybe.String === "string") {
+      if (typeof maybe.Valid === "boolean" && !maybe.Valid) return null;
+      return maybe.String.length > 0 ? maybe.String : null;
+    }
+    try {
+      return JSON.stringify(value);
+    } catch {
+      return String(value);
+    }
+  }
+  return String(value);
+};
+
+const trimContent = (value: unknown, max = 140) => {
+  const normalized = normalizeNullableField(value);
+  if (!normalized) return "-";
+  return normalized.length > max ? `${normalized.slice(0, max)}…` : normalized;
+};
+
+export function ExecutionLogPage() {
+  const loaderData = useLoaderData() as ExecutionQueueLoaderResponse;
+  const queueList = loaderData?.data ?? [];
+  const { state: revalidatorState, revalidate } = useRevalidator();
+  const isRefreshing = revalidatorState !== "idle";
+  const [lastUpdated, setLastUpdated] = useState(() => new Date());
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLastUpdated(new Date());
+  }, [loaderData?.data]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      revalidate();
+    }, 10000);
+
+    return () => clearInterval(interval);
+  }, [revalidate]);
+
+  const lastUpdatedLabel = lastUpdated.toLocaleTimeString();
 
   return (
-    <div className="flex-1 flex flex-col h-screen bg-background">
+    <div className="h-screen w-full flex flex-col bg-background">
       {/* Header */}
       <div className="border-b border-border px-6 py-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <button
-              onClick={onBack}
+              onClick={() => {}}
               className="p-1 hover:bg-muted rounded-md transition-colors text-foreground"
             >
               <ChevronRight className="w-5 h-5 transform rotate-180" />
             </button>
             <div>
               <h1 className="text-2xl font-semibold text-foreground">
-                Execution Log
+                Execution Log Queue
               </h1>
               <p className="text-sm text-muted-foreground">
-                Inspect dry-runs or published executions
+                Inspect last runned execution logs and their statuses.
               </p>
             </div>
           </div>
@@ -70,7 +117,7 @@ export function ExecutionLog({ onBack }: ExecutionLogProps) {
       </div>
 
       {/* Filters */}
-      <div className="border-b border-border px-6 py-4">
+      {/* <div className="border-b border-border px-6 py-4">
         <div className="flex gap-4">
           <div className="flex-1">
             <label className="text-xs font-medium text-foreground block mb-1">
@@ -116,95 +163,189 @@ export function ExecutionLog({ onBack }: ExecutionLogProps) {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Table */}
       <div className="flex-1 overflow-auto px-6 py-4">
         <Card className="border border-border bg-card">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-border">
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Timestamp
-                  </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Entity
-                  </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Operation
-                  </th>
-                  <th className="text-right px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Items
-                  </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Duration
-                  </th>
-                  <th className="text-left px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Status
-                  </th>
-                  <th className="text-center px-4 py-3 text-xs font-semibold text-foreground/70 bg-muted/30">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {mockExecutions.length === 0 ? (
-                  <tr>
-                    <td
-                      colSpan={7}
-                      className="text-center py-8 text-muted-foreground text-sm"
-                    >
-                      No executions found
-                    </td>
+          <CardHeader>
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <CardTitle className="text-2xl">Execution Queue</CardTitle>
+                <CardDescription className="text-base">
+                  Live feed of migration jobs. Data auto-refreshes every 10
+                  seconds.
+                </CardDescription>
+                <p className="text-xs text-muted-foreground mt-2">
+                  Menampilkan {queueList.length} antrean aktif. Terakhir update:
+                  <span className="font-semibold text-foreground ml-1">
+                    {lastUpdatedLabel}
+                  </span>
+                </p>
+              </div>
+              <div className="flex items-center gap-3">
+                {!loaderData?.ok && (
+                  <div className="flex items-center gap-1 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs">
+                    <AlertTriangle className="h-3.5 w-3.5" />
+                    {loaderData?.message || "Gagal memuat data"}
+                  </div>
+                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  disabled={isRefreshing}
+                  onClick={() => revalidate()}
+                  className="min-w-[120px]"
+                >
+                  {isRefreshing ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="mr-2 h-4 w-4" />
+                  )}
+                  Refresh
+                </Button>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border bg-muted/30 text-left text-xs font-semibold text-foreground/70">
+                    <th className="px-4 py-3">Queue ID</th>
+                    <th className="px-4 py-3">Entity</th>
+                    <th className="px-4 py-3">Status</th>
+                    <th className="px-4 py-3">SQL Statement</th>
+                    <th className="px-4 py-3">Arguments</th>
+                    <th className="px-4 py-3">Info</th>
                   </tr>
-                ) : (
-                  mockExecutions.map((exec) => (
-                    <tr
-                      key={exec.id}
-                      className="border-b border-border hover:bg-muted/30 transition-colors"
-                    >
-                      <td className="px-4 py-3 text-sm text-foreground font-mono">
-                        {exec.timestamp}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground">
-                        {exec.entity}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground font-mono">
-                        {exec.operation}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground text-right">
-                        {exec.items}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-foreground">
-                        {exec.duration}
-                      </td>
-                      <td className="px-4 py-3 text-sm">
-                        <span
-                          className={`px-2 py-1 rounded text-xs font-medium ${
-                            exec.status === "success"
-                              ? "bg-green-500/20 text-green-300"
-                              : "bg-red-500/20 text-red-300"
-                          }`}
-                        >
-                          {exec.status === "success" ? "Success" : "Error"}
-                        </span>
-                      </td>
-                      <td className="px-4 py-3 text-center">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-7 w-7 p-0"
-                        >
-                          <MoreHorizontal className="w-4 h-4" />
-                        </Button>
+                </thead>
+                <tbody>
+                  {queueList.length === 0 ? (
+                    <tr>
+                      <td
+                        colSpan={6}
+                        className="py-10 text-center text-sm text-muted-foreground"
+                      >
+                        Belum ada antrean eksekusi yang tercatat.
                       </td>
                     </tr>
-                  ))
-                )}
-              </tbody>
-            </table>
-          </div>
+                  ) : (
+                    queueList.map((queue) => {
+                      const sqlTextFull = normalizeNullableField(queue.SQLText);
+                      const sqlArgsFull = normalizeNullableField(queue.SQLArgs);
+                      const lastError = normalizeNullableField(queue.LastError);
+
+                      return (
+                        <Fragment key={queue.QueueID}>
+                          <tr className="border-b border-border/60 hover:bg-muted/20">
+                            <td className="px-4 py-3 text-sm font-mono text-foreground">
+                              {queue.QueueID}
+                            </td>
+                            <td className="px-4 py-3">
+                              <p className="text-sm font-semibold text-foreground">
+                                {queue.Entity}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {queue.SQLText ? "Primary statement" : "-"}
+                              </p>
+                            </td>
+                            <td className="px-4 py-3">
+                              <span
+                                className={getStatusBadgeClasses(queue.Status)}
+                              >
+                                {prettyStatusLabel(queue.Status)}
+                              </span>
+                            </td>
+                            <td className="px-4 py-3">
+                              <p
+                                className="font-mono text-xs text-foreground/80 break-words"
+                                title={sqlTextFull || undefined}
+                              >
+                                {trimContent(sqlTextFull)}
+                              </p>
+                            </td>
+                            <td className="px-4 py-3">
+                              <p
+                                className="font-mono text-xs text-muted-foreground break-words"
+                                title={sqlArgsFull || undefined}
+                              >
+                                {trimContent(sqlArgsFull)}
+                              </p>
+                            </td>
+                            <td className="px-4 py-3 text-sm">
+                              {lastError ? (
+                                <p className="text-destructive font-medium">
+                                  Error: {trimContent(lastError, 80)}
+                                </p>
+                              ) : (
+                                <p className="text-emerald-500 font-medium">
+                                  No errors
+                                </p>
+                              )}
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Split statements: {queue.ExecSplit?.length || 0}
+                              </p>
+                            </td>
+                          </tr>
+                          {queue.ExecSplit && queue.ExecSplit.length > 0 && (
+                            <tr className="border-b border-border/50 bg-muted/20">
+                              <td colSpan={6} className="px-6 py-4">
+                                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+                                  Detail Split Statements
+                                </p>
+                                <div className="mt-3 grid gap-2 md:grid-cols-2">
+                                  {queue.ExecSplit.map((split, index) => {
+                                    const splitTextFull =
+                                      normalizeNullableField(split.SQLText);
+                                    const splitArgsFull =
+                                      normalizeNullableField(split.SQLArgs);
+
+                                    return (
+                                      <div
+                                        key={`${queue.QueueID}-${index}`}
+                                        className="rounded-md border border-border bg-background/80 p-3"
+                                      >
+                                        <div className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-wide text-muted-foreground">
+                                          <span>Step {index + 1}</span>
+                                          <span
+                                            className={getStatusBadgeClasses(
+                                              split.Status
+                                            )}
+                                          >
+                                            {prettyStatusLabel(split.Status)}
+                                          </span>
+                                        </div>
+                                        <p
+                                          className="mt-2 font-mono text-xs text-foreground break-words"
+                                          title={splitTextFull || undefined}
+                                        >
+                                          {trimContent(splitTextFull)}
+                                        </p>
+                                        {splitArgsFull && (
+                                          <p
+                                            className="mt-1 font-mono text-[11px] text-muted-foreground break-words"
+                                            title={splitArgsFull}
+                                          >
+                                            Args:{" "}
+                                            {trimContent(splitArgsFull, 80)}
+                                          </p>
+                                        )}
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </td>
+                            </tr>
+                          )}
+                        </Fragment>
+                      );
+                    })
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>

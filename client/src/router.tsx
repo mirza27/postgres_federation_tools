@@ -32,6 +32,7 @@ import {
   RunWorkerAction,
   StopWorkerAction,
 } from "./page/execution/woker-action";
+import { GetExecutionQueueListLoader } from "./page/execution/queue-loader";
 
 export const router = createBrowserRouter([
   {
@@ -153,6 +154,7 @@ export const router = createBrowserRouter([
           {
             path: DefaultPaths.EXECUTION_LOG.childPaths.LOGS.path,
             element: <ExecutionLogPage />,
+            loader: GetExecutionQueueListLoader,
           },
         ],
       },
