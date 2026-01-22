@@ -1,5 +1,5 @@
 {
-  "entity": "publication-&-country-to-publication",
+  "entity": "publication-&-country-&-book-to-publication",
   "sources": [
     { "alias": "p", "from": "publication" },
     {
@@ -8,6 +8,14 @@
       "join": {
         "fact_column": "pub_cntry",
         "dim_column": "cntry_id"
+      }
+    },
+    {
+      "alias": "b",
+      "from": "book",
+      "join": {
+        "fact_column": "pub_id",
+        "dim_column": "book_id"
       }
     }
   ],
@@ -25,7 +33,7 @@
     "place": { "from": "p.pub_loc" },
     "country": { "from": "c.cntry_name_en" },
     "year": { "from": "p.pub_year" },
-    "publicationtype_name": { "default": "PUBLICATION" },
+    "publicationtype_name": { "default": "BOOK" },
     "publisher_name": { "from": "p.pub_edit" }
   },
   "routing": {

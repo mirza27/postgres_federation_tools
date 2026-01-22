@@ -30,14 +30,9 @@ api:
 
 # Debezium Config
 conn-publication:
-	curl -X POST -H "Content-Type: application/json"   -d @connector-publication.json   http://localhost:8083/connectors
+	curl -X POST -H "Content-Type: application/json"   -d @internal/debezium/connector-publication.json   http://localhost:8083/connectors
 dis-publication:
 	curl -X DELETE http://localhost:8083/connectors/publication-connector
-
-conn-ojol:
-	curl -X POST -H "Content-Type: application/json"   -d @connector-ojol.json   http://localhost:8083/connectors
-dis-ojol:
-	curl -X DELETE http://localhost:8083/connectors/ojol-connector
 
 # pivotable 
 up-pivot:
@@ -60,7 +55,7 @@ drop-new-publication:
 
 add-old-publication:
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/up.sql
-	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/seed.sql
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/seed2.sql
 
 drop-old-publication:
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/down.sql
