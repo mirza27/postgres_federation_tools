@@ -48,10 +48,10 @@ pg_recvlogical -d new_ojol_db -U new_user --slot=db_sync_slot --start -o pretty-
 curl -X POST -H "Content-Type: application/json"   -d @debezium-connector.json   http://localhost:8083/connectors
 
 
-curl -X DELETE http://localhost:8083/connectors/new-db-connector
+curl -X DELETE http://localhost:8083/connectors/debezium-connector-testing
 
 
 - check status
-http://localhost:8083/connectors/new-db-connector/status
+http://localhost:8083/connectors/publication-connector/status
 http://localhost:8083/connectors?expand=status&expand=info%
 

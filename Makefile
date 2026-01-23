@@ -34,6 +34,13 @@ conn-publication:
 dis-publication:
 	curl -X DELETE http://localhost:8083/connectors/publication-connector
 
+#kafka
+reset-kafka:
+	docker stop debezium
+	docker exec -it kafka kafka-consumer-groups --bootstrap-server kafka:9092 --delete --group 1
+	docker exec -it kafka kafka-topics --bootstrap-server kafka:9092 --delete --topic '.*'
+	docker start debezium
+
 # pivotable 
 up-pivot:
 	docker exec -i pivot_db psql -U pivot_user -d pivot < ./internal/config/pivot_db.sql
@@ -53,6 +60,9 @@ add-new-publication:
 drop-new-publication:
 	docker exec -i new_publication psql -U new_user -d new_publication_db < ./migration/publication/new/down.sql
 
+empty-new-publication:
+	docker exec -i new_publication psql -U new_user -d new_publication_db < ./migration/publication/new/empty.sql
+
 add-old-publication:
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/up.sql
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/seed2.sql
@@ -60,6 +70,12 @@ add-old-publication:
 drop-old-publication:
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/down.sql
 
+empty-old-publication:
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/empty.sql
+
+pub-seed:
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/empty.sql
+	go run ./cmd/seeder/*.go
 
 # CHINOOK CASE
 add-new-chinook:
