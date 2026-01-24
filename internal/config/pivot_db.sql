@@ -71,6 +71,8 @@ create table if not exists _need_join (
   join_topic text not null,
   join_payload jsonb,
   join_fields jsonb,
+  attempts int not null default 0,
+  next_attempt_at timestamptz not null default now(),
   status text not null default 'pending',
   last_error text,
   locked_at timestamptz,
