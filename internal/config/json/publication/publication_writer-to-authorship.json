@@ -3,12 +3,17 @@
   "sources": [{ "alias": "pw", "from": "publication_writer" }],
   "target_table": "authorship",
   "key": {
-    "strategy": "natural",
-    "source": "pw.pub_id"
+    "strategy": "shared_key",
+    "source": "pw.pub_id",
+    "resolver": {
+      "type": "mapping_table",
+      "table": "_keymap_publication_writer-to-authorship"
+    }
   },
   "columns": {
     "code": {
-      "from": "$key"
+      "from": "$key",
+      "code": { "expr": "uuid()" }
     },
     "paper_doi": { "from": "pw.pub_id", "cast": "string" },
     "author_code": { "from": "pw.rese_id" },

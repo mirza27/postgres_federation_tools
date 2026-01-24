@@ -13,7 +13,7 @@
   "columns": {
     "code": {
       "from": "$key",
-      "expr": "random_number(1, 1000000000)"
+      "code": { "expr": "uuid()" }
     },
     "paper_doi": { "from": "pw.pub_id", "cast": "string" },
     "author_code": { "from": "pw.rese_id" },

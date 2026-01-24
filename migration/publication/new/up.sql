@@ -41,7 +41,7 @@ CREATE TABLE public.paper (
 );
 
 CREATE TABLE public.authorship (
-	code int8 NOT NULL,
+	code varchar NULL,
 	orderofauthor int8 NULL,
 	author_code int8 NULL,
 	paper_doi varchar NULL,
