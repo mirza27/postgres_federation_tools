@@ -19,12 +19,13 @@ import (
 // Worker joiner mengambil pekerjaan join pending, menunggu fragment lengkap,
 // lalu menulis baris eksekusi nyata ke _exec_queue.
 type Worker struct {
-	Pivot    PivotStore
-	Plan     *mapping.Planner
-	Proc     *pipeline.Processor
-	MaxRows  int
-	Interval time.Duration
-	WorkerID string
+	Pivot       PivotStore
+	Plan        *mapping.Planner
+	Proc        *pipeline.Processor
+	MaxRows     int
+	Interval    time.Duration
+	MaxAttempts int
+	WorkerID    string
 }
 
 type PivotStore interface {
@@ -33,16 +34,18 @@ type PivotStore interface {
 	FetchJoinFragments(ctx context.Context, entity, joinKey string, topics []string) (map[string]*kafka.DebeziumValue, bool, error)
 	MarkNeedJoinError(ctx context.Context, id int64, msg string) error
 	MarkNeedJoinDone(ctx context.Context, id int64) error
+	BackoffNeedJoin(ctx context.Context, id int64, delay time.Duration) error
 }
 
-func New(pivotRepo PivotStore, plan *mapping.Planner, maxRows, intervalMs int) *Worker {
+func New(pivotRepo PivotStore, plan *mapping.Planner, maxRows, intervalMs, maxAttempts int) *Worker {
 	return &Worker{
-		Pivot:    pivotRepo,
-		Plan:     plan,
-		Proc:     pipeline.NewProcessor(plan, pivotRepo),
-		MaxRows:  maxRows,
-		Interval: time.Duration(intervalMs) * time.Millisecond,
-		WorkerID: fmt.Sprintf("joiner-%s", uuid.NewString()),
+		Pivot:       pivotRepo,
+		Plan:        plan,
+		Proc:        pipeline.NewProcessor(plan, pivotRepo),
+		MaxRows:     maxRows,
+		Interval:    time.Duration(intervalMs) * time.Millisecond,
+		MaxAttempts: maxAttempts,
+		WorkerID:    fmt.Sprintf("joiner-%s", uuid.NewString()),
 	}
 }
 
@@ -171,7 +174,10 @@ func (w *Worker) handle(ctx context.Context, item pivot.NeedJoinItem) error {
 	}
 	if !complete {
 		util.Debug.Printf("joiner: join incomplete entity=%s joinKey=%s", item.Entity, item.JoinKey)
-		return nil
+		if w.MaxAttempts > 0 && item.Attempts+1 >= w.MaxAttempts {
+			return w.Pivot.MarkNeedJoinError(ctx, item.ID, "exceeded max join attempts")
+		}
+		return w.Pivot.BackoffNeedJoin(ctx, item.ID, w.Interval)
 	}
 
 	payloads := map[string]*kafka.DebeziumValue{

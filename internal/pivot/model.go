@@ -1,9 +1,9 @@
 package pivot
 
 import (
-    "time"
+	"time"
 
-    "github.com/google/uuid"
+	"github.com/google/uuid"
 )
 
 // Row merepresentasikan baris yang dibaca executor dari _exec_queue. Struktur
@@ -35,6 +35,8 @@ type NeedJoinItem struct {
 	JoinTopic   string
 	JoinPayload []byte
 	JoinFields  []byte
+	Attempts    int
+	NextAttempt time.Time
 	Status      string
 }
 

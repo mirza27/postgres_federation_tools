@@ -18,6 +18,14 @@ func pidFilePath() string {
 	return filepath.Join(os.TempDir(), "db_migrate_tool_worker_pids.json")
 }
 
+func logFile(name string) (*os.File, error) {
+	if err := os.MkdirAll("logs", 0755); err != nil {
+		return nil, err
+	}
+	path := filepath.Join("logs", fmt.Sprintf("%s.log", name))
+	return os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+}
+
 // runningCmds holds started commands in memory so the server can Wait() them
 var (
 	runningMu   sync.Mutex
@@ -125,6 +133,7 @@ func (server *Server) GetWorkerStatus(c *gin.Context) {
 }
 
 func (server *Server) RunWorker(c *gin.Context) {
+	fmt.Println("start at ", time.Now())
 	cmds := map[string][]string{
 		"parser":   {"go", "run", "./cmd/parser"},
 		"joiner":   {"go", "run", "./cmd/joiner"},
@@ -138,8 +147,14 @@ func (server *Server) RunWorker(c *gin.Context) {
 	workerStartErr := error(nil)
 	for name, argv := range cmds {
 		cmd := exec.Command(argv[0], argv[1:]...)
-		cmd.Stdout = os.Stdout
-		cmd.Stderr = os.Stderr
+		logfh, err := logFile(name)
+		if err != nil {
+			workerStartErr = fmt.Errorf("open log for %s: %w", name, err)
+			isAllRunning = false
+			break
+		}
+		cmd.Stdout = logfh
+		cmd.Stderr = logfh
 		cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 		if err := cmd.Start(); err != nil {
@@ -156,12 +171,13 @@ func (server *Server) RunWorker(c *gin.Context) {
 		runningMu.Unlock()
 
 		// spawn goroutine to Wait() and cleanup when process exits
-		go func(name string, cmd *exec.Cmd) {
+		go func(name string, cmd *exec.Cmd, logfh *os.File) {
 			_ = cmd.Wait()
+			_ = logfh.Close()
 			runningMu.Lock()
 			delete(runningCmds, name)
 			runningMu.Unlock()
-		}(name, cmd)
+		}(name, cmd, logfh)
 
 		// small delay so processes have time to initialize
 		time.Sleep(100 * time.Millisecond)

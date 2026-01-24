@@ -35,6 +35,7 @@ type Config struct {
 
 	BatchMaxRows        int    `mapstructure:"BATCH_MAX_ROWS"`
 	BatchMaxInterval    int    `mapstructure:"BATCH_MAX_INTERVAL"`
+	MaximumJoinAttempts int    `mapstructure:"MAX_JOIN_ATTEMPTS"`
 	KafkaBrokers        string `mapstructure:"KAFKA_BROKERS"`
 	KafkaGroupID        string `mapstructure:"KAFKA_GROUP_ID"`
 	KafkaCounsumerReset bool   `mapstructure:"KAFKA_CONSUMER_RESET"`

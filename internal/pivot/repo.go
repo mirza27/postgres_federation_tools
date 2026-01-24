@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"time"
 
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/util"
@@ -211,12 +212,13 @@ func (r *Repo) EnqueueNeedJoin(ctx context.Context, it NeedJoinItem) error {
 // FetchNeedJoin mengambil pekerjaan join pending untuk worker joiner.
 func (r *Repo) FetchNeedJoin(ctx context.Context, limit int) ([]NeedJoinItem, error) {
 	rows, err := r.DB.Query(ctx, `
-        select id, queue_id, entity, op, join_key, join_topic,
-               coalesce(join_payload,'{}'::jsonb), coalesce(join_fields,'{}'::jsonb), status
-        from _need_join
-        where status='pending'
-        order by created_at asc
-        limit $1`, limit)
+	 select id, queue_id, entity, op, join_key, join_topic,
+		 coalesce(join_payload,'{}'::jsonb), coalesce(join_fields,'{}'::jsonb),
+		 coalesce(attempts,0), coalesce(next_attempt_at, now()), status
+	 from _need_join
+	 where status='pending' and next_attempt_at <= now()
+	 order by attempts asc, created_at asc
+	 limit $1`, limit)
 	if err != nil {
 		return nil, err
 	}
@@ -225,29 +227,33 @@ func (r *Repo) FetchNeedJoin(ctx context.Context, limit int) ([]NeedJoinItem, er
 	var out []NeedJoinItem
 	for rows.Next() {
 		var (
-			id      int64
-			queueID uuid.UUID
-			entity  string
-			op      string
-			joinKey string
-			joinTopic string
+			id          int64
+			queueID     uuid.UUID
+			entity      string
+			op          string
+			joinKey     string
+			joinTopic   string
 			joinPayload []byte
-			joinFields []byte
-			status  string
+			joinFields  []byte
+			attempts    int
+			nextAttempt time.Time
+			status      string
 		)
-		if err := rows.Scan(&id, &queueID, &entity, &op, &joinKey, &joinTopic, &joinPayload, &joinFields, &status); err != nil {
+		if err := rows.Scan(&id, &queueID, &entity, &op, &joinKey, &joinTopic, &joinPayload, &joinFields, &attempts, &nextAttempt, &status); err != nil {
 			return nil, err
 		}
 		out = append(out, NeedJoinItem{
-			ID:            id,
-			QueueID:       queueID,
-			Entity:        entity,
-			Op:            op,
-			JoinKey:       joinKey,
-			JoinTopic:     joinTopic,
-			JoinPayload:   joinPayload,
-			JoinFields:    joinFields,
-			Status:        status,
+			ID:          id,
+			QueueID:     queueID,
+			Entity:      entity,
+			Op:          op,
+			JoinKey:     joinKey,
+			JoinTopic:   joinTopic,
+			JoinPayload: joinPayload,
+			JoinFields:  joinFields,
+			Attempts:    attempts,
+			NextAttempt: nextAttempt,
+			Status:      status,
 		})
 	}
 	return out, rows.Err()
@@ -270,6 +276,18 @@ func (r *Repo) MarkNeedJoinError(ctx context.Context, id int64, msg string) erro
         update _need_join
         set status='error', updated_at=now(), last_error=$2
         where id=$1`, id, msg)
+	return err
+}
+
+// BackoffNeedJoin menunda percobaan join berikutnya dengan interval tertentu.
+func (r *Repo) BackoffNeedJoin(ctx context.Context, id int64, delay time.Duration) error {
+	util.Debug.Printf("pivot: BackoffNeedJoin id=%d delay=%s", id, delay)
+	_, err := r.DB.Exec(ctx, `
+	update _need_join
+	set attempts = coalesce(attempts,0) + 1,
+	    next_attempt_at = now() + $2::interval,
+	    updated_at = now()
+	where id=$1`, id, delay)
 	return err
 }
 
@@ -476,13 +494,13 @@ func (r *Repo) FetchForChecker(ctx context.Context, limit int) ([]CheckerItem, e
 	var out []CheckerItem
 	for rows.Next() {
 		var (
-			id          int64
-			entity      string
-			needKeymap  bool
-			status      string
-			keymapID    pgtype.Int8
-			payload     []byte
-			queueID     uuid.UUID
+			id         int64
+			entity     string
+			needKeymap bool
+			status     string
+			keymapID   pgtype.Int8
+			payload    []byte
+			queueID    uuid.UUID
 		)
 
 		if err := rows.Scan(&id, &queueID, &entity, &needKeymap, &keymapID, &status, &payload); err != nil {

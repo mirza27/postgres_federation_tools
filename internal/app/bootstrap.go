@@ -65,6 +65,7 @@ var DefaultConfigKey = []string{
 	"MAPPING_PATH",
 	"BATCH_MAX_ROWS",
 	"BATCH_MAX_INTERVAL",
+	"MAX_JOIN_ATTEMPTS",
 	"KAFKA_BROKERS",
 	"KAFKA_GROUP_ID",
 	"KAFKA_CONSUMER_RESET",
@@ -99,6 +100,7 @@ func ApplyBaseConfig(config *config.Config, pivotRepo *pivot.Repo) (*config.Conf
 		"MAPPING_PATH":            config.MappingPath,
 		"BATCH_MAX_ROWS":          fmt.Sprintf("%d", config.BatchMaxRows),
 		"BATCH_MAX_INTERVAL":      fmt.Sprintf("%d", config.BatchMaxInterval),
+		"MAX_JOIN_ATTEMPTS":       fmt.Sprintf("%d", config.MaximumJoinAttempts),
 		"KAFKA_BROKERS":           config.KafkaBrokers,
 		"KAFKA_GROUP_ID":          config.KafkaGroupID,
 		"KAFKA_CONSUMER_RESET":    fmt.Sprintf("%t", config.KafkaCounsumerReset),
@@ -198,6 +200,8 @@ func applyConfigValue(cfg *config.Config, key, val string) {
 		cfg.BatchMaxRows = parseInt(val, cfg.BatchMaxRows)
 	case "BATCH_MAX_INTERVAL":
 		cfg.BatchMaxInterval = parseInt(val, cfg.BatchMaxInterval)
+	case "MAX_JOIN_ATTEMPTS":
+		cfg.MaximumJoinAttempts = parseInt(val, cfg.MaximumJoinAttempts)
 	case "KAFKA_BROKERS":
 		cfg.KafkaBrokers = val
 	case "KAFKA_GROUP_ID":

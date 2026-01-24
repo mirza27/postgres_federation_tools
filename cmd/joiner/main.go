@@ -42,7 +42,7 @@ func main() {
 	}
 
 	// make joiner worker
-	w := joiner.New(pivotRepo, plan, config.BatchMaxRows, config.BatchMaxInterval)
+	w := joiner.New(pivotRepo, plan, config.BatchMaxRows, config.BatchMaxInterval, config.MaximumJoinAttempts)
 	util.Info.Println("joiner: worker ready")
 
 	util.Info.Println("joiner: starting run loop")
