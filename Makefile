@@ -65,7 +65,7 @@ empty-new-publication:
 
 add-old-publication:
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/up.sql
-	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/seed2.sql
+	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/seed.sql
 
 drop-old-publication:
 	docker exec -i old_publication psql -U old_user -d old_publication_db < ./migration/publication/old/down.sql

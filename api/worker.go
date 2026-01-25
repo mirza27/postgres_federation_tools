@@ -23,7 +23,7 @@ func logFile(name string) (*os.File, error) {
 		return nil, err
 	}
 	path := filepath.Join("logs", fmt.Sprintf("%s.log", name))
-	return os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0644)
+	return os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
 }
 
 // runningCmds holds started commands in memory so the server can Wait() them
