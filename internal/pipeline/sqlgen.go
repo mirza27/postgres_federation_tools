@@ -1,6 +1,7 @@
 package pipeline
 
 import (
+	"db_migrate_server/internal/cast"
 	"db_migrate_server/internal/expr"
 	"db_migrate_server/internal/kafka"
 	"db_migrate_server/internal/mapping"
@@ -43,12 +44,20 @@ func evalColumns(ent mapping.Entity, key string, hasKey bool, payload map[string
 					util.Debug.Printf("sqlgen: skip column=%s entity=%s because key unavailable", colName, ent.Entity)
 					continue
 				}
+			} else {
+				value = key
 			}
-			value = key
 		case spec.From != "":
 			value = firstAfterField(payload, spec.From)
 		default:
 			value = spec.Default
+		}
+		value, err = cast.Value(spec.Cast, value)
+		if err != nil {
+			return cols, vals, fmt.Errorf("entity %s column %s: %w", ent.Entity, colName, err)
+		}
+		if spec.Cast != "" {
+			util.Debug.Printf("sqlgen: cast column=%s entity=%s split=%t cast=%s -> %v", colName, ent.Entity, usePlaceholder, spec.Cast, value)
 		}
 		cols = append(cols, colName)
 		vals = append(vals, value)

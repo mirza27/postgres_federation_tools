@@ -450,6 +450,9 @@ func (p *Processor) buildColumns(ent mapping.Entity, key string, hasKey bool, pa
 		if err != nil {
 			return cols, vals, sets, nil, fmt.Errorf("entity %s column %s: %w", ent.Entity, colName, err)
 		}
+		if spec.Cast != "" {
+			util.Debug.Printf("processor: cast column=%s entity=%s cast=%s -> %v", colName, ent.Entity, spec.Cast, value)
+		}
 
 		cols = append(cols, colName)
 		vals = append(vals, value)
