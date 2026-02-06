@@ -49,3 +49,27 @@ CREATE TABLE public.authorship (
 	CONSTRAINT authorship_fk FOREIGN KEY (author_code) REFERENCES public.author(code),
 	CONSTRAINT authorship__fk_2 FOREIGN KEY (paper_doi) REFERENCES public.paper(doi)
 );
+
+
+CREATE SEQUENCE public.publication_code_seq
+	AS integer
+	START WITH 1
+	INCREMENT BY 1
+	NO MINVALUE
+	NO MAXVALUE
+	CACHE 1;
+
+ALTER TABLE public.publication
+ALTER COLUMN code SET DEFAULT nextval('public.publication_code_seq'::regclass);
+
+
+CREATE SEQUENCE public.paper_doi_seq
+	AS integer
+	START WITH 1
+	INCREMENT BY 1
+	NO MINVALUE
+	NO MAXVALUE
+	CACHE 1;
+
+ALTER TABLE public.paper
+ALTER COLUMN doi SET DEFAULT nextval('public.paper_doi_seq'::regclass);
