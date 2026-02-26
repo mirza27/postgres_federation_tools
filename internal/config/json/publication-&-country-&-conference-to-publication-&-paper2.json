@@ -1,5 +1,5 @@
 {
-  "entity": "publication-&-country-&-journal-to-publication-&-paper",
+  "entity": "publication-&-country-&-conference-to-publication-&-paper2",
   "sources": [
     { "alias": "p", "from": "publication" },
     {
@@ -11,43 +11,43 @@
       }
     },
     {
-      "alias": "j",
-      "from": "journal",
+      "alias": "f",
+      "from": "conference",
       "join": {
         "fact_column": "pub_id",
-        "dim_column": "jrnl_id"
+        "dim_column": "conf_id"
       }
     }
   ],
   "target_table": "publication",
   "key": {
-    "strategy": "natural",
-    "source": "p.pub_id"
+    "strategy": "shared_key",
+    "source": "p.pub_id",
+    "resolver": {
+      "type": "mapping_table",
+      "table": "_keymap_publication-&-country-&-conference-to-publication-&-paper2"
+    }
   },
   "columns": {
     "code": {
-      "from": "$key",
-      "cast": "integer"
+      "from": "$key"
     },
-    "title": { "from": "j.jrnl_journ_title" },
+    "title": { "from": "f.conf_name" },
     "place": { "from": "p.pub_loc" },
     "country": { "from": "c.cntry_name_en" },
     "year": { "from": "p.pub_year" },
     "publisher_name": { "from": "p.pub_edit" },
-    "publicationtype_name": { "default": "JOURNAL" }
+    "publicationtype_name": { "default": "CONFERENCE" }
   },
   "split_table": [
     {
       "table_name": "paper",
       "columns": {
-        "doi": {
-          "from": "$key",
-          "cast": "integer"
-        },
-        "title": { "from": "j.jrnl_journ_title" },
-        "startpage": { "from": "j.jrnl_start_page" },
-        "endpage": { "from": "j.jrnl_end_page" },
-        "publication_code": { "from": "$key", "cast": "integer" }
+        "doi": { "from": "p.pub_id" },
+        "title": { "from": "p.pub_title" },
+        "startpage": { "from": "f.conf_start_page" },
+        "endpage": { "from": "f.conf_end_page" },
+        "publication_code": { "from": "$key" }
       }
     }
   ],

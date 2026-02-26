@@ -21,13 +21,16 @@
   ],
   "target_table": "publication",
   "key": {
-    "strategy": "natural",
-    "source": "p.pub_id"
+    "strategy": "shared_key",
+    "source": "p.pub_id",
+    "resolver": {
+      "type": "mapping_table",
+      "table": "_keymap_publication-&-country-&-book-to-publication"
+    }
   },
   "columns": {
     "code": {
-      "from": "$key",
-      "cast": "integer"
+      "from": "$key"
     },
     "title": { "from": "p.pub_title" },
     "place": { "from": "p.pub_loc" },
