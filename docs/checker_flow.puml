@@ -1,44 +1,30 @@
 @startuml CheckerFlow
-title Checker Worker Flow
+title Checker Worker
 
 start
-:Loop every interval;
-:Fetch pending rows from _exec_queue;
-if (Rows found?) then (yes)
   repeat
-    :Select next row;
-    if (need_join == true?) then (yes)
-      :Deserialize join_payload (fact);
-      :Lookup entity in planner;
-      :Fetch join fragments for join_key\n(from _join_map_topic) for dim topics;
-      if (Fragments complete?) then (yes)
-        :Merge fact + dim payloads;
-        :Generate SQL via Processor.planAndEnqueue;\n(enqueues new ready job);
-        :Mark placeholder done;
-      else (no)
-        :Skip (wait for next tick);
-      endif
-    else (no join)
-      if (need_keymap == false?) then (yes)
-        :Mark status = ready;
-      else (need keymap)
-        :Deserialize keymap_payload;
-        :Ensure map_name & src_key present;
+:Get multiple rows in _exec_queue table;
+:Take One Row;
+    
+      :Parse fact payload;
+      :Find entity in planner;
+      :Get dim fragments for join_key\n(from _join_map_topic);
+    
+      if (need_keymap?) then (yes)
+        :Parse keymap_payload;
+        :Ensure map_name and src_key exist;
         if (Invalid payload?) then (yes)
-          :Mark queue row error;
-        else (no)
-          :Call EnsureKeymapRequest(queue_id, payload);
-          if (DB error?) then (yes)
-            :Mark queue row error;
-          else (no)
-            :Update _exec_queue row\nset keymap_id, need_keymap=true,\nstatus=ready;
-          endif
+          :Mark row error;
+        else (ok)
+          :Ensure keymap request exists\nin _keymap_generic table;
+          :Attach keymap_id, mark ready;
         endif
+      else (no keymap)
+        :Mark row ready;
       endif
-    endif
-  repeat while (More rows?)
-else (no)
-  :Sleep until next tick;
-endif
+    
+  repeat while (Next Batch)
 
+stop
 @enduml
+  :Sleep until next tick;

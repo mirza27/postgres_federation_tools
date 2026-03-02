@@ -1,48 +1,33 @@
 @startuml ParserFlow
-title Parser Worker Flow
+title Parser Worker
 
 start
-:Receive Kafka event;
-:Lookup matching entities for event topic;
-if (Entities found?) then (yes)
-  repeat
-    :Select next entity;
-    if (Entity multi-topic?) then (yes)
-      :Derive join_key (join_key field or join expr);\nDerive source_key (key.source or fallback join_key);
-      if (Event topic == fact topic?) then (yes)
-        :Marshal payload fact;
-        :Enqueue placeholder into _exec_queue\nneed_join=true, join_key/source_key,\njoin_payload (no SQL yet);
-      else (dim)
-        :Store fragment in _join_map_topic\n(join_key, topic, source_key, payload);
-      endif
-      :Skip to next entity;
-    else (single-topic)
-      :Wrap payload as single-topic set;
-
-      :Resolve key based on mapping strategy;
-      if (Key requires keymap lookup?) then (generate request)
-        :Prepare KeymapRequest (map_name, src_key, columns, tables);
-        :Mark job as need_keymap;
-      else (existing)
-        :Use resolved key value;
-      endif
-
-      :Build column/value arrays from mapping;
-      :Determine route (insert/update) from event op;
-      if (Route == update and match key missing?) then (error)
-        :Log & skip entity;
-      else (ok)
-        :Compose SQL statement;
-        if (Need keymap and target column known?) then (yes)
-          :Append RETURNING clause;
+repeat
+:Receive Kafka event\nconsist topic & payload;
+if (\nCheck the event\nmatch to entities?\n) then (yes)
+    :Get entity mapping;
+    if (Check fact event condition passes?) then (yes)
+      if (Entity needs join?) then (yes)
+        if (Event is fact topic?) then (yes, fact event)
+          :Store event payload join and\nentity datain _need_join table;
+        else (no, dim topic)
+          :Store event payload\nin _join_map table;
+          :Store event payload\nin _join_map_topic table;
         endif
-        :Enqueue job into _exec_queue\n(status = pending,\nkeymap metadata, args JSON);
+      else (no)
+        :Enqueue SQL job to _exec_queue\n(need_keymap? returning? args JSON);
+        if (Entity has split tables?) then (yes)
+          :Enqueue split inserts\nlinked to queue_id;
+        endif
       endif
+    else (no)
+      :Skip entity;
     endif
-  repeat while (More entities?)
 else (no)
-  :Log no matching entity;
+  :No entity matched;
+  :Skip to next event;
 endif
+repeat while (Next Event)
 
 stop
 @enduml

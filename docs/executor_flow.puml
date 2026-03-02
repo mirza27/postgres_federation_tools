@@ -1,46 +1,27 @@
 @startuml ExecutorFlow
-title Executor Worker Flow
+title Executor Worker
 
 start
-:Loop every interval;
-:Fetch ready rows from _exec_queue;
-if (Rows found?) then (yes)
-  :Begin target DB transaction;
   repeat
-    :Select next row;
-    :Mark row status = executing\n(locked_by, locked_at);
-    :Deserialize SQL args;
-    if (Deserialization failed?) then (yes)
-      :Mark row error;\n(if keymap_id) mark keymap error;
-    else (no)
-      if (need_keymap && returning_cols not empty?) then (yes)
-        :Execute statement with QueryRow;
-        if (Execution failed?) then (yes)
-          :Mark row error;\n(if keymap_id) mark keymap error;
-        else (no)
-          :Capture returning key;
-          if (keymap_id present?) then (yes)
-            :Fulfill keymap (set tgt_key);
-          endif
+:Fetch multiple ready rows from _exec_queue;
+  :Begin target DB transaction;
+    :Read a row;
+      if (Need keymap and has RETURNING?) then (yes)
+        :Run QueryRow;
+        if (SQL failed?) then (yes)
+          :Mark row error;\n(if keymap) mark keymap error;
+        else (ok)
+          :Capture returning key and fulfill keymap;
           :Mark row done;
         endif
-      else (no)
-        :Execute statement with Exec;
-        if (Execution failed?) then (yes)
+      else (no keymap return)
+        :Run Exec;
+        if (SQL failed?) then (yes)
           :Mark row error;
-        else (no)
+        else (ok)
           :Mark row done;
         endif
       endif
-    endif
-  repeat while (More rows?)
-  if (Any success?) then (yes)
-    :Commit transaction;
-  else (no)
-    :Rollback transaction;
-  endif
-else (no)
-  :Sleep until next tick;
-endif
+  repeat while (next batch)
 
 @enduml

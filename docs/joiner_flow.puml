@@ -1,0 +1,24 @@
+@startuml JoinerFlow
+title Joiner Worker
+
+start
+  repeat
+:Get multiple rows in _need_join table;
+    :Take one item (entity, join_key, topic, payload);
+    :List expected event topics (fact + dims);
+    :Find dim topics (expected minus fact topic);
+    :Fetch dim fragments for join_key\nfrom _join_map_topic table\nseparate by '|';
+      if (All dims events fragment present?) then (yes)
+        :Merge fact and dim payloads;
+        :Build and SQL columns in _exec_queue table;
+        :Mark placeholder done;
+      else (inclomplete)
+        if (Max attempts reached?) then (yes)
+          :Mark placeholder error;
+        else (wait)
+          :Backoff and retry later;
+        endif
+      endif
+  repeat while (Next batch)
+stop
+@enduml
