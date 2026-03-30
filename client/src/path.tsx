@@ -27,10 +27,14 @@ export const DefaultPaths = {
         path: "runner",
         pathname: "Runner",
       },
-      LOGS: {
+      LATEST_LOGS: {
         path: "logs",
-        pathname: "Logs",
+        pathname: "Latest Logs",
       },
+      HISTORY_LOGS: {
+        path: "history",
+        pathname: "History Logs",
+      }
     },
   },
 };

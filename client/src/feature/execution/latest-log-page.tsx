@@ -8,14 +8,8 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
-import type { ExecutionQueueList } from "./queue-loader";
 import { useLoaderData, useRevalidator } from "react-router-dom";
-
-type ExecutionQueueLoaderResponse = {
-  ok: boolean;
-  data: ExecutionQueueList[] | null;
-  message?: string;
-};
+import type { QueueLogLoaderData } from "./queue-loader";
 
 const statusPalette: Record<string, string> = {
   success: "border-emerald-400/30 bg-emerald-500/10 text-emerald-500",
@@ -70,8 +64,8 @@ const trimContent = (value: unknown, max = 140) => {
   return normalized.length > max ? `${normalized.slice(0, max)}…` : normalized;
 };
 
-export function ExecutionLogPage() {
-  const loaderData = useLoaderData() as ExecutionQueueLoaderResponse;
+export function LatestQueueLogPage() {
+  const loaderData = useLoaderData() as QueueLogLoaderData;
   const queueList = loaderData?.data ?? [];
   const { state: revalidatorState, revalidate } = useRevalidator();
   const isRefreshing = revalidatorState !== "idle";
@@ -106,7 +100,7 @@ export function ExecutionLogPage() {
             </button>
             <div>
               <h1 className="text-2xl font-semibold text-foreground">
-                Execution Log Queue
+                Latest Log Queue
               </h1>
               <p className="text-sm text-muted-foreground">
                 Inspect last runned execution logs and their statuses.
@@ -115,55 +109,6 @@ export function ExecutionLogPage() {
           </div>
         </div>
       </div>
-
-      {/* Filters */}
-      {/* <div className="border-b border-border px-6 py-4">
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="text-xs font-medium text-foreground block mb-1">
-              Entity
-            </label>
-            <Input
-              placeholder="Filter by entity..."
-              value={filters.entity}
-              onChange={(e) =>
-                setFilters({ ...filters, entity: e.target.value })
-              }
-              className="bg-input border border-border text-foreground text-sm"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="text-xs font-medium text-foreground block mb-1">
-              Status
-            </label>
-            <select
-              value={filters.status}
-              onChange={(e) =>
-                setFilters({ ...filters, status: e.target.value })
-              }
-              className="w-full px-3 py-1.5 rounded-md bg-input border border-border text-foreground text-sm"
-            >
-              <option>All</option>
-              <option>Success</option>
-              <option>Error</option>
-            </select>
-          </div>
-          <div className="flex-1">
-            <label className="text-xs font-medium text-foreground block mb-1">
-              Time Range
-            </label>
-            <Input
-              type="text"
-              placeholder="Filter by time..."
-              value={filters.timeRange}
-              onChange={(e) =>
-                setFilters({ ...filters, timeRange: e.target.value })
-              }
-              className="bg-input border border-border text-foreground text-sm"
-            />
-          </div>
-        </div>
-      </div> */}
 
       {/* Table */}
       <div className="flex-1 overflow-auto px-6 py-4">

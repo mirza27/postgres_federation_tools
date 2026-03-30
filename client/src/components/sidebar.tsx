@@ -2,7 +2,7 @@ import { ChevronDown, Database, Settings, FileInput } from "lucide-react";
 import { useNavigate, useLocation, useRouteLoaderData } from "react-router-dom";
 import { DefaultPaths } from "../path";
 import clsx from "clsx";
-import type { EntityListDataResponse } from "@/page/entity-json/entity-loader";
+import type { EntityListDataResponse } from "@/feature/entity-json/entity-loader";
 
 export function Sidebar() {
   const navigate = useNavigate();
