@@ -6,6 +6,36 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type GetExecutionQueueListRequest struct {
+	Limit         int      `form:"limit" binding:"required"`
+	Page          int      `form:"page" binding:"required"`
+	SearchSQLText string   `form:"search.sql_text"`
+	SearchSQLArg  string   `form:"search.sql_arg"`
+	FilterStatus  []string `form:"filter.status"`
+	FilterEntity  []string `form:"filter.entity"`
+}
+
+func (server *Server) GetExecutionQueueList(c *gin.Context) {
+	var req GetExecutionQueueListRequest
+	err := c.ShouldBindQuery(&req)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	queueList, err := server.PivotDB.GetExecutionQueueList(req.Limit, req.Page, req.SearchSQLText, req.SearchSQLArg, req.FilterStatus, req.FilterEntity)
+	if err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"data":    queueList,
+		"status":  "success",
+		"message": "Successfully retrieved execution queue list",
+	})
+}
+
 type GetProgressRequest struct {
 	Limit int `form:"limit" binding:"required"`
 }

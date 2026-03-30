@@ -3,6 +3,9 @@ package pivot
 import (
 	"context"
 	"database/sql"
+	"db_migrate_server/internal/util"
+	"fmt"
+	"strings"
 
 	"github.com/google/uuid"
 )
@@ -21,6 +24,99 @@ type _ExecQueue struct {
 	Status    string
 	ExecSplit []_ExecSplit
 	LastError sql.NullString
+}
+
+func (r *Repo) GetExecutionQueueList(limit int, page int, searchSQLText string, searchSQLArg string, filterStatus []string, filterEntity []string) ([]_ExecQueue, error) {
+	ctx := context.Background()
+
+	query := `SELECT DISTINCT q.queue_id, q.entity, q.sql_text, q.sql_args, q.status, q.last_error FROM _exec_queue q`
+	args := []interface{}{}
+	argIndex := 1
+
+	// If search is provided, add LEFT JOIN with _exec_split
+	if searchSQLText != "" || searchSQLArg != "" {
+		query += ` LEFT JOIN _exec_split s ON q.queue_id = s.queue_id`
+	}
+
+	query += ` WHERE 1=1`
+
+	// Filter by search sql_text (search in both queue and split)
+	if searchSQLText != "" {
+		query += fmt.Sprintf(" AND (q.sql_text ILIKE $%d OR s.sql_text ILIKE $%d)", argIndex, argIndex)
+		args = append(args, "%"+searchSQLText+"%")
+		argIndex++
+	}
+
+	// Filter by search value (search in both queue and split)
+	if searchSQLArg != "" {
+		query += fmt.Sprintf(" AND (q.sql_args::text ILIKE $%d OR s.sql_args::text ILIKE $%d)", argIndex, argIndex)
+		args = append(args, "%"+searchSQLArg+"%")
+		argIndex++
+	}
+
+	// Filter by status
+	if len(filterStatus) > 0 {
+		placeholders := []string{}
+		for _, status := range filterStatus {
+			placeholders = append(placeholders, fmt.Sprintf("$%d", argIndex))
+			args = append(args, status)
+			argIndex++
+		}
+		query += " AND q.status IN (" + strings.Join(placeholders, ",") + ")"
+	}
+
+	// Filter by entity
+	if len(filterEntity) > 0 {
+		placeholders := []string{}
+		for _, entity := range filterEntity {
+			placeholders = append(placeholders, fmt.Sprintf("$%d", argIndex))
+			args = append(args, entity)
+			argIndex++
+		}
+		query += " AND q.entity IN (" + strings.Join(placeholders, ",") + ")"
+	}
+
+	// Add pagination
+	offset := (page - 1) * limit
+	query += fmt.Sprintf(" LIMIT $%d OFFSET $%d", argIndex, argIndex+1)
+	args = append(args, limit, offset)
+
+	util.Debug.Printf("GetExecutionQueueList: query=%s args=%v", query, args)
+
+	// Execute query
+	rows, err := r.DB.Query(ctx, query, args...)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var out []_ExecQueue
+	for rows.Next() {
+		var q _ExecQueue
+		if scanErr := rows.Scan(&q.QueueID, &q.Entity, &q.SQLText, &q.SQLArgs, &q.Status, &q.LastError); scanErr != nil {
+			continue
+		}
+
+		// Fetch splits for this queue
+		srows, serr := r.DB.Query(ctx, `
+			select sql_text, sql_args, status
+			from _exec_split where queue_id=$1
+			order by created_at asc`, q.QueueID)
+		if serr == nil {
+			for srows.Next() {
+				var s _ExecSplit
+				if scanErr := srows.Scan(&s.SQLText, &s.SQLArgs, &s.Status); scanErr != nil {
+					continue
+				}
+				q.ExecSplit = append(q.ExecSplit, s)
+			}
+			srows.Close()
+		}
+
+		out = append(out, q)
+	}
+
+	return out, nil
 }
 
 func (r *Repo) GetLastUpdatedQueueList(limit int) ([]_ExecQueue, error) {

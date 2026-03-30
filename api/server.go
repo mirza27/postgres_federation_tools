@@ -64,7 +64,8 @@ func (server *Server) applyRoutes() {
 	// kafka debezium connector
 	server.Engine.GET("/connector", server.CheckAndCreateDebeziumConnector)
 
-	// progress
+	// progress / execution queue
+	server.Engine.GET("/progress/queue/list", server.GetExecutionQueueList)
 	server.Engine.GET("/progress", server.GetProgress)
 	server.Engine.GET("/progress/summary", server.GetProgressSummary)
 
