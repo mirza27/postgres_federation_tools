@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
 import { useLoaderData, useRevalidator } from "react-router-dom";
-import type { QueueLogLoaderData } from "./queue-loader";
+import type { QueueLogLoaderData } from "../services/queue";
 
 const statusPalette: Record<string, string> = {
   success: "border-emerald-400/30 bg-emerald-500/10 text-emerald-500",

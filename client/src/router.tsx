@@ -1,4 +1,4 @@
-import { LatestQueueLogPage } from "@/feature/execution/latest-log-page";
+import { LatestQueueLogPage } from "@/feature/execution/page/latest-log-page";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import { DefaultPaths } from "./path";
 import { ConnectionLayout } from "./layout/connection-layout";
@@ -26,14 +26,11 @@ import {
   UpdateEntity,
 } from "./feature/entity-json/entity-action";
 import { ExecutionLayout } from "./layout/execution-layout";
-import { RunnerPage } from "./feature/execution/runner-page";
-import { CheckWorkerStatus } from "./feature/execution/worker-loader";
-import {
-  RunWorkerAction,
-  StopWorkerAction,
-} from "./feature/execution/woker-action";
-import { GetHistoryQueueLogsLoader, GetLatestQueueLogsLoader } from "./feature/execution/queue-loader";
-import { HistoryLogPage } from "./feature/execution/history-log-page";
+import { RunnerPage } from "./feature/execution/page/runner-page";
+import { checkWorkerStatus, runWorker, stopWorker } from "./feature/execution/services/worker";
+import { HistoryLogPage } from "./feature/execution/page/history-log-page";
+import { getHistoryQueueLogs, getLatestQueueLogs } from "./feature/execution/services/queue";
+import { getEntityFilters } from "./feature/execution/services/entity";
 
 export const router = createBrowserRouter([
   {
@@ -43,7 +40,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <Navigate
+          <Navigate 
             to={
               DefaultPaths.CONNECTION_PAGE.path +
               "/" +
@@ -140,27 +137,33 @@ export const router = createBrowserRouter([
           {
             path: DefaultPaths.EXECUTION_LOG.childPaths.RUNNER.path,
             element: <RunnerPage />,
-            loader: CheckWorkerStatus,
+            loader: checkWorkerStatus,
             children: [
               {
                 path: "run-worker",
-                action: RunWorkerAction,
+                action: runWorker,
               },
               {
                 path: "stop-worker",
-                action: StopWorkerAction,
+                action: stopWorker,
               },
             ],
           },
           {
             path: DefaultPaths.EXECUTION_LOG.childPaths.LATEST_LOGS.path,
             element: <LatestQueueLogPage />,
-            loader: GetLatestQueueLogsLoader,
+            loader: getLatestQueueLogs,
           },
           {
             path: DefaultPaths.EXECUTION_LOG.childPaths.HISTORY_LOGS.path,
             element: <HistoryLogPage />,
-            loader: GetHistoryQueueLogsLoader,
+            loader: getHistoryQueueLogs,
+            children: [
+              {
+                path: "entity-filters",
+                loader: getEntityFilters,
+              },
+            ],
           },
         ],
       },

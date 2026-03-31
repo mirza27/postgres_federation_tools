@@ -1,3 +1,5 @@
+import type { LoaderFunctionArgs } from "react-router-dom";
+
 const apiUrl = import.meta.env.VITE_API_URL;
 
 interface ExecutionQueueList {
@@ -20,7 +22,7 @@ export type QueueLogLoaderData = {
   message?: string;
 };
 
-export async function GetLatestQueueLogsLoader() {
+export async function getLatestQueueLogs() {
   try {
     const res = await fetch(`${apiUrl}/progress?limit=20`);
     if (!res.ok) {
@@ -56,9 +58,40 @@ export async function GetLatestQueueLogsLoader() {
   }
 }
 
-export async function GetHistoryQueueLogsLoader() {
+export async function getHistoryQueueLogs({ request }: LoaderFunctionArgs) {
   try {
-    const res = await fetch(`${apiUrl}/progress?limit=20`);
+    const url = new URL(request.url);
+    const queryParams = new URLSearchParams();
+
+    const entity = url.searchParams.get("entity");
+    const status = url.searchParams.get("status");
+    const sqlText = url.searchParams.get("sql_text");
+    const sqlArgs = url.searchParams.get("sql_args");
+    const page = url.searchParams.get("page");
+    const limit = url.searchParams.get("limit");
+
+    if (entity) queryParams.set("filter.entity", entity);
+    if (status) queryParams.set("filter.status", status);
+    if (sqlText) queryParams.set("search.sql_text", sqlText);
+    if (sqlArgs) queryParams.set("search.sql_args", sqlArgs);
+
+    if (page) {
+      queryParams.set("page", page);
+    } else {
+      queryParams.set("page", "1");
+    }
+    if (limit) {
+      queryParams.set("limit", limit);
+    } else {
+      queryParams.set("limit", "20");
+    }
+
+    const queryString = queryParams.toString();
+    const endpoint = queryString
+      ? `${apiUrl}/progress/queue/list?${queryString}`
+      : `${apiUrl}/progress/queue/list`;
+
+    const res = await fetch(endpoint);
     if (!res.ok) {
       return {
         data: null,

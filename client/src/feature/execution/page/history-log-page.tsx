@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import {
   Card,
   CardContent,
@@ -6,12 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ChevronRight, Loader2, RefreshCw, AlertTriangle } from "lucide-react";
-import { useLoaderData, useRevalidator } from "react-router-dom";
-import type { QueueLogLoaderData } from "./queue-loader";
-import { Input } from "@/components/ui/input";
-
+import { ChevronRight } from "lucide-react";
+import {
+  useLoaderData,
+  useSearchParams,
+} from "react-router-dom";
+import type { QueueLogLoaderData } from "../services/queue";
+import { HistoryLogFilters } from "../components/history-log-filters";
 
 const statusPalette: Record<string, string> = {
   success: "border-emerald-400/30 bg-emerald-500/10 text-emerald-500",
@@ -68,25 +69,8 @@ const trimContent = (value: unknown, max = 140) => {
 
 export function HistoryLogPage() {
   const loaderData = useLoaderData() as QueueLogLoaderData;
+  const [searchParams, setSearchParams] = useSearchParams();
   const queueList = loaderData?.data ?? [];
-  const { state: revalidatorState, revalidate } = useRevalidator();
-  const isRefreshing = revalidatorState !== "idle";
-  const [lastUpdated, setLastUpdated] = useState(() => new Date());
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setLastUpdated(new Date());
-  }, [loaderData?.data]);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      revalidate();
-    }, 10000);
-
-    return () => clearInterval(interval);
-  }, [revalidate]);
-
-  const lastUpdatedLabel = lastUpdated.toLocaleTimeString();
 
   return (
     <div className="h-screen w-full flex flex-col bg-background">
@@ -105,58 +89,9 @@ export function HistoryLogPage() {
                 History Log Queue
               </h1>
               <p className="text-sm text-muted-foreground">
-                Inspect last runned execution logs and their statuses.
+                Inspect each recorded execution queue with detailed information.
               </p>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Filters */}
-      <div className="border-b border-border px-6 py-4">
-        <div className="flex gap-4">
-          <div className="flex-1">
-            <label className="text-xs font-medium text-foreground block mb-1">
-              Entity
-            </label>
-            <Input
-              placeholder="Filter by entity..."
-            //   value={filters.entity}
-            //   onChange={(e) =>
-            //     setFilters({ ...filters, entity: e.target.value })
-            //   }
-              className="bg-input border border-border text-foreground text-sm"
-            />
-          </div>
-          <div className="flex-1">
-            <label className="text-xs font-medium text-foreground block mb-1">
-              Status
-            </label>
-            <select
-            //   value={filters.status}
-            //   onChange={(e) =>
-            //     setFilters({ ...filters, status: e.target.value })
-            //   }
-              className="w-full px-3 py-1.5 rounded-md bg-input border border-border text-foreground text-sm"
-            >
-              <option>All</option>
-              <option>Success</option>
-              <option>Error</option>
-            </select>
-          </div>
-          <div className="flex-1">
-            <label className="text-xs font-medium text-foreground block mb-1">
-              Time Range
-            </label>
-            <Input
-              type="text"
-              placeholder="Filter by time..."
-            //   value={filters.timeRange}
-            //   onChange={(e) =>
-            //     setFilters({ ...filters, timeRange: e.target.value })
-            //   }
-              className="bg-input border border-border text-foreground text-sm"
-            />
           </div>
         </div>
       </div>
@@ -167,39 +102,16 @@ export function HistoryLogPage() {
           <CardHeader>
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div>
-                <CardTitle className="text-2xl">Execution Queue</CardTitle>
+                <CardTitle className="text-2xl">History Log Queue</CardTitle>
                 <CardDescription className="text-base">
-                  Live feed of migration jobs. Data auto-refreshes every 10
-                  seconds.
+                  Inspect each recorded execution queue with detailed
+                  information. Use filters to narrow down the logs based on
+                  entity-name, status, and sql or argument statement content.
                 </CardDescription>
-                <p className="text-xs text-muted-foreground mt-2">
-                  Menampilkan {queueList.length} antrean aktif. Terakhir update:
-                  <span className="font-semibold text-foreground ml-1">
-                    {lastUpdatedLabel}
-                  </span>
-                </p>
-              </div>
-              <div className="flex items-center gap-3">
-                {!loaderData?.ok && (
-                  <div className="flex items-center gap-1 rounded-md border border-destructive/40 bg-destructive/10 px-3 py-2 text-destructive text-xs">
-                    <AlertTriangle className="h-3.5 w-3.5" />
-                    {loaderData?.message || "Gagal memuat data"}
-                  </div>
-                )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  disabled={isRefreshing}
-                  onClick={() => revalidate()}
-                  className="min-w-[120px]"
-                >
-                  {isRefreshing ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  ) : (
-                    <RefreshCw className="mr-2 h-4 w-4" />
-                  )}
-                  Refresh
-                </Button>
+                <HistoryLogFilters
+                  searchParams={searchParams}
+                  setSearchParams={setSearchParams}
+                />
               </div>
             </div>
           </CardHeader>
@@ -306,7 +218,7 @@ export function HistoryLogPage() {
                                           <span>Step {index + 1}</span>
                                           <span
                                             className={getStatusBadgeClasses(
-                                              split.Status
+                                              split.Status,
                                             )}
                                           >
                                             {prettyStatusLabel(split.Status)}
