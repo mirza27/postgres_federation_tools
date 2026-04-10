@@ -4,6 +4,7 @@ import (
 	"context"
 	"db_migrate_server/internal/pivot"
 	"fmt"
+	"log"
 	"strconv"
 
 	"net/http"
@@ -246,4 +247,232 @@ func (server *Server) SaveTargetDatabase(c *gin.Context) {
 		Status:  "success",
 		Message: "Target database saved successfully",
 	})
+}
+
+func (server *Server) GetSourceTables(c *gin.Context) {
+
+	dbType := server.Config.TargetDatabaseType
+	user := server.Config.TargetDatabaseUser
+	password := server.Config.TargetDatabasePass
+	host := server.Config.TargetDatabaseHost
+	port := server.Config.TargetDatabasePort
+	dbName := server.Config.TargetDatabaseName
+
+	targetDSN := fmt.Sprintf("%s://%s:%s@%s:%d/%s?sslmode=disable",
+		dbType, user, password, host, port, dbName,
+	)
+
+	log.Printf("Source DSN: %s", targetDSN)
+
+	// check connection
+	pool, err := pgxpool.New(c, targetDSN)
+	pingErr := error(nil)
+	if err == nil {
+		pingErr = pool.Ping(c)
+	}
+	if err != nil || pingErr != nil {
+		e := err
+		if e == nil {
+			e = pingErr
+		}
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   e.Error(),
+			Status:  "error",
+			Message: "Failed to connect to target database",
+		})
+		return
+	}
+
+	q := `
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_type = 'BASE TABLE'
+        ORDER BY table_name ASC;
+    `
+	tableNames, err := server.execDbQuery(pool, q)
+	var result []map[string]interface{}
+
+	for i := 0; i < len(tableNames.([]map[string]interface{})); i++ {
+
+		tableName := tableNames.([]map[string]interface{})[i]["table_name"].(string)
+
+		cq := fmt.Sprintf(`
+			SELECT column_name, data_type 
+			FROM information_schema.columns 
+			WHERE table_schema = 'public' 
+			AND table_name = '%s'
+			ORDER BY ordinal_position;`,
+			tableName)
+
+		columns, _ := server.execDbQuery(pool, cq)
+
+		result = append(result, map[string]interface{}{
+			"table_name": tableName,
+			"columns":    columns,
+		})
+	}
+
+	// close connection
+	pool.Close()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   err.Error(),
+			Status:  "error",
+			Message: "Failed to fetch table names",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, DefaultResponse{
+		Status:  "success",
+		Message: "Table names fetched successfully",
+		Data:    result,
+	})
+}
+
+func (server *Server) GetTargetTables(c *gin.Context) {
+
+	dbType := server.Config.TargetDatabaseType
+	user := server.Config.TargetDatabaseUser
+	password := server.Config.TargetDatabasePass
+	host := server.Config.TargetDatabaseHost
+	port := server.Config.TargetDatabasePort
+	dbName := server.Config.TargetDatabaseName
+
+	targetDSN := fmt.Sprintf("%s://%s:%s@%s:%d/%s?sslmode=disable",
+		dbType, user, password, host, port, dbName,
+	)
+
+	log.Printf("Target DSN: %s", targetDSN)
+
+	// check connection
+	pool, err := pgxpool.New(c, targetDSN)
+	pingErr := error(nil)
+	if err == nil {
+		pingErr = pool.Ping(c)
+	}
+	if err != nil || pingErr != nil {
+		e := err
+		if e == nil {
+			e = pingErr
+		}
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   e.Error(),
+			Status:  "error",
+			Message: "Failed to connect to target database",
+		})
+		return
+	}
+
+	q := `
+        SELECT table_name 
+        FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_type = 'BASE TABLE'
+        ORDER BY table_name ASC;
+    `
+	tableNames, err := server.execDbQuery(pool, q)
+	var result []map[string]interface{}
+
+	for i := 0; i < len(tableNames.([]map[string]interface{})); i++ {
+
+		tableName := tableNames.([]map[string]interface{})[i]["table_name"].(string)
+
+		cq := fmt.Sprintf(`
+			SELECT column_name, data_type 
+			FROM information_schema.columns 
+			WHERE table_schema = 'public' 
+			AND table_name = '%s'
+			ORDER BY ordinal_position;`,
+			tableName)
+
+		columns, _ := server.execDbQuery(pool, cq)
+
+		result = append(result, map[string]interface{}{
+			"table_name": tableName,
+			"columns":    columns,
+		})
+	}
+
+	// close connection
+	pool.Close()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   err.Error(),
+			Status:  "error",
+			Message: "Failed to fetch table names",
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, DefaultResponse{
+		Status:  "success",
+		Message: "Table names fetched successfully",
+		Data:    result,
+	})
+}
+
+type GetColumnsRequest struct {
+	TableName string `form:"table_name" binding:"required"`
+}
+
+func (server *Server) GetSourceColumns(c *gin.Context) {
+	var req GetColumnsRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   err.Error(),
+			Status:  "error",
+			Message: "Invalid request query",
+		})
+		return
+	}
+
+}
+
+func (server *Server) GetTargetColumns(c *gin.Context) {
+	var req GetColumnsRequest
+	if err := c.ShouldBindQuery(&req); err != nil {
+		c.JSON(http.StatusBadRequest, ErrorResponse{
+			Error:   err.Error(),
+			Status:  "error",
+			Message: "Invalid request query",
+		})
+		return
+	}
+
+}
+
+func (server *Server) execDbQuery(pool *pgxpool.Pool, query string) (interface{}, error) {
+
+	rows, err := pool.Query(context.Background(), query)
+	if err != nil {
+		return nil, err
+	}
+
+	// create hashmap of column name
+	columns := rows.FieldDescriptions()
+	columnNames := make([]string, len(columns))
+	for i, col := range columns {
+		columnNames[i] = string(col.Name)
+	}
+
+	results := []map[string]interface{}{}
+
+	for rows.Next() {
+		values, err := rows.Values()
+		if err != nil {
+			return nil, err
+		}
+
+		rowMap := make(map[string]interface{})
+		for i, colName := range columnNames {
+			rowMap[colName] = values[i]
+		}
+		results = append(results, rowMap)
+	}
+
+	return results, nil
 }

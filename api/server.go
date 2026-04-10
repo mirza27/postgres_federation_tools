@@ -61,6 +61,11 @@ func (server *Server) applyRoutes() {
 	server.Engine.POST("/database/source", server.SaveSourceDatabase)
 	server.Engine.POST("/database/target", server.SaveTargetDatabase)
 
+	server.Engine.GET("/database/source/tables", server.GetSourceTables)
+	server.Engine.GET("/database/target/tables", server.GetTargetTables)
+	server.Engine.GET("/database/source/columns", server.GetSourceColumns)
+	server.Engine.GET("/database/target/columns", server.GetTargetColumns)
+
 	// kafka debezium connector
 	server.Engine.GET("/connector", server.CheckAndCreateDebeziumConnector)
 
