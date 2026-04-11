@@ -21,7 +21,7 @@ import {
   getSourceTables,
   getTargetTables,
   type EntityListDataResponse,
-} from "./entity-loader";
+} from "../services/entity-loader";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,7 +36,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { NewEntityForm } from "./_new-entity-form";
+import { NewEntityForm } from "../components/_new-entity-form";
 
 export function EntityListPage() {
   const loaderData = useRouteLoaderData("entity-list-route") as {
@@ -59,7 +59,7 @@ export function EntityListPage() {
     if (deleteFetcher.data) {
       if (deleteFetcher.data.ok) {
         toast.success(
-          deleteFetcher.data.message || "Entity deleted successfully"
+          deleteFetcher.data.message || "Entity deleted successfully",
         );
       } else {
         toast.error(deleteFetcher.data.message || "Failed to delete entity");

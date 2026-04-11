@@ -14,23 +14,32 @@ import {
   saveDatabaseSourceCredentials,
   saveDatabaseTargetCredentials,
 } from "./feature/connection/action";
-import { EntityListPage } from "./feature/entity-json/entity-list-page";
+import { EntityListPage } from "./feature/entity-json/pages/entity-list-page";
 import {
   GetEntityLoader,
   ListAllEntitiesLoader,
-} from "./feature/entity-json/entity-loader";
-import { EntityPage as EntityDetailPage } from "./feature/entity-json/entity-page";
+} from "./feature/entity-json/services/entity-loader";
+import { EntityPage as EntityDetailPage } from "./feature/entity-json/pages/entity-page";
 import {
   CreateNewEntity,
   DeleteEntity,
   UpdateEntity,
-} from "./feature/entity-json/entity-action";
+} from "./feature/entity-json/services/entity-action";
 import { ExecutionLayout } from "./layout/execution-layout";
 import { RunnerPage } from "./feature/execution/page/runner-page";
-import { checkWorkerStatus, runWorker, stopWorker } from "./feature/execution/services/worker";
+import {
+  checkWorkerStatus,
+  runWorker,
+  stopWorker,
+} from "./feature/execution/services/worker";
 import { HistoryLogPage } from "./feature/execution/page/history-log-page";
-import { getHistoryQueueLogs, getLatestQueueLogs } from "./feature/execution/services/queue";
+import {
+  getHistoryQueueLogs,
+  getLatestQueueLogs,
+} from "./feature/execution/services/queue";
 import { getEntityFilters } from "./feature/execution/services/entity";
+import { Edit } from "lucide-react";
+import { EditEntityPage } from "./feature/entity-json/pages/entity-edit-page";
 
 export const router = createBrowserRouter([
   {
@@ -40,7 +49,7 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: (
-          <Navigate 
+          <Navigate
             to={
               DefaultPaths.CONNECTION_PAGE.path +
               "/" +
@@ -106,6 +115,11 @@ export const router = createBrowserRouter([
                 action: UpdateEntity,
               },
             ],
+          },
+          {
+            path: "edit:name",
+            element: <EditEntityPage />,
+            loader: GetEntityLoader,
           },
           {
             path: "delete-entity",

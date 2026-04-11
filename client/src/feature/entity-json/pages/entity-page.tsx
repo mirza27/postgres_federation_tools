@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { DefaultPaths } from "@/path";
 import { useFetcher, useLoaderData, useNavigate } from "react-router-dom";
-import type { EntityDetailLoaderResult } from "./entity-loader";
+import type { EntityDetailLoaderResult } from "../services/entity-loader";
 import { toast } from "sonner";
 
 export function EntityPage() {
@@ -22,7 +22,7 @@ export function EntityPage() {
   const fileName = loaderData.data?.file ?? "Unavailable";
   const entityName = entity?.entity ?? "Unknown Entity";
   const [rawJson, setRawJson] = useState(() =>
-    JSON.stringify(entity ?? {}, null, 2)
+    JSON.stringify(entity ?? {}, null, 2),
   );
 
   useEffect(() => {
@@ -47,7 +47,7 @@ export function EntityPage() {
     if (updateFetcher.data) {
       if (updateFetcher.data.ok) {
         toast.success(
-          updateFetcher.data.message || "Entity updated successfully"
+          updateFetcher.data.message || "Entity updated successfully",
         );
       } else {
         toast.error(updateFetcher.data.message || "Failed to update entity");

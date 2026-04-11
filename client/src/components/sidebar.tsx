@@ -2,7 +2,7 @@ import { ChevronDown, Database, Settings, FileInput } from "lucide-react";
 import { useNavigate, useLocation, useRouteLoaderData } from "react-router-dom";
 import { DefaultPaths } from "../path";
 import clsx from "clsx";
-import type { EntityListDataResponse } from "@/feature/entity-json/entity-loader";
+import type { EntityListDataResponse } from "@/feature/entity-json/services/entity-loader";
 
 export function Sidebar() {
   const navigate = useNavigate();
@@ -19,7 +19,7 @@ export function Sidebar() {
   const entities = entityLoaderData?.data?.entities ?? [];
   const activeEntity = pathname.startsWith(`${DefaultPaths.ENTITY_LIST.path}/`)
     ? decodeURIComponent(
-        pathname.slice(DefaultPaths.ENTITY_LIST.path.length + 1)
+        pathname.slice(DefaultPaths.ENTITY_LIST.path.length + 1),
       )
     : null;
 
@@ -61,7 +61,7 @@ export function Sidebar() {
             className={clsx(
               baseButton,
               isPathActive(pathname, DefaultPaths.CONNECTION_PAGE.path) &&
-                "bg-sidebar-accent/30"
+                "bg-sidebar-accent/30",
             )}
           >
             <div className="flex items-center gap-2">
@@ -71,7 +71,7 @@ export function Sidebar() {
             <ChevronDown
               className={clsx(
                 "w-4 h-4 transition-transform",
-                expandedMenu === "connection" && "rotate-180"
+                expandedMenu === "connection" && "rotate-180",
               )}
             />
           </button>
@@ -91,13 +91,13 @@ export function Sidebar() {
                         childButton,
                         isActive
                           ? "bg-sidebar-primary/30 text-sidebar-primary font-medium"
-                          : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20"
+                          : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20",
                       )}
                     >
                       {child.pathname}
                     </button>
                   );
-                }
+                },
               )}
             </div>
           )}
@@ -110,7 +110,7 @@ export function Sidebar() {
             className={clsx(
               baseButton,
               isPathActive(pathname, DefaultPaths.ENTITY_LIST.path) &&
-                "bg-sidebar-accent/30"
+                "bg-sidebar-accent/30",
             )}
           >
             <div className="flex items-center gap-2">
@@ -120,7 +120,7 @@ export function Sidebar() {
             <ChevronDown
               className={clsx(
                 "w-4 h-4 transition-transform",
-                expandedMenu === "entity" && "rotate-180"
+                expandedMenu === "entity" && "rotate-180",
               )}
             />
           </button>
@@ -137,15 +137,15 @@ export function Sidebar() {
                     onClick={() =>
                       navigate(
                         `${DefaultPaths.ENTITY_LIST.path}/${encodeURIComponent(
-                          entityName
-                        )}`
+                          entityName,
+                        )}`,
                       )
                     }
                     className={clsx(
                       childButton,
                       isActive
                         ? "bg-sidebar-primary/30 text-sidebar-primary font-medium"
-                        : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20"
+                        : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20",
                     )}
                   >
                     {entityName}
@@ -168,7 +168,7 @@ export function Sidebar() {
             className={clsx(
               baseButton,
               isPathActive(pathname, DefaultPaths.EXECUTION_LOG.path) &&
-                "bg-sidebar-accent/30"
+                "bg-sidebar-accent/30",
             )}
           >
             <div className="flex items-center gap-2">
@@ -178,7 +178,7 @@ export function Sidebar() {
             <ChevronDown
               className={clsx(
                 "w-4 h-4 transition-transform",
-                expandedMenu === "execution" && "rotate-180"
+                expandedMenu === "execution" && "rotate-180",
               )}
             />
           </button>
@@ -198,13 +198,13 @@ export function Sidebar() {
                         childButton,
                         isActive
                           ? "bg-sidebar-primary/30 text-sidebar-primary font-medium"
-                          : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20"
+                          : "text-sidebar-foreground/80 hover:bg-sidebar-primary/20",
                       )}
                     >
                       {child.pathname}
                     </button>
                   );
-                }
+                },
               )}
             </div>
           )}
