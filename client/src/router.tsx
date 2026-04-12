@@ -104,7 +104,7 @@ export const router = createBrowserRouter([
             element: <EntityListPage />,
           },
           {
-            path: ":name",
+            path: "edit/:name",
             element: <EntityDetailPage />,
             loader: GetEntityLoader,
             children: [
@@ -115,7 +115,7 @@ export const router = createBrowserRouter([
             ],
           },
           {
-            path: "edit/:name",
+            path: ":name",
             element: <EditEntityPage />,
             loader: getEntityAndSchema,
             children: [

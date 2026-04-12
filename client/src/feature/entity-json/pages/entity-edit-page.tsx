@@ -24,6 +24,7 @@ import {
   formStateToMappingJson,
   mappingJsonToFormState,
   type KeyMap,
+  type SplitTableItem,
   type SupportingTableItem,
   type TargetMappingItem,
 } from "../services/mapping-json";
@@ -78,6 +79,9 @@ export function EditEntityPage() {
   const [targetMappings, setTargetMappings] = useState<TargetMappingItem[]>(
     initialFormState.targetMappings,
   );
+  const [splitTables, setSplitTables] = useState<SplitTableItem[]>(
+    initialFormState.splitTables,
+  );
 
   // update
   const updateFetcher = useFetcher();
@@ -89,6 +93,7 @@ export function EditEntityPage() {
     setPrimaryTargetTable(initialFormState.primaryTargetTable);
     setKeyMap(initialFormState.keyMap);
     setTargetMappings(initialFormState.targetMappings);
+    setSplitTables(initialFormState.splitTables);
   }, [initialFormState]);
 
   useEffect(() => {
@@ -142,14 +147,17 @@ export function EditEntityPage() {
     [primaryTargetTable, targetColumnsMap],
   );
 
+  const availableSplitTables = useMemo(
+    () =>
+      targetSchema
+        .map((table) => table.table_name)
+        .filter((tableName) => tableName !== primaryTargetTable),
+    [targetSchema, primaryTargetTable],
+  );
+
   const primarySourceAlias = useMemo(
     () => generateAlias(primarySourceTable),
     [primarySourceTable],
-  );
-
-  const primaryTargetAlias = useMemo(
-    () => generateAlias(primaryTargetTable),
-    [primaryTargetTable],
   );
 
   const qualifiedPrimarySourceColumns = useMemo(
@@ -159,6 +167,9 @@ export function EditEntityPage() {
       ),
     [primarySourceAlias, primarySourceColumns],
   );
+
+  const getTargetTableColumns = (tableName: string) =>
+    targetColumnsMap[tableName] ?? [];
 
   // tambah join table
   const addSupportingTable = () => {
@@ -216,14 +227,6 @@ export function EditEntityPage() {
     sourceColumnsMap,
   ]);
 
-  const qualifiedPrimaryTargetColumns = useMemo(
-    () =>
-      primaryTargetColumns.map((column) =>
-        toQualifiedColumnName(primaryTargetAlias, column),
-      ),
-    [primaryTargetAlias, primaryTargetColumns],
-  );
-
   const addTargetMapping = () => {
     const newMapping: TargetMappingItem = {
       id: Math.random().toString(36).substr(2, 9),
@@ -248,11 +251,86 @@ export function EditEntityPage() {
     );
   };
 
+  const addSplitTable = () => {
+    const newItem: SplitTableItem = {
+      id: Math.random().toString(36).substr(2, 9),
+      tableName: "",
+      columns: [],
+    };
+
+    setSplitTables([...splitTables, newItem]);
+  };
+
+  const removeSplitTable = (id: string) => {
+    setSplitTables(splitTables.filter((item) => item.id !== id));
+  };
+
+  const updateSplitTable = (id: string, updates: Partial<SplitTableItem>) => {
+    setSplitTables(
+      splitTables.map((item) =>
+        item.id === id ? { ...item, ...updates } : item,
+      ),
+    );
+  };
+
+  const addSplitTableColumn = (splitTableId: string) => {
+    const newColumn: TargetMappingItem = {
+      id: Math.random().toString(36).substr(2, 9),
+      targetColumn: "",
+      mappingType: "string",
+    };
+
+    setSplitTables(
+      splitTables.map((item) =>
+        item.id === splitTableId
+          ? { ...item, columns: [...item.columns, newColumn] }
+          : item,
+      ),
+    );
+  };
+
+  const removeSplitTableColumn = (splitTableId: string, columnId: string) => {
+    setSplitTables(
+      splitTables.map((item) =>
+        item.id === splitTableId
+          ? {
+              ...item,
+              columns: item.columns.filter((col) => col.id !== columnId),
+            }
+          : item,
+      ),
+    );
+  };
+
+  const updateSplitTableColumn = (
+    splitTableId: string,
+    columnId: string,
+    updates: Partial<TargetMappingItem>,
+  ) => {
+    setSplitTables(
+      splitTables.map((item) =>
+        item.id === splitTableId
+          ? {
+              ...item,
+              columns: item.columns.map((col) =>
+                col.id === columnId ? { ...col, ...updates } : col,
+              ),
+            }
+          : item,
+      ),
+    );
+  };
+
   // ketika ganti primary source table
   const handlePrimarySourceTableChange = (tableName: string) => {
     setPrimarySourceTable(tableName);
 
     setSupportingTables([]); // delete semua support / join table
+  };
+
+  const handlePrimaryTargetTableChange = (tableName: string) => {
+    setPrimaryTargetTable(tableName);
+    setSplitTables([]);
   };
 
   const handleReset = () => {
@@ -261,6 +339,7 @@ export function EditEntityPage() {
     setPrimaryTargetTable(initialFormState.primaryTargetTable);
     setKeyMap(initialFormState.keyMap);
     setTargetMappings(initialFormState.targetMappings);
+    setSplitTables(initialFormState.splitTables);
   };
 
   // transform to json then fetch update
@@ -274,6 +353,7 @@ export function EditEntityPage() {
         primaryTargetTable,
         keyMap,
         targetMappings,
+        splitTables,
       },
     });
 
@@ -415,7 +495,7 @@ export function EditEntityPage() {
                   <div className="md:col-span-2">
                     <Select
                       value={primaryTargetTable}
-                      onValueChange={setPrimaryTargetTable}
+                      onValueChange={handlePrimaryTargetTableChange}
                     >
                       <SelectTrigger className="w-full bg-white dark:bg-slate-800">
                         <SelectValue placeholder="Pilih tabel..." />
@@ -527,6 +607,128 @@ export function EditEntityPage() {
                     Tambah Mapping
                   </Button>
                 </div>
+              </CardContent>
+            </Card>
+
+            {/* 4. Split Table */}
+            <Card className="shadow-sm border-slate-200 dark:border-slate-700">
+              <CardHeader className="border-b border-slate-200 dark:border-slate-700">
+                <CardTitle className="text-xl">Split Table</CardTitle>
+                <CardDescription>
+                  Tambahkan tabel target tambahan beserta pemetaan kolomnya
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {splitTables.length === 0 ? (
+                  <p className="text-sm text-slate-500 dark:text-slate-400">
+                    Belum ada split table
+                  </p>
+                ) : (
+                  splitTables.map((splitTable) => {
+                    const splitTargetColumns = getTargetTableColumns(
+                      splitTable.tableName,
+                    );
+
+                    return (
+                      <div
+                        key={splitTable.id}
+                        className="rounded-lg border border-slate-200 bg-slate-50 p-4 dark:border-slate-700 dark:bg-slate-800"
+                      >
+                        <div className="grid grid-cols-1 gap-4">
+                          <div className="grid grid-cols-1 gap-2 md:grid-cols-3 md:items-end">
+                            <div className="flex flex-col gap-1 md:col-span-2">
+                              <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                                Tabel Split
+                              </label>
+                              <Select
+                                value={splitTable.tableName}
+                                onValueChange={(value) =>
+                                  updateSplitTable(splitTable.id, {
+                                    tableName: value,
+                                    columns: [],
+                                  })
+                                }
+                              >
+                                <SelectTrigger className="w-full bg-white dark:bg-slate-800">
+                                  <SelectValue placeholder="Pilih tabel split..." />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {availableSplitTables.map((tableName) => (
+                                    <SelectItem
+                                      key={tableName}
+                                      value={tableName}
+                                    >
+                                      {tableName}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div className="flex justify-end">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-950"
+                                onClick={() => removeSplitTable(splitTable.id)}
+                              >
+                                Hapus
+                              </Button>
+                            </div>
+                          </div>
+
+                          <div className="space-y-3 border-t border-slate-200 pt-4 dark:border-slate-700">
+                            {splitTable.columns.length === 0 ? (
+                              <p className="text-sm text-slate-500 dark:text-slate-400">
+                                Belum ada mapping kolom split table
+                              </p>
+                            ) : (
+                              splitTable.columns.map((column) => (
+                                <TargetColumnMapping
+                                  key={column.id}
+                                  item={column}
+                                  onUpdate={(id, updates) =>
+                                    updateSplitTableColumn(
+                                      splitTable.id,
+                                      id,
+                                      updates,
+                                    )
+                                  }
+                                  onRemove={(id) =>
+                                    removeSplitTableColumn(splitTable.id, id)
+                                  }
+                                  targetColumns={splitTargetColumns}
+                                  sourceColumns={allSourceColumnsForMapping}
+                                />
+                              ))
+                            )}
+
+                            <Button
+                              type="button"
+                              variant="outline"
+                              className="w-full border-slate-200 dark:border-slate-700"
+                              onClick={() => addSplitTableColumn(splitTable.id)}
+                            >
+                              <Plus className="mr-2 h-4 w-4" />
+                              Tambah Mapping Split
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+
+                <Button
+                  type="button"
+                  onClick={addSplitTable}
+                  variant="outline"
+                  className="w-full border-slate-200 dark:border-slate-700"
+                >
+                  <Plus className="h-4 w-4 mr-2" />
+                  Tambah Split Table
+                </Button>
               </CardContent>
             </Card>
           </div>

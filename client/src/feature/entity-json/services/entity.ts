@@ -59,6 +59,7 @@ const newEmptyEntity: BaseEntityConfig = {
     source: "",
   },
   columns: {},
+  split_table: [],
   routing: {
     on_snapshot: { mode: "insert" },
     on_create: { mode: "insert" },

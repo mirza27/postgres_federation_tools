@@ -16,6 +16,12 @@ export interface TargetMappingItem {
   transformation?: string;
 }
 
+export interface SplitTableItem {
+  id: string;
+  tableName: string;
+  columns: TargetMappingItem[];
+}
+
 export interface KeyMap {
   strategy: "shared_key" | "natural";
   targetKeyColumn: string;
@@ -27,6 +33,7 @@ export interface EditEntityFormState {
   primaryTargetTable: string;
   keyMap: KeyMap | null;
   targetMappings: TargetMappingItem[];
+  splitTables: SplitTableItem[];
 }
 
 interface MappingSource {
@@ -108,6 +115,7 @@ export const mappingJsonToFormState = (
       primaryTargetTable: "",
       keyMap: null,
       targetMappings: [],
+      splitTables: [],
     };
   }
 
@@ -124,6 +132,25 @@ export const mappingJsonToFormState = (
       transformation: mapJsonToTransformation(config),
     }),
   );
+
+  const splitTables = Array.isArray(entity.split_table)
+    ? entity.split_table.map((table: any) => ({
+        id: randomId(),
+        tableName: table.table_name ?? "",
+        columns: (
+          Object.entries(table.columns ?? {}) as Array<[string, MappingColumn]>
+        ).map(([targetColumn, config]) => ({
+          id: randomId(),
+          targetColumn,
+          mappingType:
+            config.from === "$key"
+              ? ("key" as const)
+              : ("kolom_sumber" as const),
+          sourceColumn: config.from === "$key" ? undefined : config.from,
+          transformation: mapJsonToTransformation(config),
+        })),
+      }))
+    : [];
 
   return {
     primarySourceTable: primary?.from ?? "",
@@ -142,6 +169,7 @@ export const mappingJsonToFormState = (
         }
       : null,
     targetMappings,
+    splitTables,
   };
 };
 
@@ -195,6 +223,32 @@ export const formStateToMappingJson = (params: {
     return acc;
   }, {});
 
+  const split_table = formState.splitTables
+    .filter((table) => table.tableName)
+    .map((table) => ({
+      table_name: table.tableName,
+      columns: table.columns.reduce<Record<string, MappingColumn>>(
+        (acc, item) => {
+          if (!item.targetColumn) return acc;
+
+          if (item.mappingType === "key") {
+            acc[item.targetColumn] = { from: "$key" };
+            return acc;
+          }
+
+          if (!item.sourceColumn) return acc;
+
+          acc[item.targetColumn] = {
+            from: item.sourceColumn,
+            ...mapTransformationToJson(item.transformation),
+          };
+
+          return acc;
+        },
+        {},
+      ),
+    }));
+
   return {
     entity: entityName,
     sources,
@@ -212,7 +266,7 @@ export const formStateToMappingJson = (params: {
         : {}),
     },
     columns,
-    split_table: existingEntity?.split_table,
+    split_table,
     routing: existingEntity?.routing,
   };
 };
