@@ -32,10 +32,10 @@ export function DatabasePage() {
   };
 
   const [source, setSource] = useState<DBCredential>(
-    loaderData.data?.source_database ?? emptyCred
+    loaderData.data?.source_database ?? emptyCred,
   );
   const [target, setTarget] = useState<DBCredential>(
-    loaderData.data?.target_database ?? emptyCred
+    loaderData.data?.target_database ?? emptyCred,
   );
 
   const fetcherSource = useFetcher();
@@ -236,7 +236,7 @@ export function DatabasePage() {
               <Button
                 type="submit"
                 size="sm"
-                className="gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90"
+                className="text-white gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90"
               >
                 <Save className="w-4 h-4" />
                 Save and Check Connection
@@ -388,7 +388,7 @@ export function DatabasePage() {
               <Button
                 type="submit"
                 size="sm"
-                className="gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90"
+                className="text-white gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90"
               >
                 <Save className="w-4 h-4" />
                 Save and Check Connection

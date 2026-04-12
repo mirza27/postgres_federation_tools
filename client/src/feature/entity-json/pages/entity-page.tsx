@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { DefaultPaths } from "@/path";
 import { useFetcher, useLoaderData, useNavigate } from "react-router-dom";
-import type { EntityDetailLoaderResult } from "../services/entity-loader";
+import type { EntityDetailLoaderResult } from "../services/entity";
 import { toast } from "sonner";
 
 export function EntityPage() {
@@ -104,7 +104,7 @@ export function EntityPage() {
                 <Button
                   type="submit"
                   disabled={updateFetcher.state === "submitting"}
-                  className="bg-sidebar-primary hover:bg-sidebar-primary/90"
+                  className="text-white bg-sidebar-primary hover:bg-sidebar-primary/90"
                 >
                   Save
                 </Button>
