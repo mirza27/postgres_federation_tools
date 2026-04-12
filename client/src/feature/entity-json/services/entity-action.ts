@@ -14,15 +14,15 @@ const newBaseEntity = {
   key: {
     strategy: "<natural|shared_key>",
     source: "<alias-table.source-column-name>",
+    resolver: {
+      table: "<required if strategy is shared_key --> any name>",
+      type: "<required if strategy is shared_key --> any name>",
+    },
   },
   columns: {
     id: {
       from: "$key",
       expr: "<optional --> now|uuid|random_int>",
-      resolver: {
-        table: "<required if strategy is shared_key --> any name>",
-        type: "<required if strategy is shared_key --> any name>",
-      },
     },
     column_name1: {
       from: "<alias-table.source-column-name>",
@@ -32,6 +32,17 @@ const newBaseEntity = {
       from: "<alias-table.source-column-name>",
     },
   },
+  split_table: [
+    {
+      table_name: "<split-table-name>",
+      columns: {
+        column_name1: {
+          from: "<alias-table.source-column-name>",
+          cast: "<optional --> string|number|boolean|int>",
+        },
+      },
+    },
+  ],
   routing: {
     on_snapshot: {
       mode: "insert",
@@ -66,79 +77,6 @@ export async function CreateNewEntity({ request }: ActionFunctionArgs) {
     const response = await res.json();
     if (response.status !== "success") {
       return {
-        message: response.message,
-      };
-    }
-
-    return {
-      ok: true,
-      message: response.message,
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      message: `Internal server error, ${error}`,
-    };
-  }
-}
-
-export async function UpdateEntity({ request }: ActionFunctionArgs) {
-  const data = await request.formData();
-
-  const rawJsonEntity = data.get("raw_entity") as string;
-  const parsedEntity = JSON.parse(rawJsonEntity);
-
-  const entityName = parsedEntity.entity as string;
-  const queryParams = new URLSearchParams();
-  queryParams.append("name", entityName);
-
-  try {
-    const res = await fetch(`${apiUrl}/mapping?${queryParams.toString()}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(parsedEntity),
-    });
-
-    const response = await res.json();
-    if (response.status !== "success") {
-      return {
-        message: response.message,
-      };
-    }
-
-    return {
-      ok: true,
-      message: response.message,
-    };
-  } catch (error) {
-    return {
-      ok: false,
-      message: `Internal server error, ${error}`,
-    };
-  }
-}
-
-export async function DeleteEntity({ request }: ActionFunctionArgs) {
-  const data = await request.formData();
-
-  const entityName = data.get("entity_name") as string;
-  const queryParams = new URLSearchParams();
-  queryParams.append("name", entityName);
-
-  try {
-    const res = await fetch(`${apiUrl}/mapping?${queryParams.toString()}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const response = await res.json();
-    if (response.status !== "success") {
-      return {
-        data: null,
         message: response.message,
       };
     }

@@ -16,15 +16,13 @@ import {
 } from "./feature/connection/action";
 import { EntityListPage } from "./feature/entity-json/pages/entity-list-page";
 import {
+  createEmptyEntity,
+  deleteEntity,
   GetEntityLoader,
   ListAllEntitiesLoader,
-} from "./feature/entity-json/services/entity-loader";
+  updateEntity,
+} from "./feature/entity-json/services/entity";
 import { EntityPage as EntityDetailPage } from "./feature/entity-json/pages/entity-page";
-import {
-  CreateNewEntity,
-  DeleteEntity,
-  UpdateEntity,
-} from "./feature/entity-json/services/entity-action";
 import { ExecutionLayout } from "./layout/execution-layout";
 import { RunnerPage } from "./feature/execution/page/runner-page";
 import {
@@ -38,8 +36,8 @@ import {
   getLatestQueueLogs,
 } from "./feature/execution/services/queue";
 import { getEntityFilters } from "./feature/execution/services/entity";
-import { Edit } from "lucide-react";
 import { EditEntityPage } from "./feature/entity-json/pages/entity-edit-page";
+import { getEntityAndSchema } from "./feature/entity-json/services/database";
 
 export const router = createBrowserRouter([
   {
@@ -112,22 +110,29 @@ export const router = createBrowserRouter([
             children: [
               {
                 path: "update-entity",
-                action: UpdateEntity,
+                action: updateEntity,
               },
             ],
           },
           {
-            path: "edit:name",
+            path: "edit/:name",
             element: <EditEntityPage />,
-            loader: GetEntityLoader,
+            loader: getEntityAndSchema,
+            children: [
+              {
+                path: "update-entity",
+                action: updateEntity,
+              },
+            ],
           },
+
           {
             path: "delete-entity",
-            action: DeleteEntity,
+            action: deleteEntity,
           },
           {
             path: "create-entity",
-            action: CreateNewEntity,
+            action: createEmptyEntity,
           },
         ],
       },
