@@ -415,6 +415,102 @@ func (server *Server) GetTargetTables(c *gin.Context) {
 	})
 }
 
+func (server *Server) GetDatabaseSchemaInfo(c *gin.Context) {
+	// 1. Ambil semua konfigurasi dari PivotDB
+	keys := []string{
+		"SOURCE_DATABASE_TYPE", "SOURCE_USER", "SOURCE_PASSWORD", "SOURCE_HOST", "SOURCE_PORT", "SOURCE_DATABASE",
+		"TARGET_DATABASE_TYPE", "TARGET_USER", "TARGET_PASSWORD", "TARGET_HOST", "TARGET_PORT", "TARGET_DATABASE",
+	}
+
+	configs := make(map[string]string)
+	for _, key := range keys {
+		cfg, err := server.PivotDB.GetConfigurationByName(key)
+		if err != nil || cfg == nil {
+			configs[key] = "" // fallback kosong
+			continue
+		}
+		configs[key] = cfg.ConfigValue
+	}
+
+	// 2. Helper untuk mengambil schema dari DSN tertentu
+	getSchema := func(dbType, user, pass, host, port, dbName string) (interface{}, error) {
+		dsn := fmt.Sprintf("%s://%s:%s@%s:%s/%s?sslmode=disable",
+			dbType, user, pass, host, port, dbName,
+		)
+
+		pool, err := pgxpool.New(c, dsn)
+		if err != nil {
+			return nil, err
+		}
+		defer pool.Close()
+
+		if err := pool.Ping(c); err != nil {
+			return nil, err
+		}
+
+		// Query ambil semua tabel
+		q := `SELECT table_name FROM information_schema.tables 
+              WHERE table_schema = 'public' AND table_type = 'BASE TABLE'
+              ORDER BY table_name ASC;`
+
+		tableData, err := server.execDbQuery(pool, q)
+		if err != nil {
+			return nil, err
+		}
+
+		tables := tableData.([]map[string]interface{})
+		var schemaResult []map[string]interface{}
+
+		for _, t := range tables {
+			tableName := t["table_name"].(string)
+
+			// Query ambil kolom untuk tiap tabel
+			cq := fmt.Sprintf(`
+                SELECT column_name, data_type 
+                FROM information_schema.columns 
+                WHERE table_schema = 'public' AND table_name = '%s'
+                ORDER BY ordinal_position;`, tableName)
+
+			columns, _ := server.execDbQuery(pool, cq)
+			schemaResult = append(schemaResult, map[string]interface{}{
+				"table_name": tableName,
+				"columns":    columns,
+			})
+		}
+		return schemaResult, nil
+	}
+
+	// 3. Ambil data dari Source
+	sourceSchema, err := getSchema(
+		configs["SOURCE_DATABASE_TYPE"], configs["SOURCE_USER"], configs["SOURCE_PASSWORD"],
+		configs["SOURCE_HOST"], configs["SOURCE_PORT"], configs["SOURCE_DATABASE"],
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to connect Source: " + err.Error()})
+		return
+	}
+
+	// 4. Ambil data dari Target
+	targetSchema, err := getSchema(
+		configs["TARGET_DATABASE_TYPE"], configs["TARGET_USER"], configs["TARGET_PASSWORD"],
+		configs["TARGET_HOST"], configs["TARGET_PORT"], configs["TARGET_DATABASE"],
+	)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to connect Target: " + err.Error()})
+		return
+	}
+
+	// 5. Kirim Response Gabungan
+	c.JSON(http.StatusOK, DefaultResponse{
+		Status:  "success",
+		Message: "Database schema info fetched successfully",
+		Data: map[string]interface{}{
+			"source_schema": sourceSchema,
+			"target_schema": targetSchema,
+		},
+	})
+}
+
 type GetColumnsRequest struct {
 	TableName string `form:"table_name" binding:"required"`
 }
