@@ -29,6 +29,12 @@ interface SplitTableConfig {
   columns: ColumnsConfig;
 }
 
+interface RoutingConfig {
+  on_snapshot: { mode: "insert" | "update" | "delete" };
+  on_create: { mode: "insert" | "update" | "delete" };
+  on_update: { mode: "insert" | "update" | "delete"; matchKey: string[] };
+}
+
 export interface BaseEntityConfig {
   entity: string;
   sources: SourceConfig[];
@@ -36,6 +42,7 @@ export interface BaseEntityConfig {
   key: KeyConfig;
   columns: ColumnsConfig;
   split_table?: SplitTableConfig[];
+  routing?: RoutingConfig;
 }
 
 const newEmptyEntity: BaseEntityConfig = {
@@ -52,6 +59,11 @@ const newEmptyEntity: BaseEntityConfig = {
     source: "",
   },
   columns: {},
+  routing: {
+    on_snapshot: { mode: "insert" },
+    on_create: { mode: "insert" },
+    on_update: { mode: "update", matchKey: ["code"] },
+  },
 };
 
 // create empty entities

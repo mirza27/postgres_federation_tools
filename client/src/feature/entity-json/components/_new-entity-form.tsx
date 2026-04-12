@@ -35,7 +35,7 @@ export function NewEntityForm() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="bg-sidebar-primary hover:bg-sidebar-primary/90 self-start md:self-auto">
+        <Button className="text-white bg-sidebar-primary hover:bg-sidebar-primary/90 self-start md:self-auto">
           New Mapping
         </Button>
       </DialogTrigger>

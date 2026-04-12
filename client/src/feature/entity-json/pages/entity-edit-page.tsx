@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -20,27 +20,14 @@ import { SupportingTable } from "../components/supporting-table";
 import { generateAlias } from "../components/helper";
 import { useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { DefaultPaths } from "@/path";
-
-interface SupportingTableItem {
-  id: string;
-  sourceTable: string;
-  alias: string;
-  factColumn: string;
-  dimColumn: string;
-}
-
-interface TargetMappingItem {
-  id: string;
-  targetColumn: string;
-  mappingType: "key" | "string" | "kolom_sumber";
-  sourceColumn?: string;
-  transformation?: string;
-}
-
-interface KeyMap {
-  strategy: "shared_key" | "natural";
-  targetKeyColumn: string;
-}
+import {
+  formStateToMappingJson,
+  mappingJsonToFormState,
+  type KeyMap,
+  type SupportingTableItem,
+  type TargetMappingItem,
+} from "../services/mapping-json";
+import { toast } from "sonner";
 
 interface SchemaColumn {
   column_name: string;
@@ -71,17 +58,51 @@ export function EditEntityPage() {
     [loaderData],
   );
 
-  const [primarySourceTable, setPrimarySourceTable] = useState("");
+  // reset to loaded entity if exist or empty
+  const initialFormState = useMemo(
+    () => mappingJsonToFormState(entity),
+    [entity],
+  );
+
+  const [primarySourceTable, setPrimarySourceTable] = useState(
+    initialFormState.primarySourceTable,
+  );
   const [supportingTables, setSupportingTables] = useState<
     SupportingTableItem[]
-  >([]);
-  const [primaryTargetTable, setPrimaryTargetTable] = useState("");
-  const [keyMap, setKeyMap] = useState<KeyMap | null>(null);
+  >(initialFormState.supportingTables);
+  const [primaryTargetTable, setPrimaryTargetTable] = useState(
+    initialFormState.primaryTargetTable,
+  );
+  const [keyMap, setKeyMap] = useState<KeyMap | null>(initialFormState.keyMap);
 
-  const [targetMappings, setTargetMappings] = useState<TargetMappingItem[]>([]);
+  const [targetMappings, setTargetMappings] = useState<TargetMappingItem[]>(
+    initialFormState.targetMappings,
+  );
 
   // update
   const updateFetcher = useFetcher();
+
+  useEffect(() => {
+    // keep editor state synced when loader returns a different entity
+    setPrimarySourceTable(initialFormState.primarySourceTable);
+    setSupportingTables(initialFormState.supportingTables);
+    setPrimaryTargetTable(initialFormState.primaryTargetTable);
+    setKeyMap(initialFormState.keyMap);
+    setTargetMappings(initialFormState.targetMappings);
+  }, [initialFormState]);
+
+  useEffect(() => {
+    if (!updateFetcher.data) return;
+
+    if (updateFetcher.data.ok) {
+      toast.success(
+        updateFetcher.data.message || "Entity updated successfully",
+      );
+      return;
+    }
+
+    toast.error(updateFetcher.data.message || "Failed to update entity");
+  }, [updateFetcher.data]);
 
   const sourceColumnsMap = useMemo(
     () =>
@@ -129,6 +150,14 @@ export function EditEntityPage() {
   const primaryTargetAlias = useMemo(
     () => generateAlias(primaryTargetTable),
     [primaryTargetTable],
+  );
+
+  const qualifiedPrimarySourceColumns = useMemo(
+    () =>
+      primarySourceColumns.map((column) =>
+        toQualifiedColumnName(primarySourceAlias, column),
+      ),
+    [primarySourceAlias, primarySourceColumns],
   );
 
   // tambah join table
@@ -219,21 +248,42 @@ export function EditEntityPage() {
     );
   };
 
-  const getTargetColumns = (tableName: string) => {
-    for (const table of targetSchema) {
-      if (table.table_name === tableName) {
-        return table.columns.map((col) => col.column_name);
-      }
-    }
-
-    return [];
-  };
-
   // ketika ganti primary source table
   const handlePrimarySourceTableChange = (tableName: string) => {
     setPrimarySourceTable(tableName);
 
     setSupportingTables([]); // delete semua support / join table
+  };
+
+  const handleReset = () => {
+    setPrimarySourceTable(initialFormState.primarySourceTable);
+    setSupportingTables(initialFormState.supportingTables);
+    setPrimaryTargetTable(initialFormState.primaryTargetTable);
+    setKeyMap(initialFormState.keyMap);
+    setTargetMappings(initialFormState.targetMappings);
+  };
+
+  // transform to json then fetch update
+  const handleSaveMapping = () => {
+    const payload = formStateToMappingJson({
+      entityName,
+      existingEntity: entity,
+      formState: {
+        primarySourceTable,
+        supportingTables,
+        primaryTargetTable,
+        keyMap,
+        targetMappings,
+      },
+    });
+
+    const formData = new FormData();
+    formData.append("raw_entity", JSON.stringify(payload));
+
+    updateFetcher.submit(formData, {
+      method: "put",
+      action: "update-entity",
+    });
   };
 
   return (
@@ -257,18 +307,20 @@ export function EditEntityPage() {
           {/* Action Buttons */}
           <div className="ml-auto flex gap-4">
             <Button
-              type="submit"
+              type="button"
               variant="outline"
               className="border-slate-200 dark:border-slate-700"
+              onClick={handleReset}
             >
               Reset
             </Button>
             <Button
               className="text-white gap-2 bg-sidebar-primary hover:bg-sidebar-primary/90"
-              type="submit"
+              type="button"
+              onClick={handleSaveMapping}
               disabled={updateFetcher.state === "submitting"}
             >
-              Simpan Konfigurasi
+              Save Mapping
             </Button>
           </div>
         </div>
@@ -412,7 +464,7 @@ export function EditEntityPage() {
                     </div>
                     <div className="flex flex-col gap-2">
                       <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">
-                        Kolom Key dari Tabel Target
+                        Kolom Key dari Tabel Sumber
                       </label>
                       <Select
                         value={keyMap?.targetKeyColumn || ""}
@@ -427,7 +479,7 @@ export function EditEntityPage() {
                           <SelectValue placeholder="Pilih kolom..." />
                         </SelectTrigger>
                         <SelectContent>
-                          {qualifiedPrimaryTargetColumns.map((col) => (
+                          {qualifiedPrimarySourceColumns.map((col) => (
                             <SelectItem key={col} value={col}>
                               {col}
                             </SelectItem>
@@ -461,7 +513,7 @@ export function EditEntityPage() {
                         item={item}
                         onUpdate={updateTargetMapping}
                         onRemove={removeTargetMapping}
-                        targetColumns={getTargetColumns(primaryTargetTable)}
+                        targetColumns={primaryTargetColumns}
                         sourceColumns={allSourceColumnsForMapping}
                       />
                     ))
