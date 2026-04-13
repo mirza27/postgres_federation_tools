@@ -14,7 +14,8 @@ interface TargetColumnMappingProps {
     targetColumn: string;
     mappingType: "key" | "string" | "kolom_sumber";
     sourceColumn?: string;
-    transformation?: string;
+    cast?: "int to string" | "string to int";
+    expr?: "now(datetime)" | "uuid" | "random-string";
   };
   onUpdate: (id: string, updates: any) => void;
   onRemove: (id: string) => void;
@@ -22,8 +23,10 @@ interface TargetColumnMappingProps {
   sourceColumns: string[];
 }
 
-const TRANSFORMATION_TYPES = ["int to string", "string to int", "random key"];
-const NO_TRANSFORMATION_VALUE = "__none__";
+const CAST_TYPES = ["int to string", "string to int"] as const;
+const EXPRESSION_TYPES = ["now(datetime)", "uuid", "random-string"] as const;
+const NO_CAST_VALUE = "__no_cast__";
+const NO_EXPR_VALUE = "__no_expr__";
 
 export function TargetColumnMapping({
   item,
@@ -32,7 +35,9 @@ export function TargetColumnMapping({
   targetColumns,
   sourceColumns,
 }: TargetColumnMappingProps) {
-  const showSourceFields = item.mappingType === "kolom_sumber";
+  const showSourceColumnField = item.mappingType === "kolom_sumber";
+  const showTransformationFields =
+    item.mappingType === "kolom_sumber" || item.mappingType === "key";
 
   return (
     <div className="bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg p-4">
@@ -69,12 +74,15 @@ export function TargetColumnMapping({
             <Select
               value={item.mappingType}
               onValueChange={(value: any) => {
+                const shouldKeepTransformation =
+                  value === "kolom_sumber" || value === "key";
+
                 onUpdate(item.id, {
                   mappingType: value,
                   sourceColumn:
                     value === "kolom_sumber" ? item.sourceColumn : undefined,
-                  transformation:
-                    value === "kolom_sumber" ? item.transformation : undefined,
+                  cast: shouldKeepTransformation ? item.cast : undefined,
+                  expr: shouldKeepTransformation ? item.expr : undefined,
                 });
               }}
             >
@@ -105,60 +113,89 @@ export function TargetColumnMapping({
           </div>
         </div>
 
-        {/* Conditional Fields - Show when mappingType is 'kolom_sumber' */}
-        {showSourceFields && (
+        {/* Conditional Fields */}
+        {(showSourceColumnField || showTransformationFields) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-slate-700 mt-3">
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-                Kolom Sumber
-              </label>
-              <Select
-                value={item.sourceColumn || ""}
-                onValueChange={(value) =>
-                  onUpdate(item.id, { sourceColumn: value })
-                }
-              >
-                <SelectTrigger className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600">
-                  <SelectValue placeholder="Pilih kolom..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {sourceColumns.map((col) => (
-                    <SelectItem key={col} value={col}>
-                      {col}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {showSourceColumnField && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                  Kolom Sumber
+                </label>
+                <Select
+                  value={item.sourceColumn || ""}
+                  onValueChange={(value) =>
+                    onUpdate(item.id, { sourceColumn: value })
+                  }
+                >
+                  <SelectTrigger className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600">
+                    <SelectValue placeholder="Pilih kolom..." />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {sourceColumns.map((col) => (
+                      <SelectItem key={col} value={col}>
+                        {col}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
-                Transformasi
-              </label>
-              <Select
-                value={item.transformation || NO_TRANSFORMATION_VALUE}
-                onValueChange={(value) =>
-                  onUpdate(item.id, {
-                    transformation:
-                      value === NO_TRANSFORMATION_VALUE ? undefined : value,
-                  })
-                }
-              >
-                <SelectTrigger className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600">
-                  <SelectValue placeholder="Pilih transformasi..." />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={NO_TRANSFORMATION_VALUE}>
-                    Tidak Ada
-                  </SelectItem>
-                  {TRANSFORMATION_TYPES.map((t) => (
-                    <SelectItem key={t} value={t}>
-                      {t}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {showTransformationFields && (
+              <div className="grid grid-cols-1 gap-3 md:col-span-1">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    Casting
+                  </label>
+                  <Select
+                    value={item.cast || NO_CAST_VALUE}
+                    onValueChange={(value) =>
+                      onUpdate(item.id, {
+                        cast: value === NO_CAST_VALUE ? undefined : value,
+                      })
+                    }
+                  >
+                    <SelectTrigger className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600">
+                      <SelectValue placeholder="Pilih casting..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NO_CAST_VALUE}>Tidak Ada</SelectItem>
+                      {CAST_TYPES.map((cast) => (
+                        <SelectItem key={cast} value={cast}>
+                          {cast}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                    Expression
+                  </label>
+                  <Select
+                    value={item.expr || NO_EXPR_VALUE}
+                    onValueChange={(value) =>
+                      onUpdate(item.id, {
+                        expr: value === NO_EXPR_VALUE ? undefined : value,
+                      })
+                    }
+                  >
+                    <SelectTrigger className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600">
+                      <SelectValue placeholder="Pilih expression..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value={NO_EXPR_VALUE}>Tidak Ada</SelectItem>
+                      {EXPRESSION_TYPES.map((expr) => (
+                        <SelectItem key={expr} value={expr}>
+                          {expr}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>

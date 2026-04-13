@@ -13,7 +13,8 @@ export interface TargetMappingItem {
   targetColumn: string;
   mappingType: "key" | "string" | "kolom_sumber";
   sourceColumn?: string;
-  transformation?: string;
+  cast?: "int to string" | "string to int";
+  expr?: "now(datetime)" | "uuid" | "random-string";
 }
 
 export interface SplitTableItem {
@@ -48,7 +49,7 @@ interface MappingSource {
 interface MappingColumn {
   from: string;
   cast?: "string" | "number" | "boolean" | "int";
-  expr?: "now" | "uuid" | "random_int";
+  expr?: "now" | "uuid" | "random_int" | "random_string";
 }
 
 interface MappingEntityPayload {
@@ -77,30 +78,41 @@ const buildKeymapTableName = (entityName: string) =>
     .replace(/-+/g, "-")
     .replace(/^-|-$/g, "");
 
-const mapTransformationToJson = (
-  transformation?: string,
+const mapCastToJson = (
+  cast?: TargetMappingItem["cast"],
 ): Partial<MappingColumn> => {
-  if (!transformation) return {};
-
-  if (transformation === "int to string") {
-    return { cast: "string" };
-  }
-
-  if (transformation === "string to int") {
-    return { cast: "int" };
-  }
-
-  if (transformation === "random key") {
-    return { expr: "random_int" };
-  }
-
+  if (!cast) return {};
+  if (cast === "int to string") return { cast: "string" };
+  if (cast === "string to int") return { cast: "int" };
   return {};
 };
 
-const mapJsonToTransformation = (column: MappingColumn): string | undefined => {
-  if (column.expr === "random_int") return "random key";
+const mapExprToJson = (
+  expr?: TargetMappingItem["expr"],
+): Partial<MappingColumn> => {
+  if (!expr) return {};
+  if (expr === "now(datetime)") return { expr: "now" };
+  if (expr === "uuid") return { expr: "uuid" };
+  if (expr === "random-string") return { expr: "random_string" };
+  return {};
+};
+
+const mapJsonToCast = (
+  column: MappingColumn,
+): TargetMappingItem["cast"] | undefined => {
   if (column.cast === "string") return "int to string";
   if (column.cast === "int") return "string to int";
+  return undefined;
+};
+
+const mapJsonToExpr = (
+  column: MappingColumn,
+): TargetMappingItem["expr"] | undefined => {
+  if (column.expr === "now") return "now(datetime)";
+  if (column.expr === "uuid") return "uuid";
+  if (column.expr === "random_string" || column.expr === "random_int") {
+    return "random-string";
+  }
   return undefined;
 };
 
@@ -129,7 +141,8 @@ export const mappingJsonToFormState = (
       mappingType:
         config.from === "$key" ? ("key" as const) : ("kolom_sumber" as const),
       sourceColumn: config.from === "$key" ? undefined : config.from,
-      transformation: mapJsonToTransformation(config),
+      cast: mapJsonToCast(config),
+      expr: mapJsonToExpr(config),
     }),
   );
 
@@ -147,7 +160,8 @@ export const mappingJsonToFormState = (
               ? ("key" as const)
               : ("kolom_sumber" as const),
           sourceColumn: config.from === "$key" ? undefined : config.from,
-          transformation: mapJsonToTransformation(config),
+          cast: mapJsonToCast(config),
+          expr: mapJsonToExpr(config),
         })),
       }))
     : [];
@@ -209,7 +223,11 @@ export const formStateToMappingJson = (params: {
     if (!item.targetColumn) return acc;
 
     if (item.mappingType === "key") {
-      acc[item.targetColumn] = { from: "$key" };
+      acc[item.targetColumn] = {
+        from: "$key",
+        ...mapCastToJson(item.cast),
+        ...mapExprToJson(item.expr),
+      };
       return acc;
     }
 
@@ -217,7 +235,8 @@ export const formStateToMappingJson = (params: {
 
     acc[item.targetColumn] = {
       from: item.sourceColumn,
-      ...mapTransformationToJson(item.transformation),
+      ...mapCastToJson(item.cast),
+      ...mapExprToJson(item.expr),
     };
 
     return acc;
@@ -232,7 +251,11 @@ export const formStateToMappingJson = (params: {
           if (!item.targetColumn) return acc;
 
           if (item.mappingType === "key") {
-            acc[item.targetColumn] = { from: "$key" };
+            acc[item.targetColumn] = {
+              from: "$key",
+              ...mapCastToJson(item.cast),
+              ...mapExprToJson(item.expr),
+            };
             return acc;
           }
 
@@ -240,7 +263,8 @@ export const formStateToMappingJson = (params: {
 
           acc[item.targetColumn] = {
             from: item.sourceColumn,
-            ...mapTransformationToJson(item.transformation),
+            ...mapCastToJson(item.cast),
+            ...mapExprToJson(item.expr),
           };
 
           return acc;
