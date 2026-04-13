@@ -6,6 +6,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Trash2 } from "lucide-react";
 
 interface TargetColumnMappingProps {
@@ -15,7 +16,8 @@ interface TargetColumnMappingProps {
     mappingType: "key" | "string" | "kolom_sumber";
     sourceColumn?: string;
     cast?: "int to string" | "string to int";
-    expr?: "now(datetime)" | "uuid" | "random-string";
+    expr?: "now" | "uuid" | "random_string";
+    defaultValue?: string;
   };
   onUpdate: (id: string, updates: any) => void;
   onRemove: (id: string) => void;
@@ -24,7 +26,7 @@ interface TargetColumnMappingProps {
 }
 
 const CAST_TYPES = ["int to string", "string to int"] as const;
-const EXPRESSION_TYPES = ["now(datetime)", "uuid", "random-string"] as const;
+const EXPRESSION_TYPES = ["now", "uuid", "random_string"] as const;
 const NO_CAST_VALUE = "__no_cast__";
 const NO_EXPR_VALUE = "__no_expr__";
 
@@ -36,6 +38,7 @@ export function TargetColumnMapping({
   sourceColumns,
 }: TargetColumnMappingProps) {
   const showSourceColumnField = item.mappingType === "kolom_sumber";
+  const showDefaultField = item.mappingType === "string";
   const showTransformationFields =
     item.mappingType === "kolom_sumber" || item.mappingType === "key";
 
@@ -76,6 +79,7 @@ export function TargetColumnMapping({
               onValueChange={(value: any) => {
                 const shouldKeepTransformation =
                   value === "kolom_sumber" || value === "key";
+                const shouldKeepDefault = value === "string";
 
                 onUpdate(item.id, {
                   mappingType: value,
@@ -83,6 +87,7 @@ export function TargetColumnMapping({
                     value === "kolom_sumber" ? item.sourceColumn : undefined,
                   cast: shouldKeepTransformation ? item.cast : undefined,
                   expr: shouldKeepTransformation ? item.expr : undefined,
+                  defaultValue: shouldKeepDefault ? item.defaultValue : undefined,
                 });
               }}
             >
@@ -114,7 +119,7 @@ export function TargetColumnMapping({
         </div>
 
         {/* Conditional Fields */}
-        {(showSourceColumnField || showTransformationFields) && (
+        {(showSourceColumnField || showTransformationFields || showDefaultField) && (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2 border-t border-slate-200 dark:border-slate-700 mt-3">
             {showSourceColumnField && (
               <div className="flex flex-col gap-1">
@@ -141,8 +146,24 @@ export function TargetColumnMapping({
               </div>
             )}
 
+            {showDefaultField && (
+              <div className="flex flex-col gap-1 md:col-span-2">
+                <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
+                  Nilai Default
+                </label>
+                <Input
+                  value={item.defaultValue || ""}
+                  onChange={(event) =>
+                    onUpdate(item.id, { defaultValue: event.target.value })
+                  }
+                  placeholder="Masukkan nilai string default..."
+                  className="bg-white dark:bg-slate-700 border-slate-200 dark:border-slate-600"
+                />
+              </div>
+            )}
+
             {showTransformationFields && (
-              <div className="grid grid-cols-1 gap-3 md:col-span-1">
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:col-span-1">
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold text-slate-600 dark:text-slate-400">
                     Casting

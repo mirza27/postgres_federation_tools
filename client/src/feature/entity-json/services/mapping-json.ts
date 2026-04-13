@@ -15,6 +15,7 @@ export interface TargetMappingItem {
   sourceColumn?: string;
   cast?: "int to string" | "string to int";
   expr?: "now(datetime)" | "uuid" | "random-string";
+  defaultValue?: string;
 }
 
 export interface SplitTableItem {
@@ -47,9 +48,10 @@ interface MappingSource {
 }
 
 interface MappingColumn {
-  from: string;
+  from?: string;
   cast?: "string" | "number" | "boolean" | "int";
   expr?: "now" | "uuid" | "random_int" | "random_string";
+  default?: string;
 }
 
 interface MappingEntityPayload {
@@ -139,10 +141,16 @@ export const mappingJsonToFormState = (
       id: randomId(),
       targetColumn,
       mappingType:
-        config.from === "$key" ? ("key" as const) : ("kolom_sumber" as const),
+        config.from === "$key"
+          ? ("key" as const)
+          : typeof config.default === "string"
+            ? ("string" as const)
+            : ("kolom_sumber" as const),
       sourceColumn: config.from === "$key" ? undefined : config.from,
       cast: mapJsonToCast(config),
       expr: mapJsonToExpr(config),
+      defaultValue:
+        typeof config.default === "string" ? config.default : undefined,
     }),
   );
 
@@ -158,10 +166,14 @@ export const mappingJsonToFormState = (
           mappingType:
             config.from === "$key"
               ? ("key" as const)
+              : typeof config.default === "string"
+                ? ("string" as const)
               : ("kolom_sumber" as const),
           sourceColumn: config.from === "$key" ? undefined : config.from,
           cast: mapJsonToCast(config),
           expr: mapJsonToExpr(config),
+          defaultValue:
+            typeof config.default === "string" ? config.default : undefined,
         })),
       }))
     : [];
@@ -231,6 +243,13 @@ export const formStateToMappingJson = (params: {
       return acc;
     }
 
+    if (item.mappingType === "string") {
+      acc[item.targetColumn] = {
+        default: item.defaultValue ?? "",
+      };
+      return acc;
+    }
+
     if (!item.sourceColumn) return acc;
 
     acc[item.targetColumn] = {
@@ -255,6 +274,13 @@ export const formStateToMappingJson = (params: {
               from: "$key",
               ...mapCastToJson(item.cast),
               ...mapExprToJson(item.expr),
+            };
+            return acc;
+          }
+
+          if (item.mappingType === "string") {
+            acc[item.targetColumn] = {
+              default: item.defaultValue ?? "",
             };
             return acc;
           }
