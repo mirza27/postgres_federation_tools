@@ -1,10 +1,10 @@
 {
   "entity": "publication_writer-to-authorship",
-  "sources": [{ "alias": "pw", "from": "publication_writer" }],
+  "sources": [{ "alias": "pir", "from": "publication_writer" }],
   "target_table": "authorship",
   "key": {
     "strategy": "shared_key",
-    "source": "pw.pub_id",
+    "source": "pir.pub_id",
     "resolver": {
       "type": "mapping_table",
       "table": "_keymap_publication_writer-to-authorship"
@@ -15,9 +15,9 @@
       "from": "$key",
       "expr": "uuid()"
     },
-    "paper_doi": { "from": "pw.pub_id", "cast": "string" },
-    "author_code": { "from": "pw.rese_id" },
-    "orderofauthor": { "from": "pw.pwrit_ord" }
+    "paper_doi": { "from": "pir.pub_id", "cast": "string" },
+    "author_code": { "from": "pir.rese_id" },
+    "orderofauthor": { "from": "pir.pirrit_ord" }
   },
   "routing": {
     "on_snapshot": { "mode": "insert" },

@@ -1,16 +1,22 @@
 {
   "entity": "researcher-to-author",
-  "sources": [{ "alias": "r", "from": "researcher" }],
+    "sources": [
+    {
+      "alias": "rrr",
+      "from": "researcher",
+      "topic": ""
+    }
+  ],
   "target_table": "author",
   "key": {
     "strategy": "natural",
-    "source": "r.rese_id"
+    "source": "rrr.rese_id"
   },
   "columns": {
     "code": { "from": "$key" },
-    "name": { "from": "r.rese_name" },
-    "lastname1": { "from": "r.rese_first_surname" },
-    "lastname2": { "from": "r.rese_sec_surname" }
+    "name": { "from": "rrr.rese_name" },
+    "lastname1": { "from": "rrr.rese_first_surname" },
+    "lastname2": { "from": "rrr.rese_sec_surname" }
   },
   "routing": {
     "on_snapshot": { "mode": "insert" },

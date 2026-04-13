@@ -1,0 +1,99 @@
+{
+  "entity": "conference",
+  "sources": [
+    {
+      "alias": "pcn",
+      "from": "publication",
+      "topic": ""
+    },
+    {
+      "alias": "cny",
+      "from": "country",
+      "topic": "",
+      "join": {
+        "fact_column": "pub_cntry",
+        "dim_column": "cntry_id"
+      }
+    },
+    {
+      "alias": "cre",
+      "from": "conference",
+      "topic": "",
+      "join": {
+        "fact_column": "pub_id",
+        "dim_column": "conf_id"
+      }
+    }
+  ],
+  "target_table": "publication",
+  "key": {
+    "strategy": "shared_key",
+    "source": "pcn.pub_isbn",
+    "resolver": {
+      "type": "mapping_table",
+      "table": "_keymap_conference",
+      "source_key_col": "",
+      "target_key_col": ""
+    }
+  },
+  "columns": {
+    "code": {
+      "from": "$key"
+    },
+    "country": {
+      "from": "cny.cntry_name_en"
+    },
+    "place": {
+      "from": "pcn.pub_loc"
+    },
+    "publicationtype_name": {
+      "default": "CONFERENCE"
+    },
+    "publisher_name": {
+      "from": "pcn.pub_edit"
+    },
+    "title": {
+      "from": "cre.conf_name"
+    },
+    "year": {
+      "from": "pcn.pub_year"
+    }
+  },
+  "split_table": [
+    {
+      "table_name": "paper",
+      "columns": {
+        "doi": {
+          "from": "pcn.pub_id",
+          "cast": "string"
+        },
+        "endpage": {
+          "from": "cre.conf_end_page"
+        },
+        "publication_code": {
+          "from": "$key"
+        },
+        "startpage": {
+          "from": "cre.conf_start_page"
+        },
+        "title": {
+          "from": "pcn.pub_title"
+        }
+      }
+    }
+  ],
+  "routing": {
+    "on_create": {
+      "mode": "insert"
+    },
+    "on_update": {
+      "mode": "update",
+      "matchKey": [
+        "code"
+      ]
+    },
+    "on_snapshot": {
+      "mode": "insert"
+    }
+  }
+}
